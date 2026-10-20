@@ -26,6 +26,7 @@ function validEntry(array $changes = []): array
         'stack' => 'php',
         'devnull' => 'Pest 5 shipped. https://phplives.dev',
         'checked' => '2026-10-16',
+        'added' => '2026-10-16',
     ], $changes);
 }
 

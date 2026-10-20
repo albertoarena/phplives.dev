@@ -24,7 +24,8 @@ looks.
 ## How it works
 
 A small PHP build script, with no framework, turns one PHP file per entry into
-static HTML. GitHub Actions runs the tests, builds the site and deploys it to
+static HTML. It also writes an Atom feed, a sitemap, `robots.txt`, `llms.txt` and
+a Markdown copy of each entry. GitHub Actions runs the tests, builds the site and deploys it to
 Cloudflare Workers. A daily build moves old entries to the archive.
 
 ```

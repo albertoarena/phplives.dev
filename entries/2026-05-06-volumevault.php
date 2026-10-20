@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: VolumeVault. A Laravel app you host yourself to back up Docker volumes and host folders on a schedule, with safe restores and encrypted destinations. https://github.com/Darkdragon14/VolumeVault'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-20',
+    'added' => '2026-10-20',
 ];

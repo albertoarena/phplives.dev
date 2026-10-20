@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: Laravel AI SDK v1.0. A Laravel package that gives you one API for many AI providers. https://github.com/laravel/ai'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-16',
+    'added' => '2026-10-17',
 ];

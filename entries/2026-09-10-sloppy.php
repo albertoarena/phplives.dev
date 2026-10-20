@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: Sloppy. A static analyser that finds the debt AI agents leave in PHP code, such as god methods and N+1 queries, with no model and no network. https://github.com/Heyosseus/sloppy'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',
+    'added' => '2026-10-19',
 ];

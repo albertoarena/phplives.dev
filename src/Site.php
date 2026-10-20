@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpLives;
 
 use DateTimeImmutable;
+use XMLWriter;
 
 /**
  * Renders the static pages from the entries.
@@ -24,18 +25,28 @@ final readonly class Site
     /** The Cloudflare Web Analytics site token. It is public: every page carries it. */
     public const string ANALYTICS_TOKEN = '7f3f9ca2fbab49c49f067f46832153d9';
 
+    public const string URL = 'https://phplives.dev';
+
+    /**
+     * The switch for entry pages. They are not built yet. When they are, set this to
+     * true: the sitemap then lists each entry page, and the feed links to it.
+     */
+    public const bool ENTRY_PAGES = false;
+
     /** @var array<string, true> Lower-case GitHub usernames that have a /dev/null profile. */
     private array $devnullUsers;
 
     /**
      * @param  list<string>  $devnullUsers  GitHub usernames with a /dev/null profile.
      * @param  list<Post>  $posts  The site account's /dev/null posts that link to the site.
+     * @param  bool  $entryPages  True when the site has a page for each entry. See ENTRY_PAGES.
      */
     public function __construct(
         private Entries $entries,
         private DateTimeImmutable $today,
         array $devnullUsers = [],
         private array $posts = [],
+        private bool $entryPages = self::ENTRY_PAGES,
     ) {
         $this->devnullUsers = array_fill_keys(array_map(strtolower(...), $devnullUsers), true);
     }
@@ -71,18 +82,55 @@ final readonly class Site
     }
 
     /**
-     * Writes every page and asset into a folder.
+     * The pages, and the files that help people and tools find them: robots.txt, the
+     * sitemap, llms.txt, the Atom feeds, a Markdown copy of each entry, and the headers
+     * that Cloudflare serves them with.
+     *
+     * @return array<string, string> Each file's content, keyed by its path in the output folder.
+     */
+    public function files(): array
+    {
+        $files = $this->pages() + [
+            'robots.txt' => $this->robots(),
+            'sitemap.xml' => $this->sitemap(),
+            'llms.txt' => Markdown::llms($this->entries),
+        ];
+
+        $feed = new Feed($this->entries->all(), $this->today, $this->entryPages);
+        $files['feed.xml'] = $feed->xml('/feed.xml');
+
+        foreach (array_keys($this->stackCounts($this->entries->all())) as $stack) {
+            $files["feed/{$stack}.xml"] = $feed->xml("/feed/{$stack}.xml", $stack);
+        }
+
+        foreach ($this->entries->all() as $entry) {
+            $files[ltrim(Markdown::entryPath($entry), '/')] = Markdown::entry($entry);
+        }
+
+        return $files + ['_headers' => self::headers()];
+    }
+
+    /**
+     * The address of an entry's own page, from the site's root. See ENTRY_PAGES.
+     */
+    public static function entryPath(Entry $entry): string
+    {
+        return "/entries/{$entry->slug}/";
+    }
+
+    /**
+     * Writes every page, file and asset into a folder.
      */
     public function write(string $outDir): void
     {
-        foreach ($this->pages() as $path => $html) {
+        foreach ($this->files() as $path => $content) {
             $file = rtrim($outDir, '/').'/'.$path;
 
             if (! is_dir(dirname($file))) {
                 mkdir(dirname($file), 0777, true);
             }
 
-            file_put_contents($file, $html);
+            file_put_contents($file, $content);
         }
 
         copy(self::ASSETS.'/site.css', rtrim($outDir, '/').'/site.css');
@@ -98,6 +146,79 @@ final readonly class Site
                 copy($file, rtrim($outDir, '/')."/{$dir}/".basename($file));
             }
         }
+    }
+
+    /**
+     * Every crawler may read every page. The content signals are Cloudflare's: search
+     * engines may index the site, and AI tools may use it to answer a question. The
+     * signal for AI training is not set.
+     */
+    private function robots(): string
+    {
+        return "User-agent: *\nContent-Signal: search=yes, ai-input=yes\nAllow: /\n\nSitemap: ".self::URL."/sitemap.xml\n";
+    }
+
+    /**
+     * Every page that search engines should index. The list pages change when an entry
+     * is added or checked again, so their date is the newest of those dates. The
+     * privacy page and the credits change by hand, so they have no date.
+     */
+    private function sitemap(): string
+    {
+        $dates = [];
+
+        foreach ($this->entries->all() as $entry) {
+            array_push($dates, $entry->added, $entry->checked);
+        }
+
+        $newest = $dates === [] ? null : max($dates);
+
+        $urls = [
+            ['/', $newest],
+            ['/archive/', $newest],
+            ['/privacy/', null],
+            ['/credits/', null],
+        ];
+
+        if ($this->entryPages) {
+            foreach ($this->entries->all() as $entry) {
+                $urls[] = [self::entryPath($entry), $entry->checked];
+            }
+        }
+
+        $xml = new XMLWriter();
+        $xml->openMemory();
+        $xml->setIndent(true);
+        $xml->setIndentString('  ');
+        $xml->startDocument('1.0', 'UTF-8');
+        $xml->startElementNs(null, 'urlset', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+
+        foreach ($urls as [$path, $lastmod]) {
+            $xml->startElement('url');
+            $xml->writeElement('loc', self::URL.$path);
+
+            if ($lastmod !== null) {
+                $xml->writeElement('lastmod', $lastmod->format('Y-m-d'));
+            }
+
+            $xml->endElement();
+        }
+
+        $xml->endElement();
+        $xml->endDocument();
+
+        return $xml->outputMemory();
+    }
+
+    /**
+     * Cloudflare picks a file's type from its extension, and it reads .xml as plain
+     * XML. The feeds are Atom.
+     */
+    private static function headers(): string
+    {
+        $atom = '  Content-Type: application/atom+xml; charset=utf-8';
+
+        return "/feed.xml\n{$atom}\n/feed/*\n{$atom}\n";
     }
 
     /**

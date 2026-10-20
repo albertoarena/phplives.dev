@@ -13,6 +13,7 @@ final readonly class Entry
 {
     /**
      * @param  list<Maker>  $makers  The first maker is the lead.
+     * @param  DateTimeImmutable  $added  The day the entry was added to the site.
      */
     public function __construct(
         public string $slug,
@@ -26,6 +27,7 @@ final readonly class Entry
         public string $stack,
         public string $devnull,
         public DateTimeImmutable $checked,
+        public DateTimeImmutable $added,
     ) {}
 
     /**
@@ -48,6 +50,7 @@ final readonly class Entry
             stack: $data['stack'],
             devnull: trim($data['devnull']),
             checked: new DateTimeImmutable($data['checked']),
+            added: new DateTimeImmutable($data['added']),
         );
     }
 }

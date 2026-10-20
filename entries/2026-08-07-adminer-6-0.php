@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: Adminer 6.0. A new major version of Adminer, the database manager in a single PHP file, with security fixes and a faster tables overview. https://github.com/vrana/adminer'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',
+    'added' => '2026-10-19',
 ];

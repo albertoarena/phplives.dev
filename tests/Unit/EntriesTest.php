@@ -54,6 +54,7 @@ it('turns an entry file into an Entry', function () {
     expect($entry->slug)->toBe('pest-5')
         ->and($entry->name)->toBe('Pest 5')
         ->and($entry->shipped->format('d/m/Y'))->toBe('01/09/2026')
+        ->and($entry->added->format('d/m/Y'))->toBe('16/10/2026')
         ->and($entry->stack)->toBe('php')
         ->and($entry->proofKind)->toBe('release')
         ->and($entry->makers[0]->name)->toBe('Nuno Maduro')

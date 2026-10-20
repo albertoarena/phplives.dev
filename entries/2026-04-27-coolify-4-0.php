@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: Coolify v4.0. The first stable release of Coolify, an open source alternative to Vercel and Heroku that you host on your own servers. https://github.com/coollabsio/coolify'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',
+    'added' => '2026-10-19',
 ];

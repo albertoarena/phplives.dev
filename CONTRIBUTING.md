@@ -57,6 +57,7 @@ return [
     'devnull' => 'Shipped with PHP: Laravel Vet. A dependency audit for PHP that shows you each package change before composer update writes it into vendor. https://github.com/laravel/vet'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',
+    'added' => '2026-10-19',
 ];
 ```
 
@@ -73,6 +74,7 @@ return [
 | `stack` | One stack code (see below). |
 | `devnull` | A draft of the post that announces the entry on /dev/null. The editor may rewrite it. |
 | `checked` | The date you checked the facts, as `YYYY-MM-DD`. |
+| `added` | The date the entry goes on the site, as `YYYY-MM-DD`. Use the day you send the pull request. The editor may change the date when he merges the pull request. The site's feed lists new entries by this date. |
 
 **Stack codes:** `laravel`, `symfony`, `nativephp`, `wordpress` or `php` (plain
 PHP). A stack code names a framework or a platform, not a package. A project built

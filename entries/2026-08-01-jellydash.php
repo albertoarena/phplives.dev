@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: Jellydash. A dashboard you host yourself for a Jellyfin server: who is watching, play history and viewing statistics. https://jellydash.madebymartz.com'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-16',
+    'added' => '2026-10-17',
 ];

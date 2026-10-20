@@ -24,6 +24,7 @@ $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
 <link rel="canonical" href="https://phplives.dev<?= $e($path) ?>">
 <?php endif ?>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" title="phplives.dev" href="/feed.xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="phplives.dev">
 <meta property="og:title" content="<?= $e($title) ?>">

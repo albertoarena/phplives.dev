@@ -63,6 +63,19 @@ it('writes the site into the output folder', function () {
         ->and(file_get_contents($this->tmp.'/dist/index.html'))->toContain('Pest 5');
 });
 
+it('writes the files that help people and tools find the site', function () {
+    writeEntry($this->tmp.'/entries', '2026-09-01-pest-5.php');
+
+    [$status] = build($this->tmp);
+
+    foreach (['robots.txt', 'sitemap.xml', 'llms.txt', 'feed.xml', 'feed/php.xml', 'entries/pest-5.md', '_headers'] as $file) {
+        expect($this->tmp."/dist/{$file}")->toBeFile();
+    }
+
+    expect($status)->toBe(0)
+        ->and(file_get_contents($this->tmp.'/dist/entries/pest-5.md'))->toStartWith('# Pest 5');
+});
+
 it('fails and lists the problems when an entry is not valid', function () {
     writeEntry($this->tmp.'/entries', '2026-09-01-pest-5.php', ['stack' => 'drupal']);
 

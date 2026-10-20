@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: Parsel. A PHP library that extracts Markdown, text and structured data from documents such as PDFs, using local command-line parsers. https://github.com/shipfastlabs/parsel'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',
+    'added' => '2026-10-19',
 ];

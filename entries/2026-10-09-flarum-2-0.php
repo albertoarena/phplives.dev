@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: Flarum 2.0. A new major version of Flarum, the open source forum software, after a long series of betas and release candidates. https://github.com/flarum/framework'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',
+    'added' => '2026-10-19',
 ];
