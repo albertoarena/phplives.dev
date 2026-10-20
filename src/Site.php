@@ -36,10 +36,15 @@ final readonly class Site
     /** @var array<string, true> Lower-case GitHub usernames that have a /dev/null profile. */
     private array $devnullUsers;
 
+    /** True when each entry page has its own share card. See ShareCard. */
+    private bool $shareCards;
+
     /**
      * @param  list<string>  $devnullUsers  GitHub usernames with a /dev/null profile.
      * @param  list<Post>  $posts  The site account's /dev/null posts that link to the site.
      * @param  bool  $entryPages  True when the site has a page for each entry. See ENTRY_PAGES.
+     * @param  bool|null  $shareCards  False to share entry pages with the site card. Null to draw
+     *                                 a card for each entry page when GD can.
      */
     public function __construct(
         private Entries $entries,
@@ -47,8 +52,10 @@ final readonly class Site
         array $devnullUsers = [],
         private array $posts = [],
         private bool $entryPages = self::ENTRY_PAGES,
+        ?bool $shareCards = null,
     ) {
         $this->devnullUsers = array_fill_keys(array_map(strtolower(...), $devnullUsers), true);
+        $this->shareCards = $entryPages && ($shareCards ?? ShareCard::available());
     }
 
     /**
@@ -123,7 +130,8 @@ final readonly class Site
                     'copyScript' => $this->script('copy.js'),
                     'shareScript' => $this->script('share.js'),
                 ],
-                ['description' => $entry->sentence, 'markdown' => Markdown::entryPath($entry), 'shareTitle' => self::shareTitle($entry)],
+                ['description' => $entry->sentence, 'markdown' => Markdown::entryPath($entry), 'shareTitle' => self::shareTitle($entry)]
+                    + ($this->shareCards ? ['image' => ShareCard::url($entry), 'imageAlt' => ShareCard::alt($entry)] : []),
             );
         }
 
@@ -136,6 +144,14 @@ final readonly class Site
     public function hasEntryPages(): bool
     {
         return $this->entryPages;
+    }
+
+    /**
+     * True when each entry page has its own share card. See ShareCard.
+     */
+    public function hasShareCards(): bool
+    {
+        return $this->shareCards;
     }
 
     /**
@@ -228,9 +244,26 @@ final readonly class Site
                 mkdir(rtrim($outDir, '/')."/{$dir}", 0777, true);
             }
 
-            foreach (glob(self::ASSETS."/{$dir}/*") as $file) {
+            // Only the files: the folders inside, such as the card fonts, are for the build.
+            foreach (array_filter(glob(self::ASSETS."/{$dir}/*"), is_file(...)) as $file) {
                 copy($file, rtrim($outDir, '/')."/{$dir}/".basename($file));
             }
+        }
+
+        if ($this->shareCards) {
+            $this->writeShareCards($outDir);
+        }
+    }
+
+    /**
+     * Draws the share card of each entry, current or archived, next to its page.
+     */
+    private function writeShareCards(string $outDir): void
+    {
+        $card = new ShareCard();
+
+        foreach ($this->entries->all() as $entry) {
+            file_put_contents(rtrim($outDir, '/').ShareCard::path($entry), $card->png($entry));
         }
     }
 
@@ -309,8 +342,8 @@ final readonly class Site
 
     /**
      * @param  string|null  $path  The page's own address. Null for the page that answers missing addresses.
-     * @param  array{description?: string, markdown?: string, shareTitle?: string}  $head  A page's own description, its Markdown copy
-     *                                                                                  and its title on share cards.
+     * @param  array{description?: string, markdown?: string, shareTitle?: string, image?: string, imageAlt?: string}  $head
+     *         The page's own description, its Markdown copy, its title on share cards, and its own share card with its text.
      */
     private function page(string $template, string $title, ?string $path, array $vars, array $head = []): string
     {
@@ -318,6 +351,8 @@ final readonly class Site
             'description' => null,
             'markdown' => null,
             'shareTitle' => null,
+            'image' => null,
+            'imageAlt' => null,
             'title' => $title,
             'path' => $path,
             'today' => Format::date($this->today),

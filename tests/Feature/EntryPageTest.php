@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Dom\HTMLDocument;
 use PhpLives\Entries;
+use PhpLives\ShareCard;
 use PhpLives\Site;
 
 beforeEach(function () {
@@ -22,9 +23,9 @@ afterEach(function () {
  *
  * @return array<string, HTMLDocument>
  */
-function sitePages(object $test, bool $entryPages = true, array $devnullUsers = []): array
+function sitePages(object $test, bool $entryPages = true, array $devnullUsers = [], bool $shareCards = true): array
 {
-    $site = new Site(Entries::load($test->dir, $test->today), $test->today, $devnullUsers, entryPages: $entryPages);
+    $site = new Site(Entries::load($test->dir, $test->today), $test->today, $devnullUsers, entryPages: $entryPages, shareCards: $shareCards);
 
     return array_map(
         fn (string $html) => HTMLDocument::createFromString($html, LIBXML_NOERROR),
@@ -60,7 +61,6 @@ it('gives each entry page its own title, description and address', function () {
         ->and($meta('meta[property="og:description"]'))->toBe('A testing framework for PHP, focused on simplicity.')
         ->and($doc->querySelector('link[rel="canonical"]')->getAttribute('href'))->toBe('https://phplives.dev/entries/pest-5/')
         ->and($meta('meta[property="og:url"]'))->toBe('https://phplives.dev/entries/pest-5/')
-        ->and($meta('meta[property="og:image"]'))->toBe('https://phplives.dev/share.png?v=3')
         ->and($doc->querySelector('meta[name="robots"]'))->toBeNull()
         ->and(hrefs($doc, '.nav a[aria-current]'))->toBe([]);
 });
@@ -258,4 +258,69 @@ it('has no Details links while the entry pages are off', function () {
 
     expect($pages['index.html']->querySelector('.more'))->toBeNull()
         ->and($pages['archive/index.html']->querySelector('.more'))->toBeNull();
+});
+
+/**
+ * The content of each share image tag on a page.
+ *
+ * @return array<string, string|null>
+ */
+function imageMeta(HTMLDocument $doc): array
+{
+    $meta = fn (string $selector) => $doc->querySelector($selector)?->getAttribute('content');
+
+    return [
+        'image' => $meta('meta[property="og:image"]'),
+        'width' => $meta('meta[property="og:image:width"]'),
+        'height' => $meta('meta[property="og:image:height"]'),
+        'alt' => $meta('meta[property="og:image:alt"]'),
+        'card' => $meta('meta[name="twitter:card"]'),
+    ];
+}
+
+it('shares each entry page with its own card', function () {
+    writeEntry($this->dir, '2026-09-14-laravel-vet.php', ['name' => 'Laravel Vet', 'makers' => [['name' => 'Laravel', 'github' => 'laravel']]]);
+    writeEntry($this->dir, '2026-03-01-old.php', ['name' => 'Old']);
+    $pages = sitePages($this);
+    $entry = Entries::load($this->dir, $this->today)->all()[0];
+
+    expect(imageMeta($pages['entries/laravel-vet/index.html']))->toBe([
+        'image' => ShareCard::url($entry),
+        'width' => '1200',
+        'height' => '630',
+        'alt' => 'Shipping label for Laravel Vet by Laravel, shipped on 14/09/2026. phplives.dev',
+        'card' => 'summary_large_image',
+    ])
+        ->and(imageMeta($pages['entries/old/index.html'])['image'])->toStartWith('https://phplives.dev/entries/old/card.png?v=');
+});
+
+it('shares the other pages with the site card', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+
+    foreach (['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html'] as $path) {
+        expect(imageMeta(sitePages($this)[$path]))->toBe([
+            'image' => 'https://phplives.dev/share.png?v=3',
+            'width' => '1200',
+            'height' => '630',
+            'alt' => 'PHP delivers. PHP lives! Real things people shipped with PHP in the last 6 months. phplives.dev',
+            'card' => 'summary_large_image',
+        ]);
+    }
+});
+
+it('shares entry pages with the site card when there are no cards', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+    $meta = imageMeta(sitePages($this, shareCards: false)['entries/pest-5/index.html']);
+
+    expect($meta['image'])->toBe('https://phplives.dev/share.png?v=3')
+        ->and($meta['alt'])->toStartWith('PHP delivers. PHP lives!');
+});
+
+it('draws cards only where GD can and only with entry pages', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+    $entries = Entries::load($this->dir, $this->today);
+
+    expect((new Site($entries, $this->today, entryPages: false))->hasShareCards())->toBeFalse()
+        ->and((new Site($entries, $this->today, shareCards: false))->hasShareCards())->toBeFalse()
+        ->and((new Site($entries, $this->today))->hasShareCards())->toBe(ShareCard::available());
 });

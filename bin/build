@@ -4,10 +4,13 @@
 /**
  * Builds the static site.
  *
- *   bin/build [--entries=entries] [--out=dist] [--today=YYYY-MM-DD] [--devnull=https://dev-null.sh]
+ *   bin/build [--entries=entries] [--out=dist] [--today=YYYY-MM-DD] [--devnull=https://dev-null.sh] [--no-cards]
  *
  * It looks up makers and posts on /dev/null. When /dev/null does not answer, the
  * site still builds. It then has no /dev/null links or posts.
+ *
+ * It draws a share card for each entry page with GD. Without GD and FreeType, or with
+ * --no-cards, the site still builds, and entry pages use the site's own share card.
  */
 
 declare(strict_types=1);
@@ -15,12 +18,13 @@ declare(strict_types=1);
 use PhpLives\DevNull;
 use PhpLives\Entries;
 use PhpLives\InvalidEntries;
+use PhpLives\ShareCard;
 use PhpLives\Site;
 
 require __DIR__.'/../vendor/autoload.php';
 
 $root = dirname(__DIR__);
-$options = getopt('', ['entries:', 'out:', 'today:', 'devnull:']) + [
+$options = getopt('', ['entries:', 'out:', 'today:', 'devnull:', 'no-cards']) + [
     'entries' => "{$root}/entries",
     'out' => "{$root}/dist",
     'today' => 'today',
@@ -50,11 +54,20 @@ foreach ($entries->all() as $entry) {
 $profiles = $devnull->profiles(array_values($makers));
 $posts = $profiles === null ? null : $devnull->posts(DevNull::ACCOUNT);
 
-$site = new Site($entries, $today, $profiles ?? [], $posts ?? []);
+$site = new Site($entries, $today, $profiles ?? [], $posts ?? [], shareCards: isset($options['no-cards']) ? false : null);
 $site->write($options['out']);
 
 $count = count($entries->all());
 printf("Built %d pages from %d %s into %s\n", count($site->pages()), $count, $count === 1 ? 'entry' : 'entries', $options['out']);
+
+if ($site->hasShareCards()) {
+    printf("Drew %d share %s.\n", $count, $count === 1 ? 'card' : 'cards');
+} elseif ($site->hasEntryPages()) {
+    printf(
+        "No share cards: %s. Entry pages use the site card.\n",
+        isset($options['no-cards']) ? '--no-cards was set' : 'PHP has no GD with FreeType and PNG support',
+    );
+}
 
 if ($profiles === null || $posts === null) {
     echo "/dev/null did not answer. The site was built without /dev/null links and posts.\n";

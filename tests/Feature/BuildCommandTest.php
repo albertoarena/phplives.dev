@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PhpLives\ShareCard;
 use Tests\FakeDevNull;
 
 beforeEach(function () {
@@ -13,12 +14,13 @@ afterEach(function () {
     exec('rm -rf '.escapeshellarg($this->tmp));
 });
 
-function build(string $tmp, ?string $devnull = null): array
+function build(string $tmp, ?string $devnull = null, array $options = []): array
 {
     $command = implode(' ', array_map(escapeshellarg(...), [
         PHP_BINARY, dirname(__DIR__, 2).'/bin/build',
         "--entries={$tmp}/entries", "--out={$tmp}/dist", '--today=2026-10-16',
         '--devnull='.($devnull ?? FakeDevNull::deadUrl()),
+        ...$options,
     ]));
     exec($command.' 2>&1', $output, $status);
 
@@ -121,4 +123,43 @@ it('still builds when /dev/null is down', function () {
         ->and($output)->toContain('/dev/null did not answer. The site was built without /dev/null links and posts.')
         ->and($html)->toContain('Pest 5')
         ->and($html)->not->toContain('class="strip"');
+});
+
+it('draws a share card for each entry, current and archived', function () {
+    if (! ShareCard::available()) {
+        $this->markTestSkipped('GD with FreeType is not installed.');
+    }
+
+    writeEntry($this->tmp.'/entries', '2026-09-01-pest-5.php');
+    writeEntry($this->tmp.'/entries', '2026-03-01-old.php', ['name' => 'Old']);
+
+    [$status, $output] = build($this->tmp);
+
+    expect($status)->toBe(0)
+        ->and($output)->toContain('Drew 2 share cards.')
+        ->and(getimagesize($this->tmp.'/dist/entries/pest-5/card.png'))->toMatchArray([0 => 1200, 1 => 630, 'mime' => 'image/png'])
+        ->and(getimagesize($this->tmp.'/dist/entries/old/card.png'))->toMatchArray([0 => 1200, 1 => 630])
+        ->and(file_get_contents($this->tmp.'/dist/entries/pest-5/index.html'))->toContain('https://phplives.dev/entries/pest-5/card.png?v=');
+});
+
+it('falls back to the site card when the cards are not drawn', function () {
+    writeEntry($this->tmp.'/entries', '2026-09-01-pest-5.php');
+
+    [$status, $output] = build($this->tmp, options: ['--no-cards']);
+
+    expect($status)->toBe(0)
+        ->and($output)->toContain('No share cards: --no-cards was set. Entry pages use the site card.')
+        ->and($this->tmp.'/dist/entries/pest-5/card.png')->not->toBeFile()
+        ->and(file_get_contents($this->tmp.'/dist/entries/pest-5/index.html'))->toContain('content="https://phplives.dev/share.png?v=3"');
+});
+
+it('keeps the card fonts out of the site', function () {
+    writeEntry($this->tmp.'/entries', '2026-09-01-pest-5.php');
+
+    [$status, $output] = build($this->tmp, options: ['--no-cards']);
+
+    expect($status)->toBe(0)
+        ->and($output)->not->toContain('Warning')
+        ->and($this->tmp.'/dist/fonts/card')->not->toBeDirectory()
+        ->and(glob($this->tmp.'/dist/fonts/*.ttf'))->toBe([]);
 });
