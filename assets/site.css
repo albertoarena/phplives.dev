@@ -32,7 +32,7 @@ body{margin:0;background:var(--field)}
 .nav a{text-decoration:none;padding:10px 0}
 .nav a[aria-current]{text-decoration:underline;text-decoration-thickness:2px}
 
-.hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:64px;align-items:end;padding:40px 0 44px}
+.hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:64px;align-items:end;padding:32px 0 36px}
 .hero h1{margin:0;font-size:clamp(52px,6cqi,84px);line-height:.94;font-weight:850;font-stretch:70%;letter-spacing:-.02em;word-spacing:.12em;text-wrap:balance}
 .hero h1 span{display:block}
 .hero h1 .stuck{display:inline-block;margin-top:14px;background:var(--label);color:var(--ink);padding:4px 18px 10px;border-radius:5px;transform:rotate(-1.2deg);box-shadow:var(--shadow)}
@@ -53,7 +53,7 @@ body{margin:0;background:var(--field)}
 .slip dd{margin:0;font-size:15px;font-weight:600}
 .slip-foot{padding:12px 22px 16px;border-top:2px dashed var(--perf);font-size:13px;color:var(--ink-2)}
 
-.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:0 0 18px}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:0 0 12px}
 .sec-head h2{margin:0;font-size:30px;font-weight:800;font-stretch:75%;letter-spacing:-.01em;word-spacing:.12em}
 .sec-head p{margin:0;font-size:15px;color:var(--on-field-2)}
 .sec-head>div:first-child{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px}
@@ -84,6 +84,7 @@ body{margin:0;background:var(--field)}
 .bundle-note{margin:0;font-size:15px;color:var(--on-field-2)}
 .bundle-count{font-size:13px;font-weight:600;color:var(--on-field-2);white-space:nowrap}
 .bundle-new{margin-bottom:64px}
+.bundle-new .bundle-head{margin-bottom:16px;padding-bottom:6px}
 .bundle+.bundle{margin-top:52px}
 .weeks+.bundle{margin-top:72px}
 /* The weeks of this month share one row when they are small. Their stubs stay on the same 4-column grid. */
@@ -341,12 +342,16 @@ body{margin:0;background:var(--field)}
 
 /* The three full labels stay in one row while each is at least about 300px wide. */
 @container (max-width:960px){
-  .grid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:min(400px,86%);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;
+  .grid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:min(380px,42%);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;
     margin:-8px -40px -24px;padding:8px 40px 24px;scroll-padding-inline:40px;scrollbar-width:thin;scrollbar-color:var(--on-field-2) transparent}
   .grid>.lab{scroll-snap-align:start}
 }
 @container (max-width:860px){
   .grid{margin-inline:-16px;padding-inline:16px;scroll-padding-inline:16px}
+}
+/* On a phone one label fills most of the row, and the next one shows at the edge. */
+@container (max-width:700px){
+  .grid{grid-auto-columns:86%}
 }
 @container (max-width:440px){
   .stubs,.weeks{grid-template-columns:minmax(0,1fr)}

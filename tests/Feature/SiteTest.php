@@ -65,7 +65,7 @@ it('puts the entries added last on full labels, and marks only the newest', func
 
     expect(texts($main, '#this-week article.lab h4'))->toBe(['Newer', 'Older', 'Before'])
         ->and(texts($main, '#this-week h3'))->toBe(['This week'])
-        ->and(texts($main, '#this-week .bundle-note'))->toBe(['2 added since Monday 12/10. The rest were added before.'])
+        ->and(texts($main, '#this-week .bundle-note'))->toBe(['2 parcels have been added since Monday 12/10. The rest were added before.'])
         ->and(texts($main, '#manifest [data-view="labels"] .stub h4'))->toBe(['Stub'])
         ->and($main->querySelectorAll('#manifest .lab'))->toHaveCount(3)
         ->and($main->querySelectorAll('.lab-new'))->toHaveCount(1)
@@ -84,10 +84,10 @@ it('says how many full labels were added this week', function (array $added, str
     expect(texts($main, '#this-week h3'))->toBe([$title])
         ->and(texts($main, '#this-week .bundle-note'))->toBe([$note]);
 })->with([
-    'none' => [['2026-10-01', '2026-10-02', '2026-10-03'], 'Added last', 'Nothing was added since Monday 12/10. These 3 were added last.'],
-    'one' => [['2026-10-12', '2026-10-02', '2026-10-03'], 'This week', '1 added since Monday 12/10. The rest were added before.'],
-    'all three' => [['2026-10-12', '2026-10-13', '2026-10-16'], 'This week', 'Added since Monday 12/10.'],
-    'more' => [['2026-10-12', '2026-10-13', '2026-10-16', '2026-10-16'], 'This week', '4 added since Monday 12/10. Here are the newest 3. The others are in the bundles below, by shipped date.'],
+    'none' => [['2026-10-01', '2026-10-02', '2026-10-03'], 'Added last', 'Nothing has been added since Monday 12/10. These 3 were added last.'],
+    'one' => [['2026-10-12', '2026-10-02', '2026-10-03'], 'This week', '1 parcel has been added since Monday 12/10. The rest were added before.'],
+    'all three' => [['2026-10-12', '2026-10-13', '2026-10-16'], 'This week', 'All 3 have been added since Monday 12/10.'],
+    'more' => [['2026-10-12', '2026-10-13', '2026-10-16', '2026-10-16'], 'This week', '4 parcels have been added since Monday 12/10. Here are the newest 3. The others are in the bundles below, by shipped date.'],
 ]);
 
 it('bundles the other entries by the week or the month they shipped, with a count', function () {

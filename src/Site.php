@@ -148,10 +148,10 @@ final readonly class Site
         $since = 'since Monday '.Bundles::weekStart($this->today)->format('d/m');
 
         return match (true) {
-            $added === 0 => ['Added last', "Nothing was added {$since}. ".($shown === 1 ? 'This one was' : "These {$shown} were").' added last.'],
-            $added < $shown => ['This week', "{$added} added {$since}. The rest were added before."],
-            $added === $shown => ['This week', "Added {$since}."],
-            default => ['This week', "{$added} added {$since}. Here are the newest {$shown}. The others are in the bundles below, by shipped date."],
+            $added === 0 => ['Added last', "Nothing has been added {$since}. ".($shown === 1 ? 'This one was' : "These {$shown} were").' added last.'],
+            $added < $shown => ['This week', ($added === 1 ? '1 parcel has' : "{$added} parcels have")." been added {$since}. The rest were added before."],
+            $added === $shown => ['This week', ($shown === 1 ? 'It has' : "All {$shown} have")." been added {$since}."],
+            default => ['This week', "{$added} parcels have been added {$since}. Here are the newest {$shown}. The others are in the bundles below, by shipped date."],
         };
     }
 
