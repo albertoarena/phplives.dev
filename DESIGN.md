@@ -285,7 +285,7 @@ One page per entry. Top to bottom:
 - **Back link:** inside the wrap, with a left arrow. It reads "Back to the manifest", or "Back to the archive" for an archived entry. It is 44px tall.
 - **Depot:** a full-bleed area outside the wrap, so it runs from page edge to page edge. It clips anything that goes past the sides. It has 16px of space on top and 96px at the end (8px and 64px on narrow screens).
 - **Shelf:** a 600px column, centred in the depot. On narrow screens it is the full width minus the gutters (100% minus 80px, then minus 32px below 700px). It holds the entry label, then the docket 28px under it.
-- **Neighbour stubs, from 1100px:** absolutely placed beside the label, 210px from the top of the depot. Each stub runs from 40px past the page edge to a gap of clamp(40px, 5cqi, 96px) before the label. The page edge always cuts the barcode, so the stub reads as torn off.
+- **Neighbour stubs, from 1100px:** absolutely placed beside the label, 210px from the top of the depot. Each stub starts 40px past the page edge, so the edge always cuts its barcode and the stub reads as torn off. It is at most 360px wide, and it always leaves a gap of at least clamp(40px, 5cqi, 96px) before the label. On wide screens the gap grows, and the stub keeps its size.
 - **Neighbour stubs, below 1100px:** a two-cell row under the docket, 28px below it, with a 16px gap (12px below 700px). The earlier parcel is always in the left cell and the later one in the right cell. The first and last entries show one stub, in its own cell.
 - **Below 700px:** the label blocks drop to 16px by 18px of padding, the postmark to 124px, and the docket's side padding to 18px.
 
@@ -355,7 +355,7 @@ A white sheet under the entry label, with the paper shadow and a 6px radius. Its
 ### Neighbour stubs
 The tear-off stubs of the parcels shipped just before and just after this one. They show that the list goes on. Each stub is a link.
 - **Paper:** Thermal White (Night Label in the dark theme), 6px radius, the rest shadow. No lift, no rotation, no dimming.
-- **Barcode:** a vertical barcode drawn from the neighbour's tracking number, on the outer side (left for before, right for after). It takes the full height of the stub.
+- **Barcode:** a vertical barcode drawn from the neighbour's tracking number, on the outer side (left for before, right for after). It takes the full height of the stub. From 1100px it fills the paper from the page edge up to the text, so no blank paper shows between them. The text block is at most 210px wide.
 - **Perforation:** a 2px dashed Perforation line on the side that faces the label.
 - **Text:** the caption "Shipped before" with a left arrow, or "Shipped after" with a right arrow. Then the name in the title shape, the mono date, a small inverse stack code (2px radius) and the tracking number. The earlier stub is right-aligned, so its text sits next to the label. The name underlines on hover.
 - **Placement:** see Layout. From 1100px they sit beside the label and the page edge cuts them. Below 1100px they sit as a row under the docket.

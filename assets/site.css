@@ -364,11 +364,12 @@ body{margin:0;background:var(--field)}
 /* Wide: the stubs sit on the shelf at the left and right edges, cut off by the edge of the page */
 @container (min-width:1100px){
   .nbr{display:block;margin:0}
-  /* Each stub runs from past the page edge to a fixed gap before the label, so the edge always cuts its barcode */
-  .pl .stub{position:absolute;top:210px;grid-template-columns:72px minmax(0,1fr)}
-  .pl .stub-next{grid-template-columns:minmax(0,1fr) 72px}
-  .pl .stub-prev{left:-40px;right:calc(50% + 300px + clamp(40px,5cqi,96px))}
-  .pl .stub-next{right:-40px;left:calc(50% + 300px + clamp(40px,5cqi,96px))}
+  /* Each stub starts past the page edge, so the edge always cuts its barcode. The barcode fills the paper up to the text,
+     so no blank paper shows. The stub is at most 360px wide: on wide screens the gap to the label grows instead. */
+  .pl .stub{position:absolute;top:210px;width:min(360px,50% - 300px - clamp(40px,5cqi,96px) + 40px)}
+  .pl .stub-prev{left:-40px;grid-template-columns:minmax(72px,1fr) auto}
+  .pl .stub-next{right:-40px;grid-template-columns:auto minmax(72px,1fr)}
+  .stub-body{max-width:210px}
   .stub-bars{padding:16px 0}
   .stub-prev .stub-bars{padding:16px 6px 16px 0}
   .stub-next .stub-bars{padding:16px 0 16px 6px}
