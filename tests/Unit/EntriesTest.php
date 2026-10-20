@@ -63,7 +63,7 @@ it('turns an entry file into an Entry', function () {
 
 it('fails with every problem in every file', function () {
     writeEntry($this->dir, '2026-09-01-good.php');
-    writeEntry($this->dir, '2026-09-02-bad-stack.php', ['stack' => 'wordpress']);
+    writeEntry($this->dir, '2026-09-02-bad-stack.php', ['stack' => 'drupal']);
     writeEntry($this->dir, '2026-09-03-bad-link.php', ['source' => 'http://example.com']);
 
     try {
@@ -72,7 +72,7 @@ it('fails with every problem in every file', function () {
     } catch (InvalidEntries $e) {
         expect($e->errors)->toHaveKeys(['2026-09-02-bad-stack.php', '2026-09-03-bad-link.php'])
             ->not->toHaveKey('2026-09-01-good.php')
-            ->and($e->getMessage())->toContain('2026-09-02-bad-stack.php: Unknown stack: wordpress.')
+            ->and($e->getMessage())->toContain('2026-09-02-bad-stack.php: Unknown stack: drupal.')
             ->and($e->getMessage())->toContain('2026-09-03-bad-link.php: Field source is not an HTTPS link.');
     }
 });

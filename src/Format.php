@@ -16,6 +16,7 @@ final class Format
         'laravel' => ['LRV', 'Laravel'],
         'symfony' => ['SYM', 'Symfony'],
         'nativephp' => ['NTV', 'NativePHP'],
+        'wordpress' => ['WRD', 'WordPress'],
         'php' => ['PHP', 'plain PHP'],
     ];
 

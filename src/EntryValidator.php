@@ -18,7 +18,7 @@ final class EntryValidator
         'name', 'sentence', 'makers', 'shipped', 'proof', 'source', 'stack', 'devnull', 'checked',
     ];
 
-    public const array STACKS = ['laravel', 'symfony', 'nativephp', 'php'];
+    public const array STACKS = ['laravel', 'symfony', 'nativephp', 'wordpress', 'php'];
 
     public const array PROOF_KINDS = ['release', 'tag', 'post'];
 

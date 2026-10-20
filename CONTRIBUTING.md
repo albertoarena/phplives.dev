@@ -74,10 +74,10 @@ return [
 | `devnull` | A draft of the post that announces the entry on /dev/null. The editor may rewrite it. |
 | `checked` | The date you checked the facts, as `YYYY-MM-DD`. |
 
-**Stack codes:** `laravel`, `symfony`, `nativephp` or `php` (plain PHP). A stack
-code names a framework or a platform, not a package. A project built on a package
-goes under its framework: a Filament project goes under `laravel`. A new code needs
-at least 2 entries. Until then, the entry goes under its parent stack or under
+**Stack codes:** `laravel`, `symfony`, `nativephp`, `wordpress` or `php` (plain
+PHP). A stack code names a framework or a platform, not a package. A project built
+on a package goes under its framework: a Filament project goes under `laravel`. A
+new code needs at least 2 entries. Until then, the entry goes under its parent stack or under
 `php`.
 
 ### Rules for the text

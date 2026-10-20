@@ -226,7 +226,7 @@ The theme follows the device by default. A Light / Dark / System toggle in the t
 - **Section** (`section`): section heads on the field, such as "Shipped since DD/MM/YYYY". They drop to 26px on narrow screens.
 - **Body** (`body`): reading text. The lede is 19px. Read-mode pages (Privacy) use 17px with line height 1.6 and a 65ch measure.
 - **Label** (`label`): uppercase field captions on paper (FROM, CONTENTS, SHIPPED, TRACK) and table heads.
-- **Route code** (`route-code`): the three-letter stack code (LRV, SYM, NTV, PHP) in its inverse block. Filter chips and table cells use the same width at 17px to 18px.
+- **Route code** (`route-code`): the three-letter stack code (LRV, SYM, NTV, WRD, PHP) in its inverse block. Filter chips and table cells use the same width at 17px to 18px.
 - **Mono date** (`mono-date`): the shipped date on a label.
 - **Mono data** (`mono-data`): tracking numbers, link text on the TRACK line, counts, the slip values and the terminal command. Sizes run from 11px to 15px.
 
