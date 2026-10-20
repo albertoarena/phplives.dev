@@ -1,0 +1,341 @@
+---
+name: phplives.dev
+description: A manifest of real things people shipped with PHP in the last 6 months.
+colors:
+  prussian-ink: "#12285a"
+  signal-orange: "#ff5a1f"
+  pale-field: "#e6eaf2"
+  field-muted-ink: "#3a4870"
+  field-line: "rgba(18,40,90,.18)"
+  thermal-white: "#ffffff"
+  print-black: "#121212"
+  print-grey: "#4a4a46"
+  soft-rule: "#d9d9d2"
+  perforation: "#b9b9b2"
+  band-text: "#f4f7f2"
+  band-muted-ink: "#bccbe8"
+  night-field: "#0d1d42"
+  night-band: "#081330"
+  night-label: "#e4e4dc"
+  night-text: "#eef1f8"
+  night-line: "rgba(238,241,248,.16)"
+  night-print-grey: "#42423d"
+  night-soft-rule: "#c9c9c0"
+  night-perforation: "#a9a9a0"
+typography:
+  display:
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "clamp(56px, 7.2cqi, 96px)"
+    fontWeight: 850
+    lineHeight: 0.94
+    letterSpacing: "-0.02em"
+    fontVariation: "'wdth' 70"
+  headline:
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "clamp(48px, 5.6cqi, 80px)"
+    fontWeight: 850
+    lineHeight: 0.95
+    letterSpacing: "-0.02em"
+    fontVariation: "'wdth' 70"
+  title:
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "34px"
+    fontWeight: 850
+    lineHeight: 1
+    letterSpacing: "-0.015em"
+    fontVariation: "'wdth' 72"
+  section:
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "30px"
+    fontWeight: 800
+    letterSpacing: "-0.01em"
+    fontVariation: "'wdth' 75"
+  body:
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "17px"
+    fontWeight: 400
+    lineHeight: 1.5
+  label:
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "11px"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "0.09em"
+  route-code:
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "44px"
+    fontWeight: 900
+    lineHeight: 0.86
+    letterSpacing: "0.01em"
+    fontVariation: "'wdth' 62"
+  mono-date:
+    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontSize: "27px"
+    fontWeight: 600
+    letterSpacing: "-0.01em"
+    fontFeature: "'tnum'"
+  mono-data:
+    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontSize: "13px"
+    fontWeight: 600
+    fontFeature: "'tnum'"
+rounded:
+  sheet: "6px"
+  sticker: "5px"
+  strip: "4px"
+  route: "3px"
+  tag: "2px"
+spacing:
+  gutter: "40px"
+  gutter-narrow: "16px"
+  block: "16px 18px"
+  grid-gap: "32px"
+  grid-gap-narrow: "22px"
+  hero-gap: "64px"
+  band-gap: "72px"
+  section-end: "96px"
+components:
+  button-cta:
+    backgroundColor: "{colors.thermal-white}"
+    textColor: "{colors.print-black}"
+    rounded: "{rounded.sticker}"
+    padding: "0 20px"
+    height: "48px"
+  toggle-option:
+    textColor: "{colors.prussian-ink}"
+    rounded: "{rounded.strip}"
+    padding: "0 14px"
+    height: "36px"
+  toggle-option-pressed:
+    backgroundColor: "{colors.prussian-ink}"
+    textColor: "{colors.pale-field}"
+    rounded: "{rounded.strip}"
+    padding: "0 14px"
+    height: "36px"
+  shipping-label:
+    backgroundColor: "{colors.thermal-white}"
+    textColor: "{colors.print-black}"
+    rounded: "{rounded.sheet}"
+  label-block:
+    padding: "{spacing.block}"
+  route-code:
+    backgroundColor: "{colors.print-black}"
+    textColor: "{colors.thermal-white}"
+    typography: "{typography.route-code}"
+    rounded: "{rounded.route}"
+    padding: "8px 10px 7px"
+  newest-strip:
+    backgroundColor: "{colors.signal-orange}"
+    textColor: "{colors.print-black}"
+    padding: "9px 18px"
+  newest-tag:
+    backgroundColor: "{colors.signal-orange}"
+    textColor: "{colors.print-black}"
+    rounded: "{rounded.tag}"
+    padding: "3px 7px"
+  manifest-sheet:
+    backgroundColor: "{colors.thermal-white}"
+    textColor: "{colors.print-black}"
+    rounded: "{rounded.sheet}"
+  devnull-band:
+    backgroundColor: "{colors.prussian-ink}"
+    textColor: "{colors.band-text}"
+    padding: "88px 0"
+  command-strip:
+    backgroundColor: "{colors.thermal-white}"
+    textColor: "{colors.print-black}"
+    typography: "{typography.mono-data}"
+    rounded: "{rounded.sticker}"
+    padding: "6px 6px 6px 14px"
+  copy-button:
+    textColor: "{colors.print-black}"
+    rounded: "{rounded.strip}"
+    padding: "0 14px"
+    height: "36px"
+---
+
+# Design System: phplives.dev
+
+## Overview
+
+**Creative North Star: "The Shipping Manifest"**
+
+Every project on the site is a parcel that shipped. Its postmark is the proof of the date. The page is a depot: a blue field, a manifest slip, and rows of thermal shipping labels printed in black ink. The visitor reads the line, checks the slip, then scans the labels: who, what, when, and where to check.
+
+The world is printed, not drawn. Labels are white paper with heavy black print rules, a large inverse routing code per stack, a barcode and a ring postmark. Type is one condensed family, Archivo, with a monospace face for dates and tracking data. There are two colours: one Prussian blue ink and one signal orange. The orange marks only the newest parcel.
+
+The design keeps out of the way of the entries. There are no logos, no screenshots and no art. The system rejects the showcase grid of logo cards and the awesome-list link dump.
+
+**Key Characteristics:**
+- Paper on a blue field: all content sits on paper labels, sheets and strips.
+- Heavy print rules (3px black) split every label into its fields.
+- Condensed Archivo display with wide word spacing (.12em).
+- JetBrains Mono only for dates and tracking data.
+- One signal colour, for one parcel.
+- Light and dark themes, with the same Prussian ink in both.
+- A print-in and a stamp on load, and nothing else moves.
+
+## Colors
+
+One deep Prussian blue ink, white paper, near-black print and a single signal orange.
+
+### Primary
+- **Prussian Ink** (`prussian-ink`): the ink of the whole world. In the light theme it is the type on the field and the background of the /dev/null band. On every label it is the colour of the ring postmark and the cancellation waves, in both themes. It is also the fill of the pressed state in toggles and chips.
+
+### Secondary
+- **Signal Orange** (`signal-orange`): marks the newest parcel and nothing else. It fills the "Newest parcel" strip at the top of the first label. It colours that label's postmark (ring, lettering and date). It fills the NEWEST tag in the List view. Text on it is Print Black.
+
+### Neutral
+- **Pale Field** (`pale-field`): the light theme background. A pale blue-grey, so the white labels stand out from it.
+- **Field Muted Ink** (`field-muted-ink`): secondary text on the field, such as the lede and section notes.
+- **Field Line** (`field-line`): hairlines on the field (top bar, footer), toggle group borders, and hover fills.
+- **Thermal White** (`thermal-white`): the paper of labels, the manifest slip, the sheets, the dispatch strip, the command strip and the CTA button.
+- **Print Black** (`print-black`): the ink on paper. It draws the 3px print rules, the route code blocks and the barcode.
+- **Print Grey** (`print-grey`): captions and secondary text on paper (FROM, SHIPPED, date proof, tracking number).
+- **Soft Rule** (`soft-rule`): 1px row dividers inside sheets and the slip.
+- **Perforation** (`perforation`): dashed tear lines (the slip foot and the dispatch posts).
+- **Band Text** (`band-text`) and **Band Muted Ink** (`band-muted-ink`): text on the /dev/null band.
+
+### Dark theme
+The dark theme swaps the field and dims the paper. The ink and the signal stay the same.
+- **Night Field** (`night-field`): the dark background, a deep Prussian.
+- **Night Band** (`night-band`): the /dev/null band, a darker Prussian, so it still reads as a separate band.
+- **Night Label** (`night-label`): the paper, dimmed so it does not glare at night.
+- **Night Text** (`night-text`) and **Night Line** (`night-line`): type and hairlines on the night field. Muted text uses Band Muted Ink.
+- **Night Print Grey**, **Night Soft Rule** and **Night Perforation**: the paper greys, tuned for the dimmer paper.
+
+The theme follows the device by default. A Light / Dark / System toggle in the top bar sets `data-theme` on the root element and overrides it.
+
+### Named Rules
+**The Signal Rule.** Signal Orange marks only the newest parcel: its top strip, its postmark and the NEWEST tag in the List view. The cancellation waves on that label stay blue. The archive has no orange at all. No button, link, hover or focus state is ever orange.
+
+**The One Ink Rule.** The postmark and the waves use Prussian Ink on every label, in both themes. A second blue, or a coloured stack code, breaks the print.
+
+## Typography
+
+**Display Font:** Archivo (with system-ui, sans-serif), a variable font with width 62 to 125 and weight 100 to 900.
+**Body Font:** Archivo.
+**Label/Mono Font:** JetBrains Mono (with ui-monospace, monospace), weights 400 and 600, with tabular numbers.
+
+**Character:** One grotesque family, set condensed and heavy for anything that is a headline, and at normal width for reading. The monospace face is the printer's data: dates, counts, links on the TRACK line, tracking numbers and the terminal command.
+
+### Hierarchy
+- **Display** (`display`): the line `PHP delivers. PHP lives!` only. "PHP lives!" sits on a white sticker, turned -1.2deg. The line drops to 54px on narrow screens.
+- **Headline** (`headline`): page heads on the archive, Privacy and Credits pages. The /dev/null band heading uses the same shape at clamp(40px, 4.6cqi, 64px).
+- **Title** (`title`): the project name in the CONTENTS block of a label. Sheet and slip heads use the same width at 22px to 26px.
+- **Section** (`section`): section heads on the field, such as "Shipped since DD/MM/YYYY". They drop to 26px on narrow screens.
+- **Body** (`body`): reading text. The lede is 19px. Read-mode pages (Privacy) use 17px with line height 1.6 and a 65ch measure.
+- **Label** (`label`): uppercase field captions on paper (FROM, CONTENTS, SHIPPED, TRACK) and table heads.
+- **Route code** (`route-code`): the three-letter stack code (LRV, SYM, NTV, PHP) in its inverse block. Filter chips and table cells use the same width at 17px to 18px.
+- **Mono date** (`mono-date`): the shipped date on a label.
+- **Mono data** (`mono-data`): tracking numbers, link text on the TRACK line, counts, the slip values and the terminal command. Sizes run from 11px to 15px.
+
+### Named Rules
+**The Wide Words Rule.** Every condensed heading (display, headline, title, section) gets word spacing of .12em. Condensed Archivo runs words together without it.
+
+**The Printer's Data Rule.** JetBrains Mono is for dates and machine data only: dates, counts, tracking numbers, link text on TRACK and the command line. Names, sentences and buttons are Archivo.
+
+**The Date Rule.** Every date on screen is DD/MM/YYYY. The postmark splits it into DD/MM over YYYY.
+
+## Layout
+
+The page is one column of sections inside a 1320px wrap with a 40px side gutter. The root is a size container, so the layout responds to its own width (container queries), not to the viewport.
+
+- **Hero:** two columns (1.4fr and 1fr, 64px gap), aligned to the bottom. The line is on the left. The white manifest slip is on the right. Below 1100px it becomes one column and the slip caps at 560px.
+- **Labels grid:** three columns with a 32px gap. Two columns below 1100px. One column below 700px, with a 22px gap. The first row of labels starts inside the first screen.
+- **Section head:** the title and a note on the left, the tools (stack filter, then Labels / List) on the right. Below 700px they stack.
+- **/dev/null band:** full width, 88px top and bottom. Two columns (72px gap) when there are posts. With no posts it is one row: the heading on the left, the CTA and command strip on the right, with less padding (64px).
+- **Sheets:** the archive, the List view, Privacy and Credits are white sheets inside the wrap. The Privacy sheet caps at 65ch plus padding.
+- **Narrow screens:** below 700px the gutter drops to 16px and the "Commit it on /dev/null" nav link hides. Below 860px each table row becomes a small grid: date and stack code on top, then name, sentence, maker and link.
+- **Rhythm:** sections end with 96px of space (64px on narrow screens). Label blocks have 16px by 18px of padding.
+
+## Elevation & Depth
+
+Depth is paper lying on a surface. Every sheet of paper (label, slip, sheet, sticker, CTA, command strip) has one soft drop shadow tinted with Prussian blue. Nothing else casts a shadow. A label lifts 3px on hover, and its shadow grows. In the dark theme the shadows are black and deeper.
+
+### Shadow Vocabulary
+- **Paper rest** (`--shadow`): every sheet of paper at rest. A 1px contact line plus a long soft fall.
+- **Paper lifted** (`--shadow-hi`): a label on hover.
+
+### Named Rules
+**The Paper Only Rule.** Only paper casts a shadow. The field, the band, toggles and chips stay flat. Hard offset shadows are not part of this world.
+
+## Shapes
+
+Shapes are cut paper: small, tight corners and straight edges. Sheets and labels have a 6px radius. The sticker and the CTA have 5px. The dispatch strip and the small buttons have 4px. The route code has 3px and the NEWEST tag 2px. Nothing is a pill or a circle, except the postmark.
+
+The paper carries print marks, not borders:
+- **Print rule:** 3px solid Print Black. It splits label blocks and closes sheet heads and feet.
+- **Table rule:** 2px Print Black under table heads.
+- **Soft rule:** 1px Soft Rule between rows.
+- **Perforation:** dashed Perforation lines. The slip foot uses 2px dashes. Dispatch posts use 1px dashes.
+- **Torn edge:** the dispatch strip has a scalloped top edge, cut with a radial-gradient mask.
+
+### Named Rules
+**The Print Rule.** Blocks on paper are split by black print rules, never by gaps or cards inside cards. A label is one sheet with ruled fields.
+
+## Components
+
+### Buttons
+Tactile and plain, like a sticker on a box.
+- **Shape:** sticker corners (5px).
+- **CTA:** "Commit it on /dev/null ↗" on the /dev/null band. White paper with Print Black text, weight 800, 48px tall, with the paper shadow and an inline arrow icon. It rises 1px on hover.
+- **Copy:** in the command strip. A 2px Print Black outline on paper, weight 800, 36px tall. It shows "Copied" or "Not copied" for 2 seconds. It is hidden when the browser has no clipboard.
+- **Focus:** a 2px outline in the colour of the text around it, with a 2px to 3px offset.
+
+### Toggles and chips
+Segmented groups on the field: the theme toggle (Light, Dark, System), the view toggle (Labels, List) and the stack filter.
+- **Style:** a 1px Field Line border, 6px radius, 3px inner padding. Options are transparent, with weight 600 to 700. They are 32px tall in the theme toggle and 36px in the others.
+- **State:** the pressed option fills with the field's text colour and takes the field colour as text. Hover fills with Field Line.
+- **Stack chips:** "All" plus one chip per stack, up to 6, most common first. Each shows its route code in condensed weight 900 and a mono count. With more than 6 stacks a native select replaces the chips.
+- **Behaviour:** the state lives in the URL hash (`#stack=laravel&view=list`). The view is also kept in `localStorage`. Without JavaScript the tools stay hidden and every entry shows as a label.
+
+### Shipping label (signature)
+A 4x6 thermal label, one per entry. White paper, 6px radius, paper shadow. The label is its own size container. Its blocks, top to bottom:
+1. **Newest parcel strip** (newest only): Signal Orange, uppercase weight 800.
+2. **FROM:** one line per maker. The name links to their GitHub. A small mono "/dev/null ↗" link follows when they have a profile there. The route code block sits on the right.
+3. **CONTENTS:** the project name (title) and one plain sentence.
+4. **SHIPPED:** the mono date, the date proof link, the waves and the ring postmark. The postmark is 118px, turned -9deg, at 90% opacity, with a multiply blend. Its ring reads PHPLIVES.DEV over SHIPPED around the date. The waves fill only the gap between the date and the ring. They hide when the label is narrower than 378px.
+5. **Barcode, TRACK and tracking number:** a full-width barcode, then TRACK with the source link and an arrow, then the tracking number in letter-spaced mono.
+
+### Route code
+The stack code printed inverse: Print Black block, white condensed weight 900 code, the stack name in small type below it. The same block, smaller, marks the stack in table rows.
+
+### Manifest slip
+The white slip in the hero. A head with "Manifest" and today's date over a 3px print rule. Then rows of term and value: Parcels, Shipped since, Last shipped and Stacks. A perforated foot holds one note, and it hides on narrow screens.
+
+### Manifest sheet
+The table shared by the archive and the List view. A head and a foot closed by print rules. Columns: No., Shipped, Project, Contents, From, Stack, Track. Rows take a Field Line tint on hover. The first row of the List view carries the NEWEST tag.
+
+### /dev/null band
+A full-width Prussian band (Night Band in the dark theme). It holds the heading "Shipped something in PHP?", one line of text, the CTA and the command strip. The command strip is a white bar with the mono `curl` command and the Copy button. A note below it says what the command needs. The **Dispatch log** strip appears only when there are posts. It is a torn-edge paper strip with dated posts split by perforations.
+
+### Read-mode sheets
+Privacy and Credits use a page head on the field and one white sheet. Privacy is sections of body text at a 65ch measure. Credits is groups of items in three columns: the name, what the site uses it for, and its maker and licence. Inline code sits on a Soft Rule tint.
+
+### Navigation
+The top bar: the wordmark "phplives.dev" (condensed 75%, weight 800) on the left, then Manifest, Archive and "Commit it on /dev/null", then the theme toggle. The current page is underlined with a 2px line. Links on paper and on the field underline at 1px and thicken to 2px on hover.
+
+### Motion
+Labels print in once on load: each one reveals from top to bottom with a clip-path over .95s, 70ms after the one before. Then each postmark stamps down, scaling from 1.3 to 1 over .4s, 700ms after its label starts. Both are off under `prefers-reduced-motion`. The theme change fades the field over .3s.
+
+## Do's and Don'ts
+
+### Do:
+- **Do** put every piece of content on paper: a label, the slip, a sheet or a strip.
+- **Do** split label fields with 3px Print Black rules.
+- **Do** keep Signal Orange on the newest parcel only: strip, postmark and NEWEST tag.
+- **Do** print the postmark and the waves in Prussian Ink, in both themes.
+- **Do** set condensed headings in Archivo with .12em word spacing.
+- **Do** use JetBrains Mono for dates and machine data, and write dates as DD/MM/YYYY.
+- **Do** keep the page fully usable without JavaScript: all entries as labels, tools hidden.
+- **Do** turn off the print-in and the stamp under `prefers-reduced-motion`.
+
+### Don't:
+- **Don't** build a showcase grid of logo cards or an awesome-list link dump.
+- **Don't** use Signal Orange for buttons, links, hover, focus or any second highlight.
+- **Don't** add a second accent colour or colour-code the stacks.
+- **Don't** add shadows to anything that is not paper, or use hard offset shadows.
+- **Don't** round corners past 6px or use pill shapes.
+- **Don't** add motion beyond the print-in, the stamp, the label lift and the theme fade.
+- **Don't** show the cancellation waves on a label narrower than 378px.

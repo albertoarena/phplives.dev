@@ -1,0 +1,14 @@
+// Cloudflare Workers static assets.
+// It serves the site that bin/build writes into ./dist. The Deploy workflow builds it first.
+{
+  "name": "phplives",
+  "compatibility_date": "2026-10-16",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "phplives.dev", "custom_domain": true },
+    { "pattern": "www.phplives.dev", "custom_domain": true }
+  ]
+}

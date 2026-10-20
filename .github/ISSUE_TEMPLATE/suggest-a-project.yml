@@ -1,0 +1,50 @@
+name: Suggest a project
+description: Something shipped with PHP in the last 6 months.
+title: "Suggest: "
+labels: ["candidate"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. The editor checks each suggestion against the project's own source. [CONTRIBUTING.md](https://github.com/albertoarena/phplives.dev/blob/main/CONTRIBUTING.md) says what qualifies.
+  - type: input
+    id: name
+    attributes:
+      label: Project name
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Link to the project
+      description: Its repo, or its site for a closed product.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: proof
+    attributes:
+      label: Link that proves when it shipped
+      description: A release, a version tag or a launch post by the maker.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: makers
+    attributes:
+      label: Who made it
+      description: Names and GitHub usernames, if you know them.
+  - type: textarea
+    id: what
+    attributes:
+      label: What it does
+      description: One or two plain sentences.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: It shipped in the last 6 months.
+          required: true
+        - label: PHP is the main language on its server side.
+          required: true

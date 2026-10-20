@@ -1,0 +1,10 @@
+.impeccable/questions/
+.impeccable/config.local.json
+/.docs
+/vendor/
+/node_modules/
+.phpunit.cache/
+/dist/
+.wrangler/
+.impeccable/review/
+.claude/worktrees/

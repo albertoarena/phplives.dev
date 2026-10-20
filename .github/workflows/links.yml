@@ -1,0 +1,47 @@
+name: Links
+
+# On a pull request, checks the links in the entries it adds or changes. A pull
+# request that changes no entry file runs this job only when it changes the
+# checker. The job then checks every entry.
+#
+# Once a week, it checks every entry, to find links that broke after merging.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'entries/**'
+      - 'bin/check-links'
+      - 'src/Http.php'
+      - 'src/LinkCheck.php'
+      - '.github/workflows/links.yml'
+
+jobs:
+  links:
+    name: Entry links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Check the links
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          files=''
+          if [ "$EVENT" = 'pull_request' ]; then
+            files=$(git diff --name-only --diff-filter=AMR "origin/${BASE_REF}...HEAD" -- 'entries/*.php')
+          fi
+          bin/check-links $files

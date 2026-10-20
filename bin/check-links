@@ -1,0 +1,72 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Checks that every link in some entry files still works.
+ *
+ *   bin/check-links [--entries=entries] [--today=YYYY-MM-DD] [entries/file.php ...]
+ *
+ * With no files, it checks every entry. It fails when a link is broken.
+ */
+
+declare(strict_types=1);
+
+use PhpLives\Entries;
+use PhpLives\InvalidEntries;
+use PhpLives\LinkCheck;
+
+require __DIR__.'/../vendor/autoload.php';
+
+$root = dirname(__DIR__);
+$options = getopt('', ['entries:', 'today:'], $rest) + [
+    'entries' => "{$root}/entries",
+    'today' => 'today',
+];
+$files = array_map(basename(...), array_slice($argv, $rest));
+
+$today = new DateTimeImmutable($options['today'], new DateTimeZone('UTC'));
+
+try {
+    $entries = Entries::load($options['entries'], $today);
+} catch (InvalidEntries $e) {
+    fwrite(STDERR, $e->getMessage()."\n");
+    exit(1);
+}
+
+$byFile = [];
+
+foreach ($entries->all() as $entry) {
+    $byFile[$entry->shipped->format('Y-m-d')."-{$entry->slug}.php"] = $entry;
+}
+
+if ($missing = array_diff($files, array_keys($byFile))) {
+    foreach ($missing as $file) {
+        fwrite(STDERR, "Not an entry file: {$file}\n");
+    }
+
+    exit(1);
+}
+
+$check = new LinkCheck();
+$checked = 0;
+$broken = 0;
+
+foreach ($files ? array_intersect_key($byFile, array_flip($files)) : $byFile as $file => $entry) {
+    echo "{$file}\n";
+
+    foreach (LinkCheck::links($entry) as $url) {
+        $status = $check->status($url);
+        $checked++;
+
+        if (LinkCheck::ok($status)) {
+            echo "  ok ({$status}) {$url}\n";
+        } else {
+            $broken++;
+            printf("  broken (%s) %s\n", $status === 0 ? 'no answer' : $status, $url);
+        }
+    }
+}
+
+printf("%d %s checked, %d broken.\n", $checked, $checked === 1 ? 'link' : 'links', $broken);
+
+exit($broken > 0 ? 1 : 0);

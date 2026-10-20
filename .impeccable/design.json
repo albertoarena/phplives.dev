@@ -1,0 +1,537 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-17T00:00:00Z",
+  "title": "Design System: phplives.dev",
+  "extensions": {
+    "colorMeta": {
+      "prussian-ink": {
+        "role": "primary",
+        "displayName": "Prussian Ink",
+        "canonical": "oklch(29.2% 0.094 264)",
+        "tonalRamp": [
+          "#000232",
+          "#0c2152",
+          "#273f74",
+          "#456097",
+          "#6581bb",
+          "#87a5e1",
+          "#aac9ff",
+          "#ceefff"
+        ]
+      },
+      "signal-orange": {
+        "role": "secondary",
+        "displayName": "Signal Orange",
+        "canonical": "oklch(68.2% 0.211 38)",
+        "tonalRamp": [
+          "#2d0000",
+          "#570000",
+          "#830000",
+          "#b32000",
+          "#db4b17",
+          "#fa7a53",
+          "#ffa684",
+          "#ffd2b4"
+        ]
+      },
+      "pale-field": {
+        "role": "neutral",
+        "displayName": "Pale Field",
+        "canonical": "oklch(93.6% 0.012 265)",
+        "tonalRamp": [
+          "#090b10",
+          "#22252b",
+          "#3f4248",
+          "#5e6168",
+          "#7f828a",
+          "#a1a5ad",
+          "#c5c9d1",
+          "#ebeff7"
+        ]
+      },
+      "field-muted-ink": {
+        "role": "neutral",
+        "displayName": "Field Muted Ink",
+        "canonical": "oklch(40.8% 0.070 269)",
+        "tonalRamp": [
+          "#030628",
+          "#172247",
+          "#324067",
+          "#506089",
+          "#7181ad",
+          "#93a4d2",
+          "#b6c8f8",
+          "#dbeeff"
+        ]
+      },
+      "thermal-white": {
+        "role": "neutral",
+        "displayName": "Thermal White",
+        "canonical": "oklch(100.0% 0.000 90)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "print-black": {
+        "role": "neutral",
+        "displayName": "Print Black",
+        "canonical": "oklch(18.2% 0.000 90)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "print-grey": {
+        "role": "neutral",
+        "displayName": "Print Grey",
+        "canonical": "oklch(40.8% 0.007 107)",
+        "tonalRamp": [
+          "#0b0b08",
+          "#252522",
+          "#42423e",
+          "#61615d",
+          "#83837e",
+          "#a5a5a1",
+          "#c9c9c5",
+          "#efefea"
+        ]
+      },
+      "soft-rule": {
+        "role": "neutral",
+        "displayName": "Soft Rule",
+        "canonical": "oklch(88.3% 0.009 107)",
+        "tonalRamp": [
+          "#0c0b07",
+          "#252520",
+          "#42423d",
+          "#62625c",
+          "#83837c",
+          "#a5a59f",
+          "#cacac3",
+          "#efefe8"
+        ]
+      },
+      "perforation": {
+        "role": "neutral",
+        "displayName": "Perforation",
+        "canonical": "oklch(78.4% 0.010 107)",
+        "tonalRamp": [
+          "#0c0b07",
+          "#252520",
+          "#42423d",
+          "#62625b",
+          "#83837c",
+          "#a5a59f",
+          "#cacac2",
+          "#efefe8"
+        ]
+      },
+      "band-text": {
+        "role": "neutral",
+        "displayName": "Band Text",
+        "canonical": "oklch(97.2% 0.007 132)",
+        "tonalRamp": [
+          "#0a0c09",
+          "#242622",
+          "#40433f",
+          "#60625e",
+          "#81837f",
+          "#a3a6a1",
+          "#c7cac5",
+          "#edf0eb"
+        ]
+      },
+      "band-muted-ink": {
+        "role": "neutral",
+        "displayName": "Band Muted Ink",
+        "canonical": "oklch(84.0% 0.044 264)",
+        "tonalRamp": [
+          "#030a1d",
+          "#1a253a",
+          "#36425a",
+          "#54617b",
+          "#75839d",
+          "#97a5c1",
+          "#bbcae7",
+          "#e0efff"
+        ]
+      },
+      "night-field": {
+        "role": "neutral",
+        "displayName": "Night Field",
+        "canonical": "oklch(24.2% 0.073 264)",
+        "tonalRamp": [
+          "#010629",
+          "#122348",
+          "#2e4169",
+          "#4c618b",
+          "#6c82af",
+          "#8ea5d4",
+          "#b1c9fa",
+          "#d6efff"
+        ]
+      },
+      "night-band": {
+        "role": "neutral",
+        "displayName": "Night Band",
+        "canonical": "oklch(19.7% 0.060 265)",
+        "tonalRamp": [
+          "#020824",
+          "#172442",
+          "#324162",
+          "#516184",
+          "#7182a7",
+          "#93a5cc",
+          "#b6c9f1",
+          "#dbefff"
+        ]
+      },
+      "night-label": {
+        "role": "neutral",
+        "displayName": "Night Label",
+        "canonical": "oklch(91.7% 0.011 107)",
+        "tonalRamp": [
+          "#0c0b07",
+          "#262520",
+          "#42423c",
+          "#62625b",
+          "#83837c",
+          "#a6a69e",
+          "#cacac2",
+          "#efefe7"
+        ]
+      },
+      "night-text": {
+        "role": "neutral",
+        "displayName": "Night Text",
+        "canonical": "oklch(95.8% 0.010 267)",
+        "tonalRamp": [
+          "#090b0f",
+          "#23252a",
+          "#404247",
+          "#5f6167",
+          "#808288",
+          "#a2a5ab",
+          "#c6c9d0",
+          "#ebeef5"
+        ]
+      },
+      "night-print-grey": {
+        "role": "neutral",
+        "displayName": "Night Print Grey",
+        "canonical": "oklch(37.7% 0.008 107)",
+        "tonalRamp": [
+          "#0b0b08",
+          "#252521",
+          "#42423d",
+          "#62625c",
+          "#83837d",
+          "#a5a5a0",
+          "#c9cac3",
+          "#efefe9"
+        ]
+      },
+      "night-soft-rule": {
+        "role": "neutral",
+        "displayName": "Night Soft Rule",
+        "canonical": "oklch(83.3% 0.012 107)",
+        "tonalRamp": [
+          "#0c0c06",
+          "#26261f",
+          "#43433b",
+          "#62625a",
+          "#83837b",
+          "#a6a69d",
+          "#cacac1",
+          "#efefe6"
+        ]
+      },
+      "night-perforation": {
+        "role": "neutral",
+        "displayName": "Night Perforation",
+        "canonical": "oklch(73.2% 0.013 107)",
+        "tonalRamp": [
+          "#0c0c06",
+          "#26261e",
+          "#43433b",
+          "#62625a",
+          "#83837a",
+          "#a6a69d",
+          "#cacac0",
+          "#efefe6"
+        ]
+      },
+      "field-line": {
+        "role": "neutral",
+        "displayName": "Field Line",
+        "canonical": "rgba(18,40,90,.18)"
+      },
+      "night-line": {
+        "role": "neutral",
+        "displayName": "Night Line",
+        "canonical": "rgba(238,241,248,.16)"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The line PHP delivers. PHP lives! only. Word spacing .12em."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page heads on the archive, Privacy and Credits, and the /dev/null band heading. Word spacing .12em."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Project name on a label. Word spacing .12em."
+      },
+      "section": {
+        "displayName": "Section",
+        "purpose": "Section heads on the field. Word spacing .12em."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Reading text. 65ch measure on read-mode pages."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase field captions on paper (FROM, CONTENTS, SHIPPED, TRACK) and table heads."
+      },
+      "route-code": {
+        "displayName": "Route code",
+        "purpose": "Inverse stack code on a label (LRV, SYM, NTV, PHP)."
+      },
+      "mono-date": {
+        "displayName": "Mono date",
+        "purpose": "The shipped date on a label, DD/MM/YYYY."
+      },
+      "mono-data": {
+        "displayName": "Mono data",
+        "purpose": "Tracking numbers, TRACK link text, counts, slip values and the terminal command."
+      }
+    },
+    "shadows": [
+      {
+        "name": "paper-rest",
+        "value": "0 1px 0 rgba(18,40,90,.14),0 16px 30px -16px rgba(18,40,90,.38)",
+        "purpose": "Every sheet of paper at rest, light theme."
+      },
+      {
+        "name": "paper-lifted",
+        "value": "0 1px 0 rgba(18,40,90,.14),0 26px 40px -18px rgba(18,40,90,.45)",
+        "purpose": "A label on hover, light theme."
+      },
+      {
+        "name": "paper-rest-dark",
+        "value": "0 1px 0 rgba(0,0,0,.35),0 18px 34px -14px rgba(0,0,0,.7)",
+        "purpose": "Every sheet of paper at rest, dark theme."
+      },
+      {
+        "name": "paper-lifted-dark",
+        "value": "0 1px 0 rgba(0,0,0,.35),0 28px 44px -16px rgba(0,0,0,.8)",
+        "purpose": "A label on hover, dark theme."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-print",
+        "value": "cubic-bezier(.16,1,.3,1)",
+        "purpose": "The one easing: print-in, stamp and label lift."
+      },
+      {
+        "name": "print-in",
+        "value": ".95s, clip-path inset(0 0 100% 0) to inset(0 0 0 0), 70ms stagger per label",
+        "purpose": "Labels print in once on load. Off under prefers-reduced-motion."
+      },
+      {
+        "name": "stamp",
+        "value": ".4s, scale 1.3 to 1 at rotate(-9deg), opacity 0 to .9, 700ms after its label",
+        "purpose": "Each postmark stamps after its label prints. Off under prefers-reduced-motion."
+      },
+      {
+        "name": "label-lift",
+        "value": ".25s, translateY(-3px)",
+        "purpose": "A label rises on hover."
+      },
+      {
+        "name": "theme-fade",
+        "value": ".3s ease, background-color and color",
+        "purpose": "The field fades when the theme changes."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "page-wide",
+        "value": "1100px",
+        "purpose": "Container query on the page: three label columns above, two below; hero becomes one column."
+      },
+      {
+        "name": "page-table",
+        "value": "860px",
+        "purpose": "Container query on the page: table rows become small grids."
+      },
+      {
+        "name": "page-narrow",
+        "value": "700px",
+        "purpose": "Container query on the page: one label column, 16px gutter."
+      },
+      {
+        "name": "label-waves",
+        "value": "378px",
+        "purpose": "Container query on the label: waves hide below this width."
+      }
+    ],
+    "typeNotes": {
+      "wordSpacing": ".12em on every condensed heading",
+      "fonts": "Archivo variable (wdth 62..125, wght 100..900) and JetBrains Mono 400/600, from Google Fonts"
+    }
+  },
+  "components": [
+    {
+      "name": "CTA Button",
+      "kind": "button",
+      "refersTo": "button-cta",
+      "description": "The one call to action, on the /dev/null band.",
+      "html": "<div class=\"ds-band\"><a class=\"ds-btn-cta\" href=\"#\">Commit it on /dev/null <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 17 17 7\"/><path d=\"M9 7h8v8\"/></svg></a></div>",
+      "css": ".ds-band{background:var(--band, #12285a);padding:32px} .ds-btn-cta{font-family:'Archivo',system-ui,sans-serif;display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 20px;background:var(--label, #ffffff);color:var(--ink, #121212);font-weight:800;font-size:16px;border-radius:5px;text-decoration:none;box-shadow:var(--shadow, 0 1px 0 rgba(18,40,90,.14),0 16px 30px -16px rgba(18,40,90,.38));transition:transform .2s} .ds-btn-cta:hover{transform:translateY(-1px)} .ds-btn-cta:focus-visible{outline:2px solid var(--on-band, #f4f7f2);outline-offset:3px}"
+    },
+    {
+      "name": "View Toggle",
+      "kind": "nav",
+      "refersTo": "toggle-option-pressed",
+      "description": "Segmented toggle on the field. Same shape for the theme toggle.",
+      "html": "<div class=\"ds-field\"><div class=\"ds-toggle\" role=\"group\" aria-label=\"View\"><button type=\"button\" aria-pressed=\"true\">Labels</button><button type=\"button\" aria-pressed=\"false\">List</button></div></div>",
+      "css": ".ds-field{background:var(--field, #e6eaf2);padding:24px} .ds-toggle{font-family:'Archivo',system-ui,sans-serif;display:inline-flex;border:1px solid var(--line, rgba(18,40,90,.18));border-radius:6px;padding:3px;gap:2px} .ds-toggle button{font:inherit;font-size:14px;font-weight:700;color:var(--on-field, #12285a);background:transparent;border:0;border-radius:4px;padding:0 14px;min-height:36px;cursor:pointer} .ds-toggle button:hover{background:var(--line, rgba(18,40,90,.18))} .ds-toggle button[aria-pressed=\"true\"]{background:var(--on-field, #12285a);color:var(--field, #e6eaf2)} .ds-toggle button:focus-visible{outline:2px solid var(--on-field, #12285a);outline-offset:2px}"
+    },
+    {
+      "name": "Stack Filter Chips",
+      "kind": "chip",
+      "refersTo": "toggle-option",
+      "description": "Up to 6 stacks, most common first, each with its route code and a mono count.",
+      "html": "<div class=\"ds-field\"><div class=\"ds-filter\" role=\"group\" aria-label=\"Filter by stack\"><span class=\"ds-filter-cap\">Stack</span><button type=\"button\" aria-pressed=\"true\">All <span class=\"ds-n\">12</span></button><button type=\"button\" aria-pressed=\"false\"><b>LRV</b> <span class=\"ds-n\">7</span></button><button type=\"button\" aria-pressed=\"false\"><b>SYM</b> <span class=\"ds-n\">2</span></button></div></div>",
+      "css": ".ds-field{background:var(--field, #e6eaf2);padding:24px} .ds-filter{font-family:'Archivo',system-ui,sans-serif;display:inline-flex;align-items:center;border:1px solid var(--line, rgba(18,40,90,.18));border-radius:6px;padding:3px;gap:2px} .ds-filter-cap{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--on-field-2, #3a4870);padding:0 8px 0 6px} .ds-filter button{font:inherit;font-size:14px;font-weight:700;color:var(--on-field, #12285a);background:transparent;border:0;border-radius:4px;padding:0 11px;min-height:36px;cursor:pointer;display:inline-flex;align-items:center;gap:6px} .ds-filter b{font-weight:900;font-stretch:62%;font-size:17px;letter-spacing:.02em} .ds-n{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;opacity:.75} .ds-filter button:hover{background:var(--line, rgba(18,40,90,.18))} .ds-filter button[aria-pressed=\"true\"]{background:var(--on-field, #12285a);color:var(--field, #e6eaf2)} .ds-filter button:focus-visible{outline:2px solid var(--on-field, #12285a);outline-offset:2px}"
+    },
+    {
+      "name": "Shipping Label",
+      "kind": "card",
+      "refersTo": "shipping-label",
+      "description": "The signature: one thermal label per entry, split by 3px print rules. Shown as the newest parcel.",
+      "html": "<div class=\"ds-field\"><article class=\"ds-lab\"><div class=\"ds-new\">Newest parcel</div><div class=\"ds-blk ds-from\"><div><span class=\"ds-cap\">From</span><a class=\"ds-who\" href=\"#\">Maker Name</a> <a class=\"ds-dn\" href=\"#\">/dev/null &#8599;</a></div><div class=\"ds-route\"><b>LRV</b><span>Laravel</span></div></div><div class=\"ds-blk\"><span class=\"ds-cap\">Contents</span><h3>Project name</h3><p>One plain sentence on what it does.</p></div><div class=\"ds-blk ds-ship\"><span class=\"ds-cap\">Shipped</span><p class=\"ds-date\">14/10/2026</p><p class=\"ds-proof\">Date from: <a href=\"#\">release notes</a></p><svg class=\"ds-pm\" viewBox=\"0 0 120 120\" aria-hidden=\"true\"><circle cx=\"60\" cy=\"60\" r=\"56\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\"/><circle cx=\"60\" cy=\"60\" r=\"34\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"60\" y=\"58\" fill=\"currentColor\" font-family=\"JetBrains Mono, monospace\" font-size=\"12\" font-weight=\"600\" text-anchor=\"middle\">14/10</text><text x=\"60\" y=\"73\" fill=\"currentColor\" font-family=\"JetBrains Mono, monospace\" font-size=\"12\" font-weight=\"600\" text-anchor=\"middle\">2026</text></svg></div><div class=\"ds-blk\"><span class=\"ds-cap\">Track</span><a class=\"ds-mono\" href=\"#\">github.com/owner/repo</a><p class=\"ds-tid\">2026101412</p></div></article></div>",
+      "css": ".ds-field{background:var(--field, #e6eaf2);padding:24px} .ds-lab{font-family:'Archivo',system-ui,sans-serif;max-width:380px;background:var(--label, #ffffff);color:var(--ink, #121212);border-radius:6px;overflow:hidden;box-shadow:var(--shadow, 0 1px 0 rgba(18,40,90,.14),0 16px 30px -16px rgba(18,40,90,.38));transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s cubic-bezier(.16,1,.3,1)} .ds-lab:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi, 0 1px 0 rgba(18,40,90,.14),0 26px 40px -18px rgba(18,40,90,.45))} .ds-lab a{color:inherit;text-underline-offset:.22em} .ds-lab a:focus-visible{outline:2px solid var(--ink, #121212);outline-offset:3px} .ds-new{background:var(--signal, #ff5a1f);font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:9px 18px} .ds-blk{padding:16px 18px;border-bottom:3px solid var(--ink, #121212)} .ds-blk:last-child{border-bottom:0} .ds-from{display:grid;grid-template-columns:1fr auto;gap:14px} .ds-cap{display:block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2, #4a4a46);margin:0 0 6px} .ds-who{font-size:17px;font-weight:700;text-decoration:none} .ds-dn{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;color:var(--ink-2, #4a4a46)} .ds-route{background:var(--ink, #121212);color:var(--label, #ffffff);border-radius:3px;padding:8px 10px 7px;text-align:center;min-width:76px} .ds-route b{display:block;font-size:44px;line-height:.86;font-weight:900;font-stretch:62%} .ds-route span{display:block;margin-top:5px;font-size:11px;font-weight:600} .ds-lab h3{margin:0;font-size:34px;line-height:1;font-weight:850;font-stretch:72%;letter-spacing:-.015em;word-spacing:.12em} .ds-lab p{margin:10px 0 0;font-size:16px;line-height:1.45} .ds-ship{position:relative;min-height:112px} .ds-date{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:27px;font-weight:600;margin:0 !important} .ds-proof{font-size:13px !important;color:var(--ink-2, #4a4a46);margin:4px 0 0 !important} .ds-pm{position:absolute;right:10px;top:50%;width:118px;height:118px;margin-top:-59px;transform:rotate(-9deg);opacity:.9;mix-blend-mode:multiply;color:var(--signal, #ff5a1f)} .ds-mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:13px;font-weight:600} .ds-tid{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:11px !important;color:var(--ink-2, #4a4a46);letter-spacing:.12em;margin:6px 0 0 !important}"
+    },
+    {
+      "name": "Route Code",
+      "kind": "custom",
+      "refersTo": "route-code",
+      "description": "The stack code printed inverse, on a label and in table rows.",
+      "html": "<div class=\"ds-route-demo\"><div class=\"ds-route\"><b>SYM</b><span>Symfony</span></div></div>",
+      "css": ".ds-route-demo{background:var(--label, #ffffff);padding:24px;display:inline-block} .ds-route{font-family:'Archivo',system-ui,sans-serif;background:var(--ink, #121212);color:var(--label, #ffffff);border-radius:3px;padding:8px 10px 7px;text-align:center;min-width:76px} .ds-route b{display:block;font-size:44px;line-height:.86;font-weight:900;font-stretch:62%;letter-spacing:.01em} .ds-route span{display:block;margin-top:5px;font-size:11px;font-weight:600;letter-spacing:.04em}"
+    },
+    {
+      "name": "Manifest Slip",
+      "kind": "card",
+      "refersTo": "manifest-sheet",
+      "description": "The white slip in the hero: count and dates under a print rule, with a perforated foot.",
+      "html": "<div class=\"ds-field\"><aside class=\"ds-slip\"><div class=\"ds-slip-head\"><h2>Manifest</h2><span class=\"ds-mono\">17/10/2026</span></div><dl><div><dt>Parcels</dt><dd class=\"ds-mono\">12</dd></div><div><dt>Shipped since</dt><dd class=\"ds-mono\">17/04/2026</dd></div></dl><p class=\"ds-slip-foot\">Newest first. Each date comes from the project's own source.</p></aside></div>",
+      "css": ".ds-field{background:var(--field, #e6eaf2);padding:24px} .ds-slip{font-family:'Archivo',system-ui,sans-serif;max-width:420px;background:var(--label, #ffffff);color:var(--ink, #121212);border-radius:6px;box-shadow:var(--shadow, 0 1px 0 rgba(18,40,90,.14),0 16px 30px -16px rgba(18,40,90,.38));overflow:hidden} .ds-slip-head{display:flex;justify-content:space-between;align-items:baseline;padding:16px 22px;border-bottom:3px solid var(--ink, #121212)} .ds-slip-head h2{margin:0;font-size:24px;font-weight:850;font-stretch:72%;word-spacing:.12em} .ds-slip dl{margin:0;padding:6px 22px 4px} .ds-slip dl div{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule-soft, #d9d9d2)} .ds-slip dl div:last-child{border-bottom:0} .ds-slip dt{font-size:13px;font-weight:600;color:var(--ink-2, #4a4a46)} .ds-slip dd{margin:0;font-size:15px;font-weight:600} .ds-mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;} .ds-slip-foot{margin:0;padding:12px 22px 16px;border-top:2px dashed var(--perf, #b9b9b2);font-size:13px;color:var(--ink-2, #4a4a46)}"
+    },
+    {
+      "name": "Command Strip",
+      "kind": "input",
+      "refersTo": "command-strip",
+      "description": "The terminal command on the /dev/null band, with a Copy button.",
+      "html": "<div class=\"ds-band\"><div class=\"ds-cli\"><code><span aria-hidden=\"true\">$ </span>curl -fsSL https://dev-null.sh/commit | bash</code><button type=\"button\">Copy</button></div></div>",
+      "css": ".ds-band{background:var(--band, #12285a);padding:32px} .ds-cli{font-family:'Archivo',system-ui,sans-serif;display:flex;align-items:center;gap:12px;background:var(--label, #ffffff);color:var(--ink, #121212);border-radius:5px;padding:6px 6px 6px 14px;box-shadow:var(--shadow, 0 1px 0 rgba(18,40,90,.14),0 16px 30px -16px rgba(18,40,90,.38))} .ds-cli code{flex:1 1 auto;min-width:0;overflow-x:auto;white-space:nowrap;font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;padding:6px 0} .ds-cli code span{color:var(--ink-2, #4a4a46)} .ds-cli button{flex:none;font:inherit;font-size:13px;font-weight:800;min-height:36px;padding:0 14px;border:2px solid var(--ink, #121212);border-radius:4px;background:transparent;color:var(--ink, #121212);cursor:pointer} .ds-cli button:hover{background:var(--rule-soft, #d9d9d2)} .ds-cli button:focus-visible{outline:2px solid var(--ink, #121212);outline-offset:2px}"
+    },
+    {
+      "name": "Newest Tag",
+      "kind": "chip",
+      "refersTo": "newest-tag",
+      "description": "Marks the first row in the List view. The only orange outside the newest label.",
+      "html": "<div class=\"ds-row\"><span class=\"ds-name\">Project name</span><span class=\"ds-new-tag\">Newest</span></div>",
+      "css": ".ds-row{font-family:'Archivo',system-ui,sans-serif;background:var(--label, #ffffff);color:var(--ink, #121212);padding:14px} .ds-name{font-weight:800;font-stretch:80%;font-size:17px} .ds-new-tag{display:inline-block;margin-left:8px;vertical-align:2px;background:var(--signal, #ff5a1f);color:var(--ink, #121212);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Shipping Manifest",
+    "overview": "Every project on the site is a parcel that shipped. Its postmark is the proof of the date. The page is a depot: a blue field, a manifest slip, and rows of thermal shipping labels printed in black ink. The visitor reads the line, checks the slip, then scans the labels: who, what, when, and where to check.\n\nThe world is printed, not drawn. Labels are white paper with heavy black print rules, a large inverse routing code per stack, a barcode and a ring postmark. Type is one condensed family, Archivo, with a monospace face for dates and tracking data. There are two colours: one Prussian blue ink and one signal orange. The orange marks only the newest parcel.\n\nThe design keeps out of the way of the entries. There are no logos, no screenshots and no art. The system rejects the showcase grid of logo cards and the awesome-list link dump.",
+    "keyCharacteristics": [
+      "Paper on a blue field: all content sits on paper labels, sheets and strips.",
+      "Heavy print rules (3px black) split every label into its fields.",
+      "Condensed Archivo display with wide word spacing (.12em).",
+      "JetBrains Mono only for dates and tracking data.",
+      "One signal colour, for one parcel.",
+      "Light and dark themes, with the same Prussian ink in both.",
+      "A print-in and a stamp on load, and nothing else moves."
+    ],
+    "rules": [
+      {
+        "name": "The Signal Rule",
+        "body": "Signal Orange marks only the newest parcel: its top strip, its postmark and the NEWEST tag in the List view. The cancellation waves on that label stay blue. The archive has no orange at all. No button, link, hover or focus state is ever orange.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Ink Rule",
+        "body": "The postmark and the waves use Prussian Ink on every label, in both themes. A second blue, or a coloured stack code, breaks the print.",
+        "section": "colors"
+      },
+      {
+        "name": "The Wide Words Rule",
+        "body": "Every condensed heading (display, headline, title, section) gets word spacing of .12em. Condensed Archivo runs words together without it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Printer's Data Rule",
+        "body": "JetBrains Mono is for dates and machine data only: dates, counts, tracking numbers, link text on TRACK and the command line. Names, sentences and buttons are Archivo.",
+        "section": "typography"
+      },
+      {
+        "name": "The Date Rule",
+        "body": "Every date on screen is DD/MM/YYYY. The postmark splits it into DD/MM over YYYY.",
+        "section": "typography"
+      },
+      {
+        "name": "The Paper Only Rule",
+        "body": "Only paper casts a shadow. The field, the band, toggles and chips stay flat. Hard offset shadows are not part of this world.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Print Rule",
+        "body": "Blocks on paper are split by black print rules, never by gaps or cards inside cards. A label is one sheet with ruled fields.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** put every piece of content on paper: a label, the slip, a sheet or a strip.",
+      "**Do** split label fields with 3px Print Black rules.",
+      "**Do** keep Signal Orange on the newest parcel only: strip, postmark and NEWEST tag.",
+      "**Do** print the postmark and the waves in Prussian Ink, in both themes.",
+      "**Do** set condensed headings in Archivo with .12em word spacing.",
+      "**Do** use JetBrains Mono for dates and machine data, and write dates as DD/MM/YYYY.",
+      "**Do** keep the page fully usable without JavaScript: all entries as labels, tools hidden.",
+      "**Do** turn off the print-in and the stamp under `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "**Don't** build a showcase grid of logo cards or an awesome-list link dump.",
+      "**Don't** use Signal Orange for buttons, links, hover, focus or any second highlight.",
+      "**Don't** add a second accent colour or colour-code the stacks.",
+      "**Don't** add shadows to anything that is not paper, or use hard offset shadows.",
+      "**Don't** round corners past 6px or use pill shapes.",
+      "**Don't** add motion beyond the print-in, the stamp, the label lift and the theme fade.",
+      "**Don't** show the cancellation waves on a label narrower than 378px."
+    ]
+  }
+}

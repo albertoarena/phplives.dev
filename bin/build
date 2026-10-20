@@ -1,0 +1,66 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Builds the static site.
+ *
+ *   bin/build [--entries=entries] [--out=dist] [--today=YYYY-MM-DD] [--devnull=https://dev-null.sh]
+ *
+ * It looks up makers and posts on /dev/null. When /dev/null does not answer, the
+ * site still builds. It then has no /dev/null links or posts.
+ */
+
+declare(strict_types=1);
+
+use PhpLives\DevNull;
+use PhpLives\Entries;
+use PhpLives\InvalidEntries;
+use PhpLives\Site;
+
+require __DIR__.'/../vendor/autoload.php';
+
+$root = dirname(__DIR__);
+$options = getopt('', ['entries:', 'out:', 'today:', 'devnull:']) + [
+    'entries' => "{$root}/entries",
+    'out' => "{$root}/dist",
+    'today' => 'today',
+    'devnull' => DevNull::URL,
+];
+
+$today = new DateTimeImmutable($options['today'], new DateTimeZone('UTC'));
+
+try {
+    $entries = Entries::load($options['entries'], $today);
+} catch (InvalidEntries $e) {
+    fwrite(STDERR, $e->getMessage()."\n");
+    exit(1);
+}
+
+$devnull = new DevNull($options['devnull']);
+$makers = [];
+
+foreach ($entries->all() as $entry) {
+    foreach ($entry->makers as $maker) {
+        if ($maker->github !== null) {
+            $makers[strtolower($maker->github)] ??= $maker->github;
+        }
+    }
+}
+
+$profiles = $devnull->profiles(array_values($makers));
+$posts = $profiles === null ? null : $devnull->posts(DevNull::ACCOUNT);
+
+$site = new Site($entries, $today, $profiles ?? [], $posts ?? []);
+$site->write($options['out']);
+
+$count = count($entries->all());
+printf("Built %d pages from %d %s into %s\n", count($site->pages()), $count, $count === 1 ? 'entry' : 'entries', $options['out']);
+
+if ($profiles === null || $posts === null) {
+    echo "/dev/null did not answer. The site was built without /dev/null links and posts.\n";
+} else {
+    printf(
+        "/dev/null: %d of %d makers have a profile. %d %s to phplives.dev.\n",
+        count($profiles), count($makers), count($posts), count($posts) === 1 ? 'post links' : 'posts link',
+    );
+}
