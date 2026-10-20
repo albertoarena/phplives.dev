@@ -3,7 +3,8 @@
  * @var callable $e
  * @var \PhpLives\Site $site
  * @var list<\PhpLives\Entry> $entries
- * @var list<\PhpLives\Entry> $featured The entries on full labels, the newest parcel first.
+ * @var list<\PhpLives\Entry> $featured The entries on full labels, the one added last first.
+ * @var string|null $newestSlug The entry that shipped last: the newest parcel, on a label or a stub.
  * @var string $latestTitle
  * @var string $latestNote
  * @var list<\PhpLives\Bundle> $bundles Every other entry, by week and by month.
@@ -98,7 +99,7 @@ use PhpLives\Format;
       <section class="sheet list-sheet" data-view="list" aria-label="Manifest list" hidden>
 <?php
 $groups = [new Bundle('this-week', 'latest', $latestTitle, $featured), ...$bundles];
-$newest = $featured[0]->slug;
+$newest = $newestSlug;
 $groupPrefix = 'list-';
 require __DIR__.'/table.php';
 ?>

@@ -513,7 +513,7 @@
       "name": "Newest Tag",
       "kind": "chip",
       "refersTo": "newest-tag",
-      "description": "Marks the first row in the List view. The only orange outside the newest label.",
+      "description": "Marks the newest parcel (the entry that shipped last) in the List view, and on its stub when it is not on a full label.",
       "html": "<div class=\"ds-row\"><span class=\"ds-name\">Project name</span><span class=\"ds-new-tag\">Newest</span></div>",
       "css": ".ds-row{font-family:'Archivo',system-ui,sans-serif;background:var(--label, #ffffff);color:var(--ink, #121212);padding:14px} .ds-name{font-weight:800;font-stretch:80%;font-size:17px} .ds-new-tag{display:inline-block;margin-left:8px;vertical-align:2px;background:var(--signal, #ff5a1f);color:var(--ink, #121212);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:2px}"
     },
@@ -558,7 +558,7 @@
     "rules": [
       {
         "name": "The Signal Rule",
-        "body": "Signal Orange marks only the newest parcel: its top strip, its postmark and the NEWEST tag in the List view. The cancellation waves on that label stay blue. The archive has no orange at all. A stub has no orange either. No button, link, hover or focus state is ever orange.",
+        "body": "Signal Orange marks only the newest parcel, the entry that shipped last: its top strip and postmark on a full label, or its NEWEST tag on a stub, and the NEWEST tag in the List view. It is on one parcel only. The cancellation waves on that label stay blue. The archive has no orange at all. No button, link, hover or focus state is ever orange.",
         "section": "colors"
       },
       {

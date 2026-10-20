@@ -66,6 +66,8 @@ final readonly class Site
             'index.html' => $this->page('main', 'phplives.dev: PHP delivers. PHP lives!', '/', [
                 'entries' => $current,
                 'featured' => $featured,
+                // The newest parcel is the entry that shipped last, wherever it sits on the page.
+                'newestSlug' => $current[0]->slug ?? null,
                 'latestTitle' => $latestTitle,
                 'latestNote' => $latestNote,
                 'bundles' => Bundles::group($rest, $this->today),

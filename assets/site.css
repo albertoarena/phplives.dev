@@ -105,6 +105,7 @@ body{margin:0;background:var(--field)}
 .stub .route{min-width:0;padding:5px 7px 4px}
 .stub .route b{font-size:22px}
 .stub-sentence{flex:1 1 auto;margin:10px 0 12px;font-size:14px;line-height:1.45}
+.stub .new-tag{align-self:flex-start;margin:10px 0 -2px}
 .stub-cred{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:12px;margin:0;padding:8px 0;border-top:1px solid var(--rule-soft);border-bottom:1px dashed var(--perf);font-size:13px;line-height:1.35}
 .stub-from{font-weight:700;min-width:0}
 .stub-date{font-size:12px;font-weight:600;white-space:nowrap}

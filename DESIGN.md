@@ -239,7 +239,7 @@ One deep Prussian blue ink, white paper, near-black print and a single signal or
 - **Prussian Ink** (`prussian-ink`): the ink of the whole world. In the light theme it is the type on the field and the background of the /dev/null band. On every label it is the colour of the ring postmark and the cancellation waves, in both themes. It is also the fill of the pressed state in toggles and chips.
 
 ### Secondary
-- **Signal Orange** (`signal-orange`): marks the newest parcel and nothing else. It fills the "Newest parcel" strip at the top of the first label. It colours that label's postmark (ring, lettering and date). It fills the NEWEST tag in the List view. Text on it is Print Black.
+- **Signal Orange** (`signal-orange`): marks the newest parcel and nothing else. The newest parcel is the entry that shipped last. When it is on a full label, orange fills the "Newest parcel" strip at the top of that label and colours its postmark (ring, lettering and date). When it is a stub, orange fills a NEWEST tag under the stub's name. It also fills the NEWEST tag in the List view. Text on it is Print Black.
 
 ### Neutral
 - **Pale Field** (`pale-field`): the light theme background. A pale blue-grey, so the white labels stand out from it.
@@ -263,7 +263,7 @@ The dark theme swaps the field and dims the paper. The ink and the signal stay t
 The theme follows the device by default. A Light / Dark / System toggle in the top bar sets `data-theme` on the root element and overrides it.
 
 ### Named Rules
-**The Signal Rule.** Signal Orange marks only the newest parcel: its top strip, its postmark and the NEWEST tag in the List view. The cancellation waves on that label stay blue. The archive has no orange at all. A stub has no orange either. No button, link, hover or focus state is ever orange.
+**The Signal Rule.** Signal Orange marks only the newest parcel, the entry that shipped last: its top strip and postmark on a full label, or its NEWEST tag on a stub, and the NEWEST tag in the List view. It is on one parcel only. The cancellation waves on that label stay blue. The archive has no orange at all. No button, link, hover or focus state is ever orange.
 
 **The One Ink Rule.** The postmark and the waves use Prussian Ink on every label, in both themes. A second blue, or a coloured stack code, breaks the print.
 
@@ -408,7 +408,7 @@ A stub has no barcode, postmark, waves or tracking number. It has no orange and 
 
 ### Bundles
 The main page groups the entries in bundles. Each bundle opens with a head on the field: a condensed heading on the left and a mono parcel count on the right, such as "4 parcels". A 3px rule in the field's text colour closes the head. Week heads are 22px and month heads are 26px.
-- **This week:** up to 3 full labels. They are the entries added last, newest added first. The first one is the newest parcel, in Signal Orange. The heading is "This week". When nothing was added this week, the heading is "Added last". This bundle has a note in place of the count. The note says when the labels were added.
+- **This week:** up to 3 full labels. They are the entries added last, newest added first. If one of them is the newest parcel (the entry that shipped last), it is in Signal Orange. Otherwise the newest parcel is a stub with a NEWEST tag. The heading is "This week". When nothing was added this week, the heading is "Added last". This bundle has a note in place of the count. The note says when the labels were added.
 - **Weeks:** every other entry is a stub, grouped by the date it shipped. The current week comes first. Each earlier week of the current month follows, such as "Week 40, 01/10 to 04/10". When an earlier week starts in the month before, its title starts on the first of the month. Weeks are ISO weeks in UTC, from Monday to Sunday.
 - **Months:** the older entries in the 6-month window are in one bundle per month, such as "September 2026".
 

@@ -74,6 +74,36 @@ it('puts the entries added last on full labels, and marks only the newest', func
         ->and($main->querySelector('#manifest article')->querySelector('.lab-new'))->not->toBeNull();
 });
 
+it('marks the entry that shipped last as the newest, even when it is not the first label', function () {
+    writeEntry($this->dir, '2026-09-01-added-last.php', ['name' => 'Added last', 'added' => '2026-10-15']);
+    writeEntry($this->dir, '2026-10-10-shipped-last.php', ['name' => 'Shipped last', 'added' => '2026-10-14']);
+    writeEntry($this->dir, '2026-08-01-third.php', ['name' => 'Third', 'added' => '2026-10-13']);
+
+    $main = pages($this)['index.html'];
+
+    expect(texts($main, '#this-week article.lab h4'))->toBe(['Added last', 'Shipped last', 'Third'])
+        ->and(texts($main, '#this-week article.lab.newest h4'))->toBe(['Shipped last'])
+        ->and($main->querySelectorAll('.lab-new'))->toHaveCount(1)
+        ->and(texts($main, '#manifest [data-view="list"] .new-tag'))->toBe(['Newest'])
+        ->and(texts($main, '#manifest [data-view="list"] tr:has(.new-tag) .name'))->toBe(['Shipped last Newest']);
+});
+
+it('marks the newest on its stub when the entry that shipped last is not on a full label', function () {
+    writeEntry($this->dir, '2026-10-15-fresh.php', ['name' => 'Fresh', 'added' => '2026-10-15']);
+    foreach (['a', 'b', 'c'] as $i => $name) {
+        writeEntry($this->dir, '2026-09-0'.($i + 1)."-{$name}.php", ['name' => strtoupper($name), 'added' => '2026-10-16']);
+    }
+
+    $main = pages($this)['index.html'];
+
+    expect(texts($main, '#this-week article.lab h4'))->not->toContain('Fresh')
+        ->and($main->querySelectorAll('.lab.newest'))->toHaveCount(0)
+        ->and($main->querySelectorAll('.lab-new'))->toHaveCount(0)
+        ->and(texts($main, '.stub.newest h4'))->toBe(['Fresh'])
+        ->and(texts($main, '.stub.newest .new-tag'))->toBe(['Newest'])
+        ->and($main->querySelectorAll('.stub .new-tag'))->toHaveCount(1);
+});
+
 it('says how many full labels were added this week', function (array $added, string $title, string $note) {
     foreach ($added as $i => $day) {
         writeEntry($this->dir, '2026-09-0'.($i + 1)."-e{$i}.php", ['added' => $day]);
