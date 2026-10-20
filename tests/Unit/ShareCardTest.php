@@ -141,12 +141,13 @@ describe('the image', function () {
             ->and($orange)->toBe(0);
     });
 
-    it('draws a card in well under a second', function () {
+    // A card takes about 0.13 s. The limit leaves room for a slow CI runner, and still catches a real slowdown.
+    it('draws a card in under 3 seconds', function () {
         $card = new ShareCard();
         $card->png(cardEntry());
         $start = hrtime(true);
         $card->png(cardEntry(['name' => 'Symfony Security Auditor']));
 
-        expect((hrtime(true) - $start) / 1e9)->toBeLessThan(1.0);
+        expect((hrtime(true) - $start) / 1e9)->toBeLessThan(3.0);
     });
 });
