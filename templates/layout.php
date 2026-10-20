@@ -77,7 +77,7 @@ $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
     </div>
     <p class="fine">Every entry links to its own source. Dates are DD/MM/YYYY.</p>
     <p class="fine indie">phplives.dev is an independent site. /dev/null does not sponsor or endorse it.</p>
-    <p class="fine foot-pages"><a href="/privacy/"<?= $path === '/privacy/' ? ' aria-current="page"' : '' ?>>Privacy</a><span aria-hidden="true">·</span><a href="/credits/"<?= $path === '/credits/' ? ' aria-current="page"' : '' ?>>Credits</a></p>
+    <p class="fine foot-pages"><a href="/privacy/"<?= $path === '/privacy/' ? ' aria-current="page"' : '' ?>>Privacy</a><span aria-hidden="true">·</span><a href="/credits/"<?= $path === '/credits/' ? ' aria-current="page"' : '' ?>>Credits</a><span aria-hidden="true">·</span><a href="/feed.xml">Feed</a></p>
   </footer>
 </div>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='<?= $e(json_encode(['token' => $analyticsToken])) ?>'></script>

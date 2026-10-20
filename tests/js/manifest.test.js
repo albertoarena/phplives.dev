@@ -48,12 +48,24 @@ function run({ hash = '', stored = {}, broken = false, select = false, views = t
   const tools = element({ 'data-tools': '' }, { hidden: true })
   const status = element({ 'data-filter-status': '', 'data-total': '3' })
 
+  // Two bundles in the first view: one with the php entry, one with the two laravel entries.
+  const groups = [[items[0]], [items[1], items[2]]].map((members) => {
+    const group = element({ 'data-group': '' })
+    const count = element({ 'data-group-count': '' })
+    count.textContent = members.length + (members.length === 1 ? ' parcel' : ' parcels')
+    group.count = count
+    group.querySelectorAll = (selector) => (selector === '[data-stack]' ? members : [])
+    group.querySelector = (selector) => (selector === '[data-group-count]' ? count : null)
+    return group
+  })
+
   const lists = {
     '[data-stack]': items,
     '[data-stack-choice]': chips,
     '[data-view-choice]': viewButtons,
     '[data-view]': panes,
     '[data-tools]': [tools],
+    '[data-group]': groups,
   }
   const document = {
     querySelectorAll: (selector) => lists[selector] ?? [],
@@ -69,7 +81,7 @@ function run({ hash = '', stored = {}, broken = false, select = false, views = t
   const shown = () => items.slice(0, 3).filter((item) => !item.hidden).map((item) => item.getAttribute('data-stack'))
 
   return {
-    items, chips, dropdown, viewButtons, panes, tools, status, urls, localStorage, shown,
+    items, groups, chips, dropdown, viewButtons, panes, tools, status, urls, localStorage, shown,
     chip: (stack) => chips.find((chip) => chip.getAttribute('data-stack-choice') === stack),
     view: (name) => viewButtons.find((button) => button.getAttribute('data-view-choice') === name),
     pressed: (list) => list.filter((el) => el.getAttribute('aria-pressed') === 'true').map((el) => el.getAttribute('data-stack-choice') ?? el.getAttribute('data-view-choice')),
@@ -179,5 +191,25 @@ describe('manifest script', () => {
 
     expect(page.shown()).toEqual(['php'])
     expect(page.urls.at(-1)).toBe('/#stack=php')
+  })
+
+  it('hides a bundle with no entry of the picked stack, and shows it again', () => {
+    const page = run()
+
+    page.chip('laravel').click()
+    expect(page.groups.map((group) => group.hidden)).toEqual([true, false])
+
+    page.chip('').click()
+    expect(page.groups.map((group) => group.hidden)).toEqual([false, false])
+  })
+
+  it('counts only the entries a bundle shows', () => {
+    const page = run()
+
+    page.chip('php').click()
+    expect(page.groups.map((group) => group.count.textContent)).toEqual(['1 parcel', '0 parcels'])
+
+    page.chip('').click()
+    expect(page.groups.map((group) => group.count.textContent)).toEqual(['1 parcel', '2 parcels'])
   })
 })

@@ -11,7 +11,7 @@ final readonly class Bundle
 {
     /**
      * @param  string  $id  A stable id for the page, such as week-2026-43 or month-2026-09.
-     * @param  'week'|'month'  $kind
+     * @param  'latest'|'week'|'month'  $kind  'latest' is the group of full labels on the main page.
      * @param  list<Entry>  $entries  Newest first.
      */
     public function __construct(

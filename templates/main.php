@@ -3,6 +3,10 @@
  * @var callable $e
  * @var \PhpLives\Site $site
  * @var list<\PhpLives\Entry> $entries
+ * @var list<\PhpLives\Entry> $featured The entries on full labels, the newest parcel first.
+ * @var string $latestTitle
+ * @var string $latestNote
+ * @var list<\PhpLives\Bundle> $bundles Every other entry, by week and by month.
  * @var string $cutoff
  * @var string $stacks
  * @var list<\PhpLives\Post> $posts
@@ -11,6 +15,7 @@
  * @var string $manifestScript
  * @var string $today
  */
+use PhpLives\Bundle;
 use PhpLives\DevNull;
 use PhpLives\Format;
 ?>
@@ -58,13 +63,45 @@ use PhpLives\Format;
 <?php endif ?>
       </div>
 <?php if ($entries): ?>
-      <div class="grid" data-view="labels">
-<?php foreach ($entries as $i => $entry) {
+      <div class="bundles" data-view="labels">
+        <section class="bundle-new" id="this-week" data-group aria-labelledby="this-week-title">
+          <div class="bundle-head">
+            <h3 id="this-week-title"><?= $e($latestTitle) ?></h3>
+            <p class="bundle-note"><?= $e($latestNote) ?></p>
+          </div>
+          <div class="grid">
+<?php $heading = 'h4'; foreach ($featured as $i => $entry) {
     require __DIR__.'/entry.php';
 } ?>
+          </div>
+        </section>
+<?php foreach ($bundles as $b => $bundle): $n = count($bundle->entries); ?>
+<?php if ($bundle->kind === 'week' && ($bundles[$b - 1] ?? null)?->kind !== 'week'): ?>
+        <div class="weeks">
+<?php endif ?>
+        <section class="bundle bundle-<?= $e($bundle->kind) ?><?= $bundle->kind === 'week' ? ' span-'.min($n, 4) : '' ?>" id="<?= $e($bundle->id) ?>" data-group aria-labelledby="<?= $e($bundle->id) ?>-title">
+          <div class="bundle-head">
+            <h3 id="<?= $e($bundle->id) ?>-title"><?= $e($bundle->title) ?></h3>
+            <span class="bundle-count mono" data-group-count><?= $n ?> <?= $n === 1 ? 'parcel' : 'parcels' ?></span>
+          </div>
+          <div class="stubs">
+<?php foreach ($bundle->entries as $j => $entry) {
+    require __DIR__.'/stub.php';
+} ?>
+          </div>
+        </section>
+<?php if ($bundle->kind === 'week' && ($bundles[$b + 1] ?? null)?->kind !== 'week'): ?>
+        </div>
+<?php endif ?>
+<?php endforeach ?>
       </div>
       <section class="sheet list-sheet" data-view="list" aria-label="Manifest list" hidden>
-<?php $markNewest = true; require __DIR__.'/table.php'; ?>
+<?php
+$groups = [new Bundle('this-week', 'latest', $latestTitle, $featured), ...$bundles];
+$newest = $featured[0]->slug;
+$groupPrefix = 'list-';
+require __DIR__.'/table.php';
+?>
         <div class="sheet-foot"><span>Each date comes from the project's own source.</span></div>
       </section>
 <?php else: ?>

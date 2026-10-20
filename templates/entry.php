@@ -5,13 +5,15 @@
  * @var callable $e
  * @var \PhpLives\Site $site
  * @var \PhpLives\Entry $entry
- * @var int $i
+ * @var int $i Its place on the page. The first label is the newest parcel.
+ * @var string|null $heading The tag of the project name. h3 when it is not set.
  */
 use PhpLives\Format;
 
 $id = $e($entry->slug);
 $tid = $site->trackingNumber($entry);
 $x = 0;
+$heading = in_array($heading ?? null, ['h2', 'h3', 'h4'], true) ? $heading : 'h3';
 ?>
         <article class="lab<?= $i === 0 ? ' newest' : '' ?>" style="--i: <?= $i ?>" data-stack="<?= $e($entry->stack) ?>" aria-labelledby="t-<?= $id ?>">
 <?php if ($i === 0): ?>
@@ -44,7 +46,7 @@ $x = 0;
           </div>
           <div class="blk contents">
             <span class="cap">Contents</span>
-            <h3 id="t-<?= $id ?>"><?= $e($entry->name) ?></h3>
+            <<?= $heading ?> id="t-<?= $id ?>"><?= $e($entry->name) ?></<?= $heading ?>>
             <p><?= $e($entry->sentence) ?></p>
           </div>
           <div class="blk ship">

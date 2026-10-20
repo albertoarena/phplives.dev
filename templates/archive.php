@@ -2,6 +2,7 @@
 /**
  * @var callable $e
  * @var list<\PhpLives\Entry> $entries
+ * @var list<\PhpLives\Bundle> $bundles The entries, one group per month.
  * @var string $cutoff
  * @var string $today
  * @var \PhpLives\Site $site
@@ -27,7 +28,7 @@
         <span class="mono"><?= count($entries) ?> <?= count($entries) === 1 ? 'parcel' : 'parcels' ?></span>
       </div>
 <?php if ($entries): ?>
-<?php $markNewest = false; require __DIR__.'/table.php'; ?>
+<?php $groups = $bundles; $newest = null; $groupPrefix = ''; require __DIR__.'/table.php'; ?>
 <?php else: ?>
       <p class="empty">No entry is older than 6 months yet.</p>
 <?php endif ?>

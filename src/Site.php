@@ -58,10 +58,17 @@ final readonly class Site
     {
         $cutoff = Format::date(Entries::cutoff($this->today));
         $current = $this->entries->current();
+        $featured = Bundles::featured($current, $this->today);
+        $rest = array_values(array_filter($current, fn (Entry $e) => ! in_array($e, $featured, true)));
+        [$latestTitle, $latestNote] = $this->latestHead($current, count($featured));
 
         return [
             'index.html' => $this->page('main', 'phplives.dev: PHP delivers. PHP lives!', '/', [
                 'entries' => $current,
+                'featured' => $featured,
+                'latestTitle' => $latestTitle,
+                'latestNote' => $latestNote,
+                'bundles' => Bundles::group($rest, $this->today),
                 'cutoff' => $cutoff,
                 'stacks' => $this->stackSummary($current),
                 'posts' => $this->posts,
@@ -71,6 +78,7 @@ final readonly class Site
             ]),
             'archive/index.html' => $this->page('archive', 'phplives.dev: archive', '/archive/', [
                 'entries' => $this->entries->archived(),
+                'bundles' => Bundles::months($this->entries->archived()),
                 'cutoff' => $cutoff,
                 'counts' => $this->stackCounts($this->entries->archived()),
                 'manifestScript' => $this->script('manifest.js'),
@@ -116,6 +124,35 @@ final readonly class Site
     public static function entryPath(Entry $entry): string
     {
         return "/entries/{$entry->slug}/";
+    }
+
+    /**
+     * Where a stub's link goes: the entry's own page, or null while the site has no
+     * entry pages. See ENTRY_PAGES.
+     */
+    public function entryLink(Entry $entry): ?string
+    {
+        return $this->entryPages ? self::entryPath($entry) : null;
+    }
+
+    /**
+     * The heading and the note above the full labels. They say how many of them were
+     * added this week, so a visitor knows why an older project has a full label.
+     *
+     * @param  list<Entry>  $entries
+     * @return array{0: string, 1: string}
+     */
+    private function latestHead(array $entries, int $shown): array
+    {
+        $added = Bundles::addedThisWeek($entries, $this->today);
+        $since = 'since Monday '.Bundles::weekStart($this->today)->format('d/m');
+
+        return match (true) {
+            $added === 0 => ['Added last', "Nothing was added {$since}. ".($shown === 1 ? 'This one was' : "These {$shown} were").' added last.'],
+            $added < $shown => ['This week', "{$added} added {$since}. The rest were added before."],
+            $added === $shown => ['This week', "Added {$since}."],
+            default => ['This week', "{$added} added {$since}. These are the newest {$shown}."],
+        };
     }
 
     /**

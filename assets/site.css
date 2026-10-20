@@ -6,9 +6,9 @@
 @font-face{font-family: 'JetBrains Mono';font-style: normal;font-weight: 400;font-display: swap;src: url(/fonts/jetbrains-mono-latin.woff2) format('woff2');unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
 @font-face{font-family: 'JetBrains Mono';font-style: normal;font-weight: 600;font-display: swap;src: url(/fonts/jetbrains-mono-latin-ext.woff2) format('woff2');unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;}
 @font-face{font-family: 'JetBrains Mono';font-style: normal;font-weight: 600;font-display: swap;src: url(/fonts/jetbrains-mono-latin.woff2) format('woff2');unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
-:root{--field:#e6eaf2;--on-field:#12285a;--on-field-2:#3a4870;--line:rgba(18,40,90,.18);--band:#12285a;--on-band:#f4f7f2;--on-band-2:#bccbe8;--label:#ffffff;--ink:#121212;--ink-2:#4a4a46;--rule-soft:#d9d9d2;--perf:#b9b9b2;--stamp:#12285a;--signal:#ff5a1f;--shadow:0 1px 0 rgba(18,40,90,.14),0 16px 30px -16px rgba(18,40,90,.38);--shadow-hi:0 1px 0 rgba(18,40,90,.14),0 26px 40px -18px rgba(18,40,90,.45);color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--field:#0d1d42;--on-field:#eef1f8;--on-field-2:#bccbe8;--line:rgba(238,241,248,.16);--band:#081330;--on-band:#eef1f8;--on-band-2:#bccbe8;--label:#e4e4dc;--ink-2:#42423d;--rule-soft:#c9c9c0;--perf:#a9a9a0;--shadow:0 1px 0 rgba(0,0,0,.35),0 18px 34px -14px rgba(0,0,0,.7);--shadow-hi:0 1px 0 rgba(0,0,0,.35),0 28px 44px -16px rgba(0,0,0,.8);color-scheme:dark}}
-:root[data-theme="dark"]{--field:#0d1d42;--on-field:#eef1f8;--on-field-2:#bccbe8;--line:rgba(238,241,248,.16);--band:#081330;--on-band:#eef1f8;--on-band-2:#bccbe8;--label:#e4e4dc;--ink-2:#42423d;--rule-soft:#c9c9c0;--perf:#a9a9a0;--shadow:0 1px 0 rgba(0,0,0,.35),0 18px 34px -14px rgba(0,0,0,.7);--shadow-hi:0 1px 0 rgba(0,0,0,.35),0 28px 44px -16px rgba(0,0,0,.8);color-scheme:dark}
+:root{--field:#e6eaf2;--on-field:#12285a;--on-field-2:#3a4870;--line:rgba(18,40,90,.18);--band:#12285a;--on-band:#f4f7f2;--on-band-2:#bccbe8;--label:#ffffff;--ink:#121212;--ink-2:#4a4a46;--rule-soft:#d9d9d2;--perf:#b9b9b2;--stamp:#12285a;--signal:#ff5a1f;--shadow:0 1px 0 rgba(18,40,90,.14),0 16px 30px -16px rgba(18,40,90,.38);--shadow-hi:0 1px 0 rgba(18,40,90,.14),0 26px 40px -18px rgba(18,40,90,.45);--shadow-drop:drop-shadow(0 1px 0 rgba(18,40,90,.14)) drop-shadow(0 8px 10px rgba(18,40,90,.16));color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--field:#0d1d42;--on-field:#eef1f8;--on-field-2:#bccbe8;--line:rgba(238,241,248,.16);--band:#081330;--on-band:#eef1f8;--on-band-2:#bccbe8;--label:#e4e4dc;--ink-2:#42423d;--rule-soft:#c9c9c0;--perf:#a9a9a0;--shadow:0 1px 0 rgba(0,0,0,.35),0 18px 34px -14px rgba(0,0,0,.7);--shadow-hi:0 1px 0 rgba(0,0,0,.35),0 28px 44px -16px rgba(0,0,0,.8);--shadow-drop:drop-shadow(0 1px 0 rgba(0,0,0,.35)) drop-shadow(0 10px 12px rgba(0,0,0,.45));color-scheme:dark}}
+:root[data-theme="dark"]{--field:#0d1d42;--on-field:#eef1f8;--on-field-2:#bccbe8;--line:rgba(238,241,248,.16);--band:#081330;--on-band:#eef1f8;--on-band-2:#bccbe8;--label:#e4e4dc;--ink-2:#42423d;--rule-soft:#c9c9c0;--perf:#a9a9a0;--shadow:0 1px 0 rgba(0,0,0,.35),0 18px 34px -14px rgba(0,0,0,.7);--shadow-hi:0 1px 0 rgba(0,0,0,.35),0 28px 44px -16px rgba(0,0,0,.8);--shadow-drop:drop-shadow(0 1px 0 rgba(0,0,0,.35)) drop-shadow(0 10px 12px rgba(0,0,0,.45));color-scheme:dark}
 body{margin:0;background:var(--field)}
 .pl{container-type:inline-size;min-height:100vh;background:var(--field);color:var(--on-field);font-family:'Archivo',system-ui,sans-serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .theme{display:inline-flex;border:1px solid var(--line);border-radius:6px;padding:3px;gap:2px}
@@ -32,12 +32,12 @@ body{margin:0;background:var(--field)}
 .nav a{text-decoration:none;padding:10px 0}
 .nav a[aria-current]{text-decoration:underline;text-decoration-thickness:2px}
 
-.hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:64px;align-items:end;padding:76px 0 72px}
-.hero h1{margin:0;font-size:clamp(56px,7.2cqi,96px);line-height:.94;font-weight:850;font-stretch:70%;letter-spacing:-.02em;word-spacing:.12em;text-wrap:balance}
+.hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:64px;align-items:end;padding:40px 0 44px}
+.hero h1{margin:0;font-size:clamp(52px,6cqi,84px);line-height:.94;font-weight:850;font-stretch:70%;letter-spacing:-.02em;word-spacing:.12em;text-wrap:balance}
 .hero h1 span{display:block}
 .hero h1 .stuck{display:inline-block;margin-top:14px;background:var(--label);color:var(--ink);padding:4px 18px 10px;border-radius:5px;transform:rotate(-1.2deg);box-shadow:var(--shadow)}
-.lede{margin:28px 0 0;max-width:44ch;font-size:19px;color:var(--on-field-2)}
-.send{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin:30px 0 0}
+.lede{margin:22px 0 0;max-width:44ch;font-size:19px;color:var(--on-field-2)}
+.send{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin:24px 0 0}
 .tag .gh{flex:none}
 .alt{font-weight:700;color:var(--on-field);text-underline-offset:4px}
 .alt:hover{text-decoration-thickness:2px}
@@ -47,13 +47,13 @@ body{margin:0;background:var(--field)}
 .slip-head{display:flex;justify-content:space-between;align-items:baseline;padding:16px 22px;border-bottom:3px solid var(--ink)}
 .slip-head h2{margin:0;font-size:24px;font-weight:850;font-stretch:72%;letter-spacing:-.01em;word-spacing:.12em}
 .slip dl{margin:0;padding:6px 22px 4px}
-.slip dl div{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px solid var(--rule-soft)}
+.slip dl div{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;padding:8px 0;border-bottom:1px solid var(--rule-soft)}
 .slip dl div:last-child{border-bottom:0}
 .slip dt{font-size:13px;font-weight:600;color:var(--ink-2)}
 .slip dd{margin:0;font-size:15px;font-weight:600}
 .slip-foot{padding:12px 22px 16px;border-top:2px dashed var(--perf);font-size:13px;color:var(--ink-2)}
 
-.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:0 0 22px}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:0 0 18px}
 .sec-head h2{margin:0;font-size:30px;font-weight:800;font-stretch:75%;letter-spacing:-.01em;word-spacing:.12em}
 .sec-head p{margin:0;font-size:15px;color:var(--on-field-2)}
 
@@ -73,7 +73,42 @@ body{margin:0;background:var(--field)}
 .new-tag{display:inline-block;margin-left:8px;vertical-align:2px;background:var(--signal);color:var(--ink);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:2px;font-stretch:100%}
 .list-sheet{margin-bottom:96px}
 
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;padding-bottom:96px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
+
+/* Bundles: this week's full labels, then the stubs of each week and each month. */
+.bundles{padding-bottom:96px}
+.bundle-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 20px;margin:0 0 20px;padding:0 0 10px;border-bottom:1px solid var(--line)}
+.bundle-head h3{margin:0;font-size:22px;line-height:1.1;font-weight:800;font-stretch:75%;letter-spacing:-.005em;word-spacing:.12em}
+.bundle-month .bundle-head h3{font-size:26px}
+.bundle-note{margin:0;font-size:15px;color:var(--on-field-2)}
+.bundle-count{font-size:13px;font-weight:600;color:var(--on-field-2);white-space:nowrap}
+.bundle-new{margin-bottom:64px}
+.bundle+.bundle{margin-top:52px}
+.weeks+.bundle{margin-top:72px}
+/* The weeks of this month share one row when they are small. Their stubs stay on the same 4-column grid. */
+.weeks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:52px 20px}
+.span-1{--s:1}.span-2{--s:2}.span-3{--s:3}.span-4{--s:4}
+.weeks .bundle{margin:0;display:grid;grid-template-columns:subgrid;grid-column:span var(--s);row-gap:20px;align-content:start}
+.weeks .bundle-head{grid-column:1/-1;margin:0}
+.weeks>.bundle+.bundle{margin-top:0}
+.weeks .stubs{display:contents}
+
+/* The stub: the top of a label, torn off along its perforation. No barcode, postmark or tracking number. */
+.stubs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px 20px}
+.stub{display:flex;filter:var(--shadow-drop)}
+.stub-paper{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;background:var(--label);color:var(--ink);border-radius:6px 6px 0 0;padding:14px 16px 16px;
+  -webkit-mask:radial-gradient(circle 4px at 50% 100%,#0000 96%,#000) 50% 100%/12px 100% repeat-x;mask:radial-gradient(circle 4px at 50% 100%,#0000 96%,#000) 50% 100%/12px 100% repeat-x}
+.stub-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start;padding-bottom:12px;border-bottom:3px solid var(--ink)}
+.stub h4{margin:0;font-size:22px;line-height:1.02;font-weight:850;font-stretch:72%;letter-spacing:-.01em;word-spacing:.12em;overflow-wrap:anywhere}
+.stub .route{min-width:0;padding:5px 7px 4px}
+.stub .route b{font-size:22px}
+.stub-sentence{flex:1 1 auto;margin:10px 0 12px;font-size:14px;line-height:1.45}
+.stub-cred{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 12px;margin:0;padding:8px 0;border-top:1px solid var(--rule-soft);border-bottom:1px dashed var(--perf);font-size:13px;line-height:1.35}
+.stub-from{font-weight:700;min-width:0}
+.stub-date{font-size:12px;font-weight:600;white-space:nowrap}
+.stub-more{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;margin-top:8px;min-height:32px;font-size:14px;font-weight:800}
+.stub-more svg{flex:none}
+.stub a:focus-visible{outline-color:var(--ink)}
 .lab{container:label / inline-size;position:relative;display:flex;flex-direction:column;background:var(--label);color:var(--ink);border-radius:6px;overflow:hidden;
   box-shadow:var(--shadow);transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s cubic-bezier(.16,1,.3,1)}
 .lab:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi)}
@@ -160,12 +195,16 @@ body{margin:0;background:var(--field)}
 @media (prefers-reduced-motion:no-preference){
   .lab{animation:print .95s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 70ms)}
   .pm{animation:stamp .4s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 70ms + 700ms)}
+  /* Stubs only tear in: a short reveal from the top, after the full labels have printed. */
+  .stub{animation:tear .45s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--j) * 40ms + 600ms)}
+  @keyframes tear{from{clip-path:inset(-24px -24px 100% -24px);transform:translateY(-6px) rotate(-.6deg)}to{clip-path:inset(-24px -24px -24px -24px);transform:none}}
   @keyframes print{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
   @keyframes stamp{from{opacity:0;transform:rotate(-9deg) scale(1.3)}to{opacity:.9;transform:rotate(-9deg) scale(1)}}
 }
 
 @container (max-width:1100px){
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stubs,.weeks{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .span-4{--s:3}
   .hero{grid-template-columns:minmax(0,1fr);gap:40px}
   .slip{max-width:560px}
 }
@@ -177,7 +216,15 @@ body{margin:0;background:var(--field)}
   .slip-foot{display:none}
   .hero h1{font-size:54px}
   .lede{font-size:17px}
-  .grid{grid-template-columns:minmax(0,1fr);gap:22px;padding-bottom:64px}
+  .grid{gap:22px}
+  .bundles{padding-bottom:64px}
+  .bundle-new{margin-bottom:48px}
+  .bundle+.bundle{margin-top:40px}
+  .weeks+.bundle{margin-top:52px}
+  .stubs,.weeks{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px}
+  .weeks{row-gap:40px}
+  .span-3,.span-4{--s:2}
+  .weeks .bundle{row-gap:18px}
   .sec-head{flex-direction:column;gap:4px}
   .sec-tools{justify-content:flex-start;margin-top:12px}
   .sec-head h2{font-size:26px}
@@ -210,6 +257,9 @@ body{margin:0;background:var(--field)}
 .sheet td{padding:12px 14px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
 .sheet tr:last-child td{border-bottom:0}
 .sheet tbody tr:hover{background:var(--line)}
+.sheet tr.grp th{padding:22px 14px 8px;font-size:19px;line-height:1.1;font-weight:850;font-stretch:72%;letter-spacing:0;word-spacing:.12em;text-transform:none;color:var(--ink);border-bottom:2px solid var(--ink)}
+.sheet tr.grp th span{margin-left:10px;font-size:12px;font-weight:600;color:var(--ink-2);word-spacing:0}
+.sheet tbody tr.grp:hover{background:none}
 .sheet .no{color:var(--ink-2);width:44px}
 .sheet .date{white-space:nowrap;font-weight:600}
 .sheet .name{font-weight:800;font-stretch:80%;font-size:17px;white-space:nowrap}
@@ -230,6 +280,8 @@ body{margin:0;background:var(--field)}
   .sheet .name,.sheet .desc,.sheet .from,.sheet .trk{grid-column:1 / -1}
   .sheet .name{white-space:normal}
   .sheet .from{color:var(--ink-2);font-size:13px}
+  .sheet tr.grp{display:block;padding:20px 16px 8px;border-bottom:2px solid var(--ink)}
+  .sheet tr.grp th{display:block;padding:0;border:0}
 }
 
 /* Added for the build */
@@ -284,4 +336,13 @@ body{margin:0;background:var(--field)}
   .credits .cr-group{padding:16px 16px 4px}
   .cr-end{padding:14px 16px}
   .credits .sheet-foot{padding:14px 16px}
+}
+
+/* The three full labels stay in one row while each is at least about 300px wide. */
+@container (max-width:960px){
+  .grid{grid-template-columns:minmax(0,1fr);max-width:560px}
+}
+@container (max-width:440px){
+  .stubs,.weeks{grid-template-columns:minmax(0,1fr)}
+  .span-2,.span-3,.span-4{--s:1}
 }
