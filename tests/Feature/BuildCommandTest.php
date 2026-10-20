@@ -25,6 +25,19 @@ function build(string $tmp, ?string $devnull = null): array
     return [$status, implode("\n", $output)];
 }
 
+it('takes the icon and the share card from the art folder', function () {
+    $art = dirname(__DIR__, 2).'/art';
+    writeEntry($this->tmp.'/entries', '2026-09-01-pest-5.php');
+
+    build($this->tmp);
+
+    expect(file_get_contents($this->tmp.'/dist/favicon.svg'))->toBe(file_get_contents($art.'/favicon.svg'))
+        ->and(file_get_contents($this->tmp.'/dist/share.png'))->toBe(file_get_contents($art.'/share-card.png'))
+        ->and($art.'/share-card.html')->toBeFile()
+        ->and(dirname(__DIR__, 2).'/assets/favicon.svg')->not->toBeFile()
+        ->and(dirname(__DIR__, 2).'/assets/share')->not->toBeDirectory();
+});
+
 it('writes the site into the output folder', function () {
     writeEntry($this->tmp.'/entries', '2026-09-01-pest-5.php');
 

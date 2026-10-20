@@ -24,6 +24,8 @@ brand. Those are separate. This policy covers these things:
   a postmark that reads "PHPLIVES.DEV" and "SHIPPED", wave lines, a barcode and a
   tracking number. Each label shows its stack as a short route code. The line at the top of the page sits on a label that looks stuck on. The
   summary looks like a packing slip, and the archive looks like a manifest sheet.
+- The files in the [`art/`](art/) folder: the site's icon, and the share card that
+  shows when someone shares a link to the site, with the page it is drawn from.
 - The design and layout of the site, as a whole: the look above, with its colours,
   in the light and the dark theme.
 - The written copy of the site, including the sentence that describes each entry.
