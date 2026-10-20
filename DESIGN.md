@@ -25,7 +25,7 @@ colors:
 typography:
   display:
     fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "clamp(56px, 7.2cqi, 96px)"
+    fontSize: "clamp(52px, 6cqi, 84px)"
     fontWeight: 850
     lineHeight: 0.94
     letterSpacing: "-0.02em"
@@ -49,6 +49,13 @@ typography:
     fontSize: "30px"
     fontWeight: 800
     letterSpacing: "-0.01em"
+    fontVariation: "'wdth' 75"
+  bundle:
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "22px"
+    fontWeight: 800
+    lineHeight: 1.1
+    letterSpacing: "-0.005em"
     fontVariation: "'wdth' 75"
   body:
     fontFamily: "Archivo, system-ui, sans-serif"
@@ -91,6 +98,11 @@ spacing:
   block: "16px 18px"
   grid-gap: "32px"
   grid-gap-narrow: "22px"
+  stub-gap: "24px 20px"
+  stub-gap-narrow: "18px 14px"
+  stub-pad: "14px 16px 16px"
+  bundle-gap: "52px"
+  bundle-gap-narrow: "40px"
   hero-gap: "64px"
   band-gap: "72px"
   section-end: "96px"
@@ -118,6 +130,20 @@ components:
     rounded: "{rounded.sheet}"
   label-block:
     padding: "{spacing.block}"
+  stub:
+    backgroundColor: "{colors.thermal-white}"
+    textColor: "{colors.print-black}"
+    rounded: "{rounded.sheet}"
+    padding: "{spacing.stub-pad}"
+  stub-route:
+    backgroundColor: "{colors.print-black}"
+    textColor: "{colors.thermal-white}"
+    rounded: "{rounded.route}"
+    padding: "5px 7px 4px"
+  bundle-head:
+    textColor: "{colors.prussian-ink}"
+    typography: "{typography.bundle}"
+    padding: "0 0 10px"
   route-code:
     backgroundColor: "{colors.print-black}"
     textColor: "{colors.thermal-white}"
@@ -160,20 +186,21 @@ components:
 
 **Creative North Star: "The Shipping Manifest"**
 
-Every project on the site is a parcel that shipped. Its postmark is the proof of the date. The page is a depot: a blue field, a manifest slip, and rows of thermal shipping labels printed in black ink. The visitor reads the line, checks the slip, then scans the labels: who, what, when, and where to check.
+Every project on the site is a parcel that shipped. Its postmark is the proof of the date. The page is a depot: a blue field, a manifest slip, this week's thermal shipping labels, and bundles of label stubs. The labels and stubs are printed in black ink. The visitor reads the line and checks the slip. Then the visitor scans the labels and the bundles: who, what, when, and where to check.
 
-The world is printed, not drawn. Labels are white paper with heavy black print rules, a large inverse routing code per stack, a barcode and a ring postmark. Type is one condensed family, Archivo, with a monospace face for dates and tracking data. There are two colours: one Prussian blue ink and one signal orange. The orange marks only the newest parcel.
+The world is printed, not drawn. Labels are white paper with heavy black print rules, a large inverse routing code per stack, a barcode and a ring postmark. A stub is the top of a label, torn off along its perforation. It keeps the name, the sentence, the maker and the date. Type is one condensed family, Archivo, with a monospace face for dates and tracking data. There are two colours: one Prussian blue ink and one signal orange. The orange marks only the newest parcel.
 
 The design keeps out of the way of the entries. There are no project logos, no screenshots and no art. The one mark is the GitHub mark on the links to the site's own code. The system rejects the showcase grid of logo cards and the awesome-list link dump.
 
 **Key Characteristics:**
-- Paper on a blue field: all content sits on paper labels, sheets and strips.
+- Paper on a blue field: all content sits on paper labels, stubs, sheets and strips.
+- Full labels for the entries added last. Stubs for every other entry, in bundles by week and by month.
 - Heavy print rules (3px black) split every label into its fields.
 - Condensed Archivo display with wide word spacing (.12em).
 - JetBrains Mono only for dates and tracking data.
 - One signal colour, for one parcel.
 - Light and dark themes, with the same Prussian ink in both.
-- A print-in and a stamp on load, and nothing else moves.
+- A print-in, a stamp and a tear-in on load, and nothing else moves.
 
 ## Colors
 
@@ -189,11 +216,11 @@ One deep Prussian blue ink, white paper, near-black print and a single signal or
 - **Pale Field** (`pale-field`): the light theme background. A pale blue-grey, so the white labels stand out from it.
 - **Field Muted Ink** (`field-muted-ink`): secondary text on the field, such as the lede and section notes.
 - **Field Line** (`field-line`): hairlines on the field (top bar, footer), toggle group borders, and hover fills.
-- **Thermal White** (`thermal-white`): the paper of labels, the manifest slip, the sheets, the dispatch strip, the command strip and the CTA button.
+- **Thermal White** (`thermal-white`): the paper of labels, stubs, the manifest slip, the sheets, the dispatch strip, the command strip and the CTA button.
 - **Print Black** (`print-black`): the ink on paper. It draws the 3px print rules, the route code blocks and the barcode.
 - **Print Grey** (`print-grey`): captions and secondary text on paper (FROM, SHIPPED, date proof, tracking number).
-- **Soft Rule** (`soft-rule`): 1px row dividers inside sheets and the slip.
-- **Perforation** (`perforation`): dashed tear lines (the slip foot and the dispatch posts).
+- **Soft Rule** (`soft-rule`): 1px row dividers inside sheets and the slip. On a stub it is the line above the credits row.
+- **Perforation** (`perforation`): dashed tear lines (the slip foot, the dispatch posts and the line under a stub's credits row).
 - **Band Text** (`band-text`) and **Band Muted Ink** (`band-muted-ink`): text on the /dev/null band.
 
 ### Dark theme
@@ -207,7 +234,7 @@ The dark theme swaps the field and dims the paper. The ink and the signal stay t
 The theme follows the device by default. A Light / Dark / System toggle in the top bar sets `data-theme` on the root element and overrides it.
 
 ### Named Rules
-**The Signal Rule.** Signal Orange marks only the newest parcel: its top strip, its postmark and the NEWEST tag in the List view. The cancellation waves on that label stay blue. The archive has no orange at all. No button, link, hover or focus state is ever orange.
+**The Signal Rule.** Signal Orange marks only the newest parcel: its top strip, its postmark and the NEWEST tag in the List view. The cancellation waves on that label stay blue. The archive has no orange at all. A stub has no orange either. No button, link, hover or focus state is ever orange.
 
 **The One Ink Rule.** The postmark and the waves use Prussian Ink on every label, in both themes. A second blue, or a coloured stack code, breaks the print.
 
@@ -222,16 +249,17 @@ The theme follows the device by default. A Light / Dark / System toggle in the t
 ### Hierarchy
 - **Display** (`display`): the line `PHP delivers. PHP lives!` only. "PHP lives!" sits on a white sticker, turned -1.2deg. The line drops to 54px on narrow screens.
 - **Headline** (`headline`): page heads on the archive, Privacy and Credits pages. The /dev/null band heading uses the same shape at clamp(40px, 4.6cqi, 64px).
-- **Title** (`title`): the project name in the CONTENTS block of a label. Sheet and slip heads use the same width at 22px to 26px.
+- **Title** (`title`): the project name in the CONTENTS block of a label. Sheet and slip heads use the same width at 22px to 26px. The stub name uses it at 22px.
 - **Section** (`section`): section heads on the field, such as "Shipped since DD/MM/YYYY". They drop to 26px on narrow screens.
+- **Bundle** (`bundle`): bundle heads on the field, such as "This week", "Week 43, 19/10 to 25/10" or "September 2026". A month head is 26px. Group head rows in the manifest sheet use the title width (72%) at 19px.
 - **Body** (`body`): reading text. The lede is 19px. Read-mode pages (Privacy) use 17px with line height 1.6 and a 65ch measure.
 - **Label** (`label`): uppercase field captions on paper (FROM, CONTENTS, SHIPPED, TRACK) and table heads.
-- **Route code** (`route-code`): the three-letter stack code (LRV, SYM, NTV, WRD, PHP) in its inverse block. Filter chips and table cells use the same width at 17px to 18px.
+- **Route code** (`route-code`): the three-letter stack code (LRV, SYM, NTV, WRD, PHP) in its inverse block. Filter chips and table cells use the same width at 17px to 18px. The chip on a stub uses it at 22px.
 - **Mono date** (`mono-date`): the shipped date on a label.
-- **Mono data** (`mono-data`): tracking numbers, link text on the TRACK line, counts, the slip values and the terminal command. Sizes run from 11px to 15px.
+- **Mono data** (`mono-data`): tracking numbers, link text on the TRACK line, counts, the slip values, the stub date and the terminal command. Sizes run from 11px to 15px.
 
 ### Named Rules
-**The Wide Words Rule.** Every condensed heading (display, headline, title, section) gets word spacing of .12em. Condensed Archivo runs words together without it.
+**The Wide Words Rule.** Every condensed heading (display, headline, title, section, bundle) gets word spacing of .12em. Condensed Archivo runs words together without it.
 
 **The Printer's Data Rule.** JetBrains Mono is for dates and machine data only: dates, counts, tracking numbers, link text on TRACK and the command line. Names, sentences and buttons are Archivo.
 
@@ -241,35 +269,40 @@ The theme follows the device by default. A Light / Dark / System toggle in the t
 
 The page is one column of sections inside a 1320px wrap with a 40px side gutter. The root is a size container, so the layout responds to its own width (container queries), not to the viewport.
 
-- **Hero:** two columns (1.4fr and 1fr, 64px gap), aligned to the bottom. The line is on the left, with the lede, the contribute row and its note under it. The white manifest slip is on the right. Below 1100px it becomes one column and the slip caps at 560px.
-- **Labels grid:** three columns with a 32px gap. Two columns below 1100px. One column below 700px, with a 22px gap. The first row of labels starts inside the first screen.
-- **Section head:** the title and a note on the left, the tools (stack filter, then Labels / List) on the right. Below 700px they stack.
+- **Hero:** two columns (1.4fr and 1fr, 64px gap), aligned to the bottom. It is short: 32px of padding on top and 36px below (28px and 32px on narrow screens). The line is on the left, with the lede, the contribute row and its note under it. The white manifest slip is on the right. Below 1100px it becomes one column and the slip caps at 560px.
+- **Section head:** the title on the left, with the note "Newest first." on the same line. The tools (stack filter, then Labels / List) are on the right. Below 700px they stack.
+- **This week:** up to three full labels in one row, with a 32px gap. The first row of labels starts inside the first screen. At 960px and below, the row scrolls sideways with scroll snap. Each column is min(380px, 42%), so the next label shows at the edge. At 700px and below a column is 86% wide. The row runs into the side gutter, so labels scroll to the edge of the page.
+- **Bundles:** the stubs sit in a grid of 4 columns, with gaps of 24px (rows) and 20px (columns). The grid has 3 columns at 1100px and below. It has 2 columns at 700px and below, with gaps of 18px and 14px. It has 1 column at 440px and below. All these widths are container widths.
+- **Weeks share rows:** the week bundles that follow each other sit in one grid with the same columns. Each week spans one column per stub, up to the number of columns. Its stubs use a column subgrid, so they line up with the stubs of the other weeks. The stubs in one row have the same height.
+- **Bundle rhythm:** "This week" ends with 64px of space (48px on narrow screens). Bundles are 52px apart (40px on narrow screens). After the last week, the first month bundle starts 72px below (52px on narrow screens).
 - **/dev/null band:** full width, 88px top and bottom. Two columns (72px gap) when there are posts. With no posts it is one row: the heading on the left, the CTA and command strip on the right, with less padding (64px).
 - **Sheets:** the archive, the List view, Privacy and Credits are white sheets inside the wrap. The Privacy sheet caps at 65ch plus padding.
 - **Narrow screens:** below 700px the gutter drops to 16px and the "Commit it on /dev/null" nav link hides. Below 860px each table row becomes a small grid: date and stack code on top, then name, sentence, maker and link.
-- **Rhythm:** sections end with 96px of space (64px on narrow screens). Label blocks have 16px by 18px of padding.
+- **Rhythm:** sections end with 96px of space (64px on narrow screens). Label blocks have 16px by 18px of padding. A stub has 14px of padding on top, 16px on the sides and 16px at the bottom.
 
 ## Elevation & Depth
 
-Depth is paper lying on a surface. Every sheet of paper (label, slip, sheet, sticker, CTA, command strip) has one soft drop shadow tinted with Prussian blue. Nothing else casts a shadow. A label lifts 3px on hover, and its shadow grows. In the dark theme the shadows are black and deeper.
+Depth is paper lying on a surface. Every sheet of paper (label, slip, sheet, sticker, CTA, command strip) has one soft drop shadow tinted with Prussian blue. Nothing else casts a shadow. A label lifts 3px on hover, and its shadow grows. A stub does not lift. In the dark theme the shadows are black and deeper.
 
 ### Shadow Vocabulary
 - **Paper rest** (`--shadow`): every sheet of paper at rest. A 1px contact line plus a long soft fall.
 - **Paper lifted** (`--shadow-hi`): a label on hover.
+- **Paper drop** (`--shadow-drop`): a stub. It is a `filter: drop-shadow`, so the shadow follows the torn edge. Its fall is shorter than the fall of the paper rest shadow.
 
 ### Named Rules
 **The Paper Only Rule.** Only paper casts a shadow. The field, the band, toggles and chips stay flat. Hard offset shadows are not part of this world.
 
 ## Shapes
 
-Shapes are cut paper: small, tight corners and straight edges. Sheets and labels have a 6px radius. The sticker and the CTA have 5px. The dispatch strip and the small buttons have 4px. The route code has 3px and the NEWEST tag 2px. Nothing is a pill or a circle, except the postmark.
+Shapes are cut paper: small, tight corners and straight edges. Sheets and labels have a 6px radius. The sticker and the CTA have 5px. The dispatch strip and the small buttons have 4px. The route code has 3px and the NEWEST tag 2px. A stub has 6px corners at the top and a torn edge at the bottom. Nothing is a pill or a circle, except the postmark.
 
 The paper carries print marks, not borders:
 - **Print rule:** 3px solid Print Black. It splits label blocks and closes sheet heads and feet.
-- **Table rule:** 2px Print Black under table heads.
+- **Table rule:** 2px Print Black under table heads and under each group head row.
+- **Bundle rule:** 3px solid in the field's text colour, under each bundle head.
 - **Soft rule:** 1px Soft Rule between rows.
-- **Perforation:** dashed Perforation lines. The slip foot uses 2px dashes. Dispatch posts use 1px dashes.
-- **Torn edge:** the dispatch strip has a scalloped top edge, cut with a radial-gradient mask.
+- **Perforation:** dashed Perforation lines. The slip foot uses 2px dashes. Dispatch posts and the stub foot use 1px dashes.
+- **Torn edge:** the dispatch strip has a scalloped top edge, cut with a radial-gradient mask. A stub has a scalloped bottom edge, cut the same way (4px circles, every 12px).
 
 ### Named Rules
 **The Print Rule.** Blocks on paper are split by black print rules, never by gaps or cards inside cards. A label is one sheet with ruled fields.
@@ -289,7 +322,8 @@ Segmented groups on the field: the theme toggle (Light, Dark, System), the view 
 - **Style:** a 1px Field Line border, 6px radius, 3px inner padding. Options are transparent, with weight 600 to 700. They are 32px tall in the theme toggle and 36px in the others.
 - **State:** the pressed option fills with the field's text colour and takes the field colour as text. Hover fills with Field Line.
 - **Stack chips:** "All" plus one chip per stack, up to 6, most common first. Each shows its route code in condensed weight 900 and a mono count. With more than 6 stacks a native select replaces the chips.
-- **Behaviour:** the state lives in the URL hash (`#stack=laravel&view=list`). The view is also kept in `localStorage`. Without JavaScript the tools stay hidden and every entry shows as a label.
+- **Behaviour:** the state lives in the URL hash (`#stack=laravel&view=list`). The view is also kept in `localStorage`. Without JavaScript the tools stay hidden. The page then shows the full labels and every bundle of stubs.
+- **Filter and bundles:** the stack filter hides a bundle when none of its entries is left. It also rewrites the parcel count of each bundle.
 
 ### Shipping label (signature)
 A 4x6 thermal label, one per entry. White paper, 6px radius, paper shadow. The label is its own size container. Its blocks, top to bottom:
@@ -299,6 +333,21 @@ A 4x6 thermal label, one per entry. White paper, 6px radius, paper shadow. The l
 4. **SHIPPED:** the mono date, the date proof link, the waves and the ring postmark. The postmark is 118px, turned -9deg, at 90% opacity, with a multiply blend. Its ring reads PHPLIVES.DEV over SHIPPED around the date. The waves fill only the gap between the date and the ring. They hide when the label is narrower than 378px.
 5. **Barcode, TRACK and tracking number:** a full-width barcode, then TRACK with the source link and an arrow, then the tracking number in letter-spaced mono.
 
+### Stub (signature)
+The top of a label, torn off along its perforation. There is one stub for each entry that does not get a full label. It is white paper with the paper drop shadow. The corners are 6px at the top, and the bottom edge is torn. Its parts, top to bottom:
+1. **Name and route code:** the project name is on the left, at 22px and 72% width. The route code is a small inverse chip on the right, without the stack name. A 3px print rule sits under them.
+2. **Sentence:** one plain sentence at 14px. It grows to fill the space, so the credits rows of the stubs in one row line up.
+3. **Credits row:** a Soft Rule line is above it, and a dashed perforation line is below it. The makers are on the left, in bold. They wrap in their own column. The mono date stays on the right, on one line.
+4. **Link:** while the site has no entry pages, "Source ↗" goes to the project's own source. When entry pages exist, "Details →" goes to `/entries/{slug}/`.
+
+A stub has no barcode, postmark, waves or tracking number. It has no orange and no hover lift.
+
+### Bundles
+The main page groups the entries in bundles. Each bundle opens with a head on the field: a condensed heading on the left and a mono parcel count on the right, such as "4 parcels". A 3px rule in the field's text colour closes the head. Week heads are 22px and month heads are 26px.
+- **This week:** up to 3 full labels. They are the entries added last, newest added first. The first one is the newest parcel, in Signal Orange. The heading is "This week". When nothing was added this week, the heading is "Added last". This bundle has a note in place of the count. The note says when the labels were added.
+- **Weeks:** every other entry is a stub, grouped by the date it shipped. The current week comes first. Each earlier week of the current month follows, such as "Week 40, 01/10 to 04/10". When an earlier week starts in the month before, its title starts on the first of the month. Weeks are ISO weeks in UTC, from Monday to Sunday.
+- **Months:** the older entries in the 6-month window are in one bundle per month, such as "September 2026".
+
 ### Route code
 The stack code printed inverse: Print Black block, white condensed weight 900 code, the stack name in small type below it. The same block, smaller, marks the stack in table rows.
 
@@ -307,6 +356,9 @@ The white slip in the hero. A head with "Manifest" and today's date over a 3px p
 
 ### Manifest sheet
 The table shared by the archive and the List view. A head and a foot closed by print rules. Columns: No., Shipped, Project, Contents, From, Stack, Track. Rows take a Field Line tint on hover. The first row of the List view carries the NEWEST tag.
+- **Groups:** the rows are in groups, one table body per group. Each group opens with a head row: the title in condensed type at 19px, then a mono count. A 2px print rule closes the head row. The head row takes no hover tint.
+- **List view:** the first group is "This week" (or "Added last"). The bundles of the main page follow it.
+- **Archive:** one group per month.
 
 ### /dev/null band
 A full-width Prussian band (Night Band in the dark theme). It holds the heading "Shipped something in PHP?", one line of text, the CTA and the command strip. The command strip is a white bar with the mono `curl` command and the Copy button. A note below it says what the command needs. The **Dispatch log** strip appears only when there are posts. It is a torn-edge paper strip with dated posts split by perforations.
@@ -315,25 +367,27 @@ A full-width Prussian band (Night Band in the dark theme). It holds the heading 
 Privacy and Credits use a page head on the field and one white sheet. Privacy is sections of body text at a 65ch measure. Credits is groups of items in three columns: the name, what the site uses it for, and its maker and licence. Inline code sits on a Soft Rule tint.
 
 ### Footer
-On every page. It opens with the **contribute row**: a section-style heading ("Open source. Anyone can help."), one line of text, and the contribute CTA with its text link on the right. A Field Line hairline splits it from the rest: the maker line, the links, the fine print, and Privacy · Credits.
+On every page. It opens with the **contribute row**: a section-style heading ("Open source. Anyone can help."), one line of text, and the contribute CTA with its text link on the right. A Field Line hairline splits it from the rest: the maker line, the links, the fine print, and Privacy · Credits · Feed. Feed links to `/feed.xml`.
 
 ### Navigation
 The top bar: the wordmark "phplives.dev" (condensed 75%, weight 800) on the left, then Manifest, Archive and "Commit it on /dev/null", then the theme toggle. The current page is underlined with a 2px line. Links on paper and on the field underline at 1px and thicken to 2px on hover.
 
 ### Motion
-Labels print in once on load: each one reveals from top to bottom with a clip-path over .95s, 70ms after the one before. Then each postmark stamps down, scaling from 1.3 to 1 over .4s, 700ms after its label starts. Both are off under `prefers-reduced-motion`. The theme change fades the field over .3s.
+Labels print in once on load: each one reveals from top to bottom with a clip-path over .95s, 70ms after the one before. Then each postmark stamps down, scaling from 1.3 to 1 over .4s, 700ms after its label starts. Stubs do not print in or stamp. They only tear in. Each stub reveals from the top with a clip-path over .45s. At the same time it drops 6px and settles from -0.6deg. A stub starts 600ms after load, plus 40ms for each place in its bundle. The delay stops growing after the 12th stub. The print-in, the stamp and the tear-in are all off under `prefers-reduced-motion`. The theme change fades the field over .3s.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** put every piece of content on paper: a label, the slip, a sheet or a strip.
+- **Do** put every piece of content on paper: a label, a stub, the slip, a sheet or a strip.
 - **Do** split label fields with 3px Print Black rules.
 - **Do** keep Signal Orange on the newest parcel only: strip, postmark and NEWEST tag.
 - **Do** print the postmark and the waves in Prussian Ink, in both themes.
 - **Do** set condensed headings in Archivo with .12em word spacing.
 - **Do** use JetBrains Mono for dates and machine data, and write dates as DD/MM/YYYY.
-- **Do** keep the page fully usable without JavaScript: all entries as labels, tools hidden.
-- **Do** turn off the print-in and the stamp under `prefers-reduced-motion`.
+- **Do** keep the page fully usable without JavaScript: full labels and bundles of stubs, tools hidden.
+- **Do** give a stub only the top of a label: route code, name, sentence, credits row and one link.
+- **Do** cast a stub's shadow with the drop-shadow filter (`--shadow-drop`), so it follows the torn edge.
+- **Do** turn off the print-in, the stamp and the tear-in under `prefers-reduced-motion`.
 
 ### Don't:
 - **Don't** build a showcase grid of logo cards or an awesome-list link dump.
@@ -341,5 +395,6 @@ Labels print in once on load: each one reveals from top to bottom with a clip-pa
 - **Don't** add a second accent colour or colour-code the stacks.
 - **Don't** add shadows to anything that is not paper, or use hard offset shadows.
 - **Don't** round corners past 6px or use pill shapes.
-- **Don't** add motion beyond the print-in, the stamp, the label lift and the theme fade.
+- **Don't** add motion beyond the print-in, the stamp, the stub tear-in, the label lift and the theme fade.
+- **Don't** add a barcode, postmark, waves or tracking number to a stub.
 - **Don't** show the cancellation waves on a label narrower than 378px.

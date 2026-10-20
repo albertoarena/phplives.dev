@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-17T00:00:00Z",
+  "generatedAt": "2026-10-20T00:00:00Z",
   "title": "Design System: phplives.dev",
   "extensions": {
     "colorMeta": {
@@ -302,6 +302,10 @@
         "displayName": "Section",
         "purpose": "Section heads on the field. Word spacing .12em."
       },
+      "bundle": {
+        "displayName": "Bundle",
+        "purpose": "Bundle heads on the field: 22px for weeks and This week, 26px for months. Word spacing .12em."
+      },
       "body": {
         "displayName": "Body",
         "purpose": "Reading text. 65ch measure on read-mode pages."
@@ -343,23 +347,38 @@
         "name": "paper-lifted-dark",
         "value": "0 1px 0 rgba(0,0,0,.35),0 28px 44px -16px rgba(0,0,0,.8)",
         "purpose": "A label on hover, dark theme."
+      },
+      {
+        "name": "paper-drop",
+        "value": "drop-shadow(0 1px 0 rgba(18,40,90,.14)) drop-shadow(0 8px 10px rgba(18,40,90,.16))",
+        "purpose": "A stub, light theme. A filter, so the shadow follows the torn edge."
+      },
+      {
+        "name": "paper-drop-dark",
+        "value": "drop-shadow(0 1px 0 rgba(0,0,0,.35)) drop-shadow(0 10px 12px rgba(0,0,0,.45))",
+        "purpose": "A stub, dark theme. A filter, so the shadow follows the torn edge."
       }
     ],
     "motion": [
       {
         "name": "ease-print",
         "value": "cubic-bezier(.16,1,.3,1)",
-        "purpose": "The one easing: print-in, stamp and label lift."
+        "purpose": "The one easing: print-in, stamp, tear-in and label lift."
       },
       {
         "name": "print-in",
         "value": ".95s, clip-path inset(0 0 100% 0) to inset(0 0 0 0), 70ms stagger per label",
-        "purpose": "Labels print in once on load. Off under prefers-reduced-motion."
+        "purpose": "Full labels print in once on load. Off under prefers-reduced-motion."
       },
       {
         "name": "stamp",
         "value": ".4s, scale 1.3 to 1 at rotate(-9deg), opacity 0 to .9, 700ms after its label",
         "purpose": "Each postmark stamps after its label prints. Off under prefers-reduced-motion."
+      },
+      {
+        "name": "tear-in",
+        "value": ".45s, clip-path from the top, translateY(-6px) rotate(-.6deg) to none, 600ms + 40ms per place in its bundle (capped at 11)",
+        "purpose": "Stubs tear in once on load. Off under prefers-reduced-motion."
       },
       {
         "name": "label-lift",
@@ -376,7 +395,12 @@
       {
         "name": "page-wide",
         "value": "1100px",
-        "purpose": "Container query on the page: three label columns above, two below; hero becomes one column."
+        "purpose": "Container query on the page: 3 stub columns; the hero becomes one column."
+      },
+      {
+        "name": "page-labels-row",
+        "value": "960px",
+        "purpose": "Container query on the page: the full labels become one row that scrolls sideways with scroll snap, each column min(380px, 42%)."
       },
       {
         "name": "page-table",
@@ -386,7 +410,12 @@
       {
         "name": "page-narrow",
         "value": "700px",
-        "purpose": "Container query on the page: one label column, 16px gutter."
+        "purpose": "Container query on the page: 2 stub columns, full label columns 86% wide, 16px gutter."
+      },
+      {
+        "name": "page-single",
+        "value": "440px",
+        "purpose": "Container query on the page: 1 stub column."
       },
       {
         "name": "label-waves",
@@ -433,6 +462,22 @@
       "css": ".ds-field{background:var(--field, #e6eaf2);padding:24px} .ds-lab{font-family:'Archivo',system-ui,sans-serif;max-width:380px;background:var(--label, #ffffff);color:var(--ink, #121212);border-radius:6px;overflow:hidden;box-shadow:var(--shadow, 0 1px 0 rgba(18,40,90,.14),0 16px 30px -16px rgba(18,40,90,.38));transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s cubic-bezier(.16,1,.3,1)} .ds-lab:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi, 0 1px 0 rgba(18,40,90,.14),0 26px 40px -18px rgba(18,40,90,.45))} .ds-lab a{color:inherit;text-underline-offset:.22em} .ds-lab a:focus-visible{outline:2px solid var(--ink, #121212);outline-offset:3px} .ds-new{background:var(--signal, #ff5a1f);font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:9px 18px} .ds-blk{padding:16px 18px;border-bottom:3px solid var(--ink, #121212)} .ds-blk:last-child{border-bottom:0} .ds-from{display:grid;grid-template-columns:1fr auto;gap:14px} .ds-cap{display:block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2, #4a4a46);margin:0 0 6px} .ds-who{font-size:17px;font-weight:700;text-decoration:none} .ds-dn{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;color:var(--ink-2, #4a4a46)} .ds-route{background:var(--ink, #121212);color:var(--label, #ffffff);border-radius:3px;padding:8px 10px 7px;text-align:center;min-width:76px} .ds-route b{display:block;font-size:44px;line-height:.86;font-weight:900;font-stretch:62%} .ds-route span{display:block;margin-top:5px;font-size:11px;font-weight:600} .ds-lab h3{margin:0;font-size:34px;line-height:1;font-weight:850;font-stretch:72%;letter-spacing:-.015em;word-spacing:.12em} .ds-lab p{margin:10px 0 0;font-size:16px;line-height:1.45} .ds-ship{position:relative;min-height:112px} .ds-date{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:27px;font-weight:600;margin:0 !important} .ds-proof{font-size:13px !important;color:var(--ink-2, #4a4a46);margin:4px 0 0 !important} .ds-pm{position:absolute;right:10px;top:50%;width:118px;height:118px;margin-top:-59px;transform:rotate(-9deg);opacity:.9;mix-blend-mode:multiply;color:var(--signal, #ff5a1f)} .ds-mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:13px;font-weight:600} .ds-tid{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:11px !important;color:var(--ink-2, #4a4a46);letter-spacing:.12em;margin:6px 0 0 !important}"
     },
     {
+      "name": "Stub",
+      "kind": "card",
+      "refersTo": "stub",
+      "description": "The top of a label, torn off along its perforation. One for each entry that does not get a full label.",
+      "html": "<div class=\"ds-field\"><article class=\"ds-stub\"><div class=\"ds-stub-paper\"><div class=\"ds-stub-top\"><h4>Project name</h4><div class=\"ds-stub-route\"><b>LRV</b></div></div><p class=\"ds-stub-sentence\">One plain sentence on what it does.</p><p class=\"ds-stub-cred\"><span class=\"ds-stub-from\">Maker Name</span> <span class=\"ds-stub-date\">14/10/2026</span></p><a class=\"ds-stub-more\" href=\"#\">Source <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 17 17 7\"/><path d=\"M9 7h8v8\"/></svg></a></div></article></div>",
+      "css": ".ds-field{background:var(--field, #e6eaf2);padding:24px} .ds-stub{font-family:'Archivo',system-ui,sans-serif;display:flex;max-width:300px;filter:var(--shadow-drop, drop-shadow(0 1px 0 rgba(18,40,90,.14)) drop-shadow(0 8px 10px rgba(18,40,90,.16)))} .ds-stub-paper{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;background:var(--label, #ffffff);color:var(--ink, #121212);border-radius:6px 6px 0 0;padding:14px 16px 16px;-webkit-mask:radial-gradient(circle 4px at 50% 100%,#0000 96%,#000) 50% 100%/12px 100% repeat-x;mask:radial-gradient(circle 4px at 50% 100%,#0000 96%,#000) 50% 100%/12px 100% repeat-x} .ds-stub-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start;padding-bottom:12px;border-bottom:3px solid var(--ink, #121212)} .ds-stub h4{margin:0;font-size:22px;line-height:1.02;font-weight:850;font-stretch:72%;letter-spacing:-.01em;word-spacing:.12em} .ds-stub-route{background:var(--ink, #121212);color:var(--label, #ffffff);border-radius:3px;padding:5px 7px 4px;text-align:center} .ds-stub-route b{display:block;font-size:22px;line-height:.86;font-weight:900;font-stretch:62%;letter-spacing:.01em} .ds-stub-sentence{flex:1 1 auto;margin:10px 0 12px;font-size:14px;line-height:1.45} .ds-stub-cred{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:12px;margin:0;padding:8px 0;border-top:1px solid var(--rule-soft, #d9d9d2);border-bottom:1px dashed var(--perf, #b9b9b2);font-size:13px;line-height:1.35} .ds-stub-from{font-weight:700;min-width:0} .ds-stub-date{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;white-space:nowrap} .ds-stub-more{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;margin-top:8px;min-height:32px;font-size:14px;font-weight:800;color:inherit;text-underline-offset:.22em} .ds-stub-more:hover{text-decoration-thickness:2px} .ds-stub-more:focus-visible{outline:2px solid var(--ink, #121212);outline-offset:3px}"
+    },
+    {
+      "name": "Bundle Head",
+      "kind": "custom",
+      "refersTo": "bundle-head",
+      "description": "Opens a bundle on the field: a condensed heading and a mono parcel count, closed by a 3px rule in the field ink.",
+      "html": "<div class=\"ds-field\"><div class=\"ds-bundle-head\"><h3>Week 43, 19/10 to 25/10</h3><span class=\"ds-bundle-count\">4 parcels</span></div></div>",
+      "css": ".ds-field{background:var(--field, #e6eaf2);padding:24px} .ds-bundle-head{font-family:'Archivo',system-ui,sans-serif;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 20px;padding:0 0 10px;border-bottom:3px solid var(--on-field, #12285a);color:var(--on-field, #12285a)} .ds-bundle-head h3{margin:0;font-size:22px;line-height:1.1;font-weight:800;font-stretch:75%;letter-spacing:-.005em;word-spacing:.12em} .ds-bundle-count{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;color:var(--on-field-2, #3a4870);white-space:nowrap}"
+    },
+    {
       "name": "Route Code",
       "kind": "custom",
       "refersTo": "route-code",
@@ -467,20 +512,21 @@
   ],
   "narrative": {
     "northStar": "The Shipping Manifest",
-    "overview": "Every project on the site is a parcel that shipped. Its postmark is the proof of the date. The page is a depot: a blue field, a manifest slip, and rows of thermal shipping labels printed in black ink. The visitor reads the line, checks the slip, then scans the labels: who, what, when, and where to check.\n\nThe world is printed, not drawn. Labels are white paper with heavy black print rules, a large inverse routing code per stack, a barcode and a ring postmark. Type is one condensed family, Archivo, with a monospace face for dates and tracking data. There are two colours: one Prussian blue ink and one signal orange. The orange marks only the newest parcel.\n\nThe design keeps out of the way of the entries. There are no logos, no screenshots and no art. The system rejects the showcase grid of logo cards and the awesome-list link dump.",
+    "overview": "Every project on the site is a parcel that shipped. Its postmark is the proof of the date. The page is a depot: a blue field, a manifest slip, this week's thermal shipping labels, and bundles of label stubs. The labels and stubs are printed in black ink. The visitor reads the line and checks the slip. Then the visitor scans the labels and the bundles: who, what, when, and where to check.\n\nThe world is printed, not drawn. Labels are white paper with heavy black print rules, a large inverse routing code per stack, a barcode and a ring postmark. A stub is the top of a label, torn off along its perforation. It keeps the name, the sentence, the maker and the date. Type is one condensed family, Archivo, with a monospace face for dates and tracking data. There are two colours: one Prussian blue ink and one signal orange. The orange marks only the newest parcel.\n\nThe design keeps out of the way of the entries. There are no project logos, no screenshots and no art. The one mark is the GitHub mark on the links to the site's own code. The system rejects the showcase grid of logo cards and the awesome-list link dump.",
     "keyCharacteristics": [
-      "Paper on a blue field: all content sits on paper labels, sheets and strips.",
+      "Paper on a blue field: all content sits on paper labels, stubs, sheets and strips.",
+      "Full labels for the entries added last. Stubs for every other entry, in bundles by week and by month.",
       "Heavy print rules (3px black) split every label into its fields.",
       "Condensed Archivo display with wide word spacing (.12em).",
       "JetBrains Mono only for dates and tracking data.",
       "One signal colour, for one parcel.",
       "Light and dark themes, with the same Prussian ink in both.",
-      "A print-in and a stamp on load, and nothing else moves."
+      "A print-in, a stamp and a tear-in on load, and nothing else moves."
     ],
     "rules": [
       {
         "name": "The Signal Rule",
-        "body": "Signal Orange marks only the newest parcel: its top strip, its postmark and the NEWEST tag in the List view. The cancellation waves on that label stay blue. The archive has no orange at all. No button, link, hover or focus state is ever orange.",
+        "body": "Signal Orange marks only the newest parcel: its top strip, its postmark and the NEWEST tag in the List view. The cancellation waves on that label stay blue. The archive has no orange at all. A stub has no orange either. No button, link, hover or focus state is ever orange.",
         "section": "colors"
       },
       {
@@ -490,7 +536,7 @@
       },
       {
         "name": "The Wide Words Rule",
-        "body": "Every condensed heading (display, headline, title, section) gets word spacing of .12em. Condensed Archivo runs words together without it.",
+        "body": "Every condensed heading (display, headline, title, section, bundle) gets word spacing of .12em. Condensed Archivo runs words together without it.",
         "section": "typography"
       },
       {
@@ -515,14 +561,16 @@
       }
     ],
     "dos": [
-      "**Do** put every piece of content on paper: a label, the slip, a sheet or a strip.",
+      "**Do** put every piece of content on paper: a label, a stub, the slip, a sheet or a strip.",
       "**Do** split label fields with 3px Print Black rules.",
       "**Do** keep Signal Orange on the newest parcel only: strip, postmark and NEWEST tag.",
       "**Do** print the postmark and the waves in Prussian Ink, in both themes.",
       "**Do** set condensed headings in Archivo with .12em word spacing.",
       "**Do** use JetBrains Mono for dates and machine data, and write dates as DD/MM/YYYY.",
-      "**Do** keep the page fully usable without JavaScript: all entries as labels, tools hidden.",
-      "**Do** turn off the print-in and the stamp under `prefers-reduced-motion`."
+      "**Do** keep the page fully usable without JavaScript: full labels and bundles of stubs, tools hidden.",
+      "**Do** give a stub only the top of a label: route code, name, sentence, credits row and one link.",
+      "**Do** cast a stub's shadow with the drop-shadow filter (`--shadow-drop`), so it follows the torn edge.",
+      "**Do** turn off the print-in, the stamp and the tear-in under `prefers-reduced-motion`."
     ],
     "donts": [
       "**Don't** build a showcase grid of logo cards or an awesome-list link dump.",
@@ -530,7 +578,8 @@
       "**Don't** add a second accent colour or colour-code the stacks.",
       "**Don't** add shadows to anything that is not paper, or use hard offset shadows.",
       "**Don't** round corners past 6px or use pill shapes.",
-      "**Don't** add motion beyond the print-in, the stamp, the label lift and the theme fade.",
+      "**Don't** add motion beyond the print-in, the stamp, the stub tear-in, the label lift and the theme fade.",
+      "**Don't** add a barcode, postmark, waves or tracking number to a stub.",
       "**Don't** show the cancellation waves on a label narrower than 378px."
     ]
   }
