@@ -197,6 +197,39 @@ it('writes a Markdown copy of each entry', function () {
         MD);
 });
 
+it('adds the optional facts to the Markdown copy when an entry gives them', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php', [
+        'details' => 'Pest 5 adds browser testing. It needs PHP 8.4.',
+        'package' => 'pestphp/pest',
+        'licence' => 'MIT',
+        'docs' => 'https://pestphp.com/docs',
+        'checked' => '2026-10-18',
+        'added' => '2026-10-19',
+    ]);
+
+    expect(files($this)['entries/pest-5.md'])->toBe(<<<'MD'
+        # Pest 5
+
+        A testing framework for PHP, focused on simplicity.
+
+        Pest 5 adds browser testing. It needs PHP 8.4.
+
+        - Made by: [Nuno Maduro](https://github.com/nunomaduro)
+        - Shipped: 01/09/2026
+        - Date from: [release](https://github.com/pestphp/pest/releases/tag/v5.0.0)
+        - Source: [github.com/pestphp/pest](https://github.com/pestphp/pest)
+        - Docs: [pestphp.com/docs](https://pestphp.com/docs)
+        - Install: `composer require pestphp/pest`
+        - Licence: MIT
+        - Stack: plain PHP
+        - Checked: 18/10/2026
+        - Added: 19/10/2026
+
+        See more at [phplives.dev](https://phplives.dev)
+
+        MD);
+});
+
 it('escapes Markdown in entry text', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php', [
         'name' => 'Pest [5] *beta*',
