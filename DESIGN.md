@@ -164,7 +164,7 @@ Every project on the site is a parcel that shipped. Its postmark is the proof of
 
 The world is printed, not drawn. Labels are white paper with heavy black print rules, a large inverse routing code per stack, a barcode and a ring postmark. Type is one condensed family, Archivo, with a monospace face for dates and tracking data. There are two colours: one Prussian blue ink and one signal orange. The orange marks only the newest parcel.
 
-The design keeps out of the way of the entries. There are no logos, no screenshots and no art. The system rejects the showcase grid of logo cards and the awesome-list link dump.
+The design keeps out of the way of the entries. There are no project logos, no screenshots and no art. The one mark is the GitHub mark on the links to the site's own code. The system rejects the showcase grid of logo cards and the awesome-list link dump.
 
 **Key Characteristics:**
 - Paper on a blue field: all content sits on paper labels, sheets and strips.
@@ -241,7 +241,7 @@ The theme follows the device by default. A Light / Dark / System toggle in the t
 
 The page is one column of sections inside a 1320px wrap with a 40px side gutter. The root is a size container, so the layout responds to its own width (container queries), not to the viewport.
 
-- **Hero:** two columns (1.4fr and 1fr, 64px gap), aligned to the bottom. The line is on the left. The white manifest slip is on the right. Below 1100px it becomes one column and the slip caps at 560px.
+- **Hero:** two columns (1.4fr and 1fr, 64px gap), aligned to the bottom. The line is on the left, with the lede, the contribute row and its note under it. The white manifest slip is on the right. Below 1100px it becomes one column and the slip caps at 560px.
 - **Labels grid:** three columns with a 32px gap. Two columns below 1100px. One column below 700px, with a 22px gap. The first row of labels starts inside the first screen.
 - **Section head:** the title and a note on the left, the tools (stack filter, then Labels / List) on the right. Below 700px they stack.
 - **/dev/null band:** full width, 88px top and bottom. Two columns (72px gap) when there are posts. With no posts it is one row: the heading on the left, the CTA and command strip on the right, with less padding (64px).
@@ -280,6 +280,7 @@ The paper carries print marks, not borders:
 Tactile and plain, like a sticker on a box.
 - **Shape:** sticker corners (5px).
 - **CTA:** "Commit it on /dev/null ↗" on the /dev/null band. White paper with Print Black text, weight 800, 48px tall, with the paper shadow and an inline arrow icon. It rises 1px on hover.
+- **Contribute CTA:** the same paper button with the GitHub mark (Octicons, 20px) before the text: "Add your project" in the hero, "See the code on GitHub" in the footer. A bold underlined text link sits next to it for the second route ("or suggest one in an issue", "Read how to contribute").
 - **Copy:** in the command strip. A 2px Print Black outline on paper, weight 800, 36px tall. It shows "Copied" or "Not copied" for 2 seconds. It is hidden when the browser has no clipboard.
 - **Focus:** a 2px outline in the colour of the text around it, with a 2px to 3px offset.
 
@@ -312,6 +313,9 @@ A full-width Prussian band (Night Band in the dark theme). It holds the heading 
 
 ### Read-mode sheets
 Privacy and Credits use a page head on the field and one white sheet. Privacy is sections of body text at a 65ch measure. Credits is groups of items in three columns: the name, what the site uses it for, and its maker and licence. Inline code sits on a Soft Rule tint.
+
+### Footer
+On every page. It opens with the **contribute row**: a section-style heading ("Open source. Anyone can help."), one line of text, and the contribute CTA with its text link on the right. A Field Line hairline splits it from the rest: the maker line, the links, the fine print, and Privacy · Credits.
 
 ### Navigation
 The top bar: the wordmark "phplives.dev" (condensed 75%, weight 800) on the left, then Manifest, Archive and "Commit it on /dev/null", then the theme toggle. The current page is underlined with a 2px line. Links on paper and on the field underline at 1px and thicken to 2px on hover.

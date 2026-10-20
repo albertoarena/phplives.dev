@@ -416,6 +416,7 @@ it('credits the software, services and data the site uses', function () {
         ->and(texts($doc, 'h1'))->toBe(['Credits'])
         ->and(texts($doc, '.credits .item'))->toBe([
             'Archivo', 'JetBrains Mono',
+            'Octicons',
             'PHP', 'Cloudflare Workers static assets', 'Wrangler', 'GitHub Actions', 'Cloudflare Web Analytics',
             'Pest', 'Vitest',
             '/dev/null',
@@ -424,6 +425,7 @@ it('credits the software, services and data the site uses', function () {
         ->and(hrefs($doc, '.credits .item a'))->toBe([
             'https://fonts.google.com/specimen/Archivo',
             'https://fonts.google.com/specimen/JetBrains+Mono',
+            'https://primer.style/octicons/',
             'https://www.php.net',
             'https://developers.cloudflare.com/workers/static-assets/',
             'https://developers.cloudflare.com/workers/wrangler/',
@@ -518,30 +520,35 @@ it('shows chips up to six stacks', function () {
     expect(Site::MAX_CHIPS)->toBe(6);
 });
 
-it('links every footer to the source code and to the contributing guide', function (string $page) {
+it('invites everyone to contribute in every footer', function (string $page) {
     $doc = pages($this)[$page];
+    $open = $doc->querySelector('footer .foot-open');
 
-    expect(hrefs($doc, 'footer .foot-pages a'))->toBe([
-        '/privacy/',
-        '/credits/',
-        'https://github.com/albertoarena/phplives.dev',
-        'https://github.com/albertoarena/phplives.dev/blob/main/CONTRIBUTING.md',
-    ])
-        ->and(texts($doc, 'footer .foot-pages a'))->toBe(['Privacy', 'Credits', 'Source code', 'Contributing'])
-        ->and($doc->querySelectorAll('footer .soon'))->toHaveCount(0);
+    expect(trim($open->querySelector('h2')->textContent))->toBe('Open source. Anyone can help.')
+        ->and(trim(preg_replace('/\s+/', ' ', $open->querySelector('p')->textContent)))
+        ->toBe('Add a project, fix a bug or improve the code. Every change is a pull request on GitHub.')
+        ->and(hrefs($doc, 'footer .foot-open a'))->toBe([
+            'https://github.com/albertoarena/phplives.dev',
+            'https://github.com/albertoarena/phplives.dev/blob/main/CONTRIBUTING.md',
+        ])
+        ->and(texts($doc, 'footer .foot-open a'))->toBe(['See the code on GitHub', 'Read how to contribute'])
+        ->and($open->querySelector('a.tag svg.gh')?->getAttribute('aria-hidden'))->toBe('true')
+        ->and(hrefs($doc, 'footer .foot-pages a'))->toBe(['/privacy/', '/credits/']);
 })->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
 
-it('tells visitors on the main page how to add a project', function () {
+it('asks visitors on the main page to add their own project', function () {
     $doc = pages($this)['index.html'];
-    $note = $doc->querySelector('.hero .open');
+    $send = $doc->querySelector('.hero .send');
 
-    expect(trim(preg_replace('/\s+/', ' ', $note->textContent)))
-        ->toBe('Open source. Add your own project with a pull request, or suggest one in an issue.')
-        ->and(hrefs($doc, '.hero .open a'))->toBe([
-            'https://github.com/albertoarena/phplives.dev/blob/main/CONTRIBUTING.md',
-            'https://github.com/albertoarena/phplives.dev/issues/new?template=suggest-a-project.yml',
-        ])
-        ->and($doc->querySelectorAll('.soon'))->toHaveCount(0);
+    expect(hrefs($doc, '.hero .send a'))->toBe([
+        'https://github.com/albertoarena/phplives.dev/blob/main/CONTRIBUTING.md',
+        'https://github.com/albertoarena/phplives.dev/issues/new?template=suggest-a-project.yml',
+    ])
+        ->and(texts($doc, '.hero .send a'))->toBe(['Add your project', 'or suggest one in an issue'])
+        ->and($send->querySelector('a.tag svg.gh')?->getAttribute('aria-hidden'))->toBe('true')
+        ->and(trim(preg_replace('/\s+/', ' ', $doc->querySelector('.hero .send-note')->textContent)))
+        ->toBe('Open source on GitHub. Anyone can send a project, and the editor checks each one.')
+        ->and($doc->querySelectorAll('.hero .open, .soon'))->toHaveCount(0);
 });
 
 it('serves its own fonts, so no page loads anything from Google', function (string $page) {
