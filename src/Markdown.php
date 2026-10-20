@@ -29,6 +29,8 @@ final class Markdown
             2. A public link proves that it shipped. Open source projects and closed products both count.
             3. PHP is the main language on its server side.
 
+            A new major version (such as Pest 5) can be its own entry, dated by its release. A minor or patch release does not qualify.
+
             Each entry below links to a Markdown copy of its facts.
 
             ## Entries
