@@ -128,7 +128,7 @@ body{margin:0;background:var(--field)}
 .route b{display:block;font-size:44px;line-height:.86;font-weight:900;font-stretch:62%;letter-spacing:.01em}
 .route span{display:block;margin-top:5px;font-size:11px;font-weight:600;letter-spacing:.04em}
 .contents{flex:1 1 auto}
-.contents h3{margin:0;font-size:34px;line-height:1;font-weight:850;font-stretch:72%;letter-spacing:-.015em;word-spacing:.12em}
+.contents :is(h2,h3,h4){margin:0;font-size:34px;line-height:1;font-weight:850;font-stretch:72%;letter-spacing:-.015em;word-spacing:.12em}
 .contents p{margin:10px 0 0;font-size:16px;line-height:1.45}
 .ship{position:relative;min-height:112px}
 .ship .date{margin:0;font-size:27px;font-weight:600;letter-spacing:-.01em}
