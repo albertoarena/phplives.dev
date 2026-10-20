@@ -19,7 +19,7 @@ use PhpLives\Format;
       <div>
         <h1><span>PHP delivers.</span> <span class="stuck">PHP lives!</span></h1>
         <p class="lede">A manifest of real things people shipped with PHP in the last 6 months. Every project links to its own source.</p>
-        <p class="soon"><strong class="soon-tag">Open source soon.</strong> The code goes public in the next few days. Then you can add your own project with a pull request.</p>
+        <p class="open"><strong class="open-tag">Open source.</strong> Add your own project with a <a href="https://github.com/albertoarena/phplives.dev/blob/main/CONTRIBUTING.md">pull request</a>, or <a href="https://github.com/albertoarena/phplives.dev/issues/new?template=suggest-a-project.yml">suggest one in an issue</a>.</p>
       </div>
       <aside class="slip" aria-label="Manifest summary">
         <div class="slip-head">

@@ -518,18 +518,30 @@ it('shows chips up to six stacks', function () {
     expect(Site::MAX_CHIPS)->toBe(6);
 });
 
-it('says in every footer that the source code goes public soon', function (string $page) {
+it('links every footer to the source code and to the contributing guide', function (string $page) {
     $doc = pages($this)[$page];
 
-    expect(hrefs($doc, 'footer .foot-pages a'))->toBe(['/privacy/', '/credits/'])
-        ->and(texts($doc, 'footer .foot-pages .soon'))->toBe(['Source code: public in the next few days']);
+    expect(hrefs($doc, 'footer .foot-pages a'))->toBe([
+        '/privacy/',
+        '/credits/',
+        'https://github.com/albertoarena/phplives.dev',
+        'https://github.com/albertoarena/phplives.dev/blob/main/CONTRIBUTING.md',
+    ])
+        ->and(texts($doc, 'footer .foot-pages a'))->toBe(['Privacy', 'Credits', 'Source code', 'Contributing'])
+        ->and($doc->querySelectorAll('footer .soon'))->toHaveCount(0);
 })->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
 
-it('tells visitors on the main page that the code goes public soon', function () {
-    $note = pages($this)['index.html']->querySelector('.hero .soon');
+it('tells visitors on the main page how to add a project', function () {
+    $doc = pages($this)['index.html'];
+    $note = $doc->querySelector('.hero .open');
 
     expect(trim(preg_replace('/\s+/', ' ', $note->textContent)))
-        ->toBe('Open source soon. The code goes public in the next few days. Then you can add your own project with a pull request.');
+        ->toBe('Open source. Add your own project with a pull request, or suggest one in an issue.')
+        ->and(hrefs($doc, '.hero .open a'))->toBe([
+            'https://github.com/albertoarena/phplives.dev/blob/main/CONTRIBUTING.md',
+            'https://github.com/albertoarena/phplives.dev/issues/new?template=suggest-a-project.yml',
+        ])
+        ->and($doc->querySelectorAll('.soon'))->toHaveCount(0);
 });
 
 it('serves its own fonts, so no page loads anything from Google', function (string $page) {

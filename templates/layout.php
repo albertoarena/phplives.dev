@@ -66,7 +66,7 @@ $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
     </div>
     <p class="fine">Every entry links to its own source. Dates are DD/MM/YYYY.</p>
     <p class="fine indie">phplives.dev is an independent site. /dev/null does not sponsor or endorse it.</p>
-    <p class="fine foot-pages"><a href="/privacy/"<?= $path === '/privacy/' ? ' aria-current="page"' : '' ?>>Privacy</a><span aria-hidden="true">·</span><a href="/credits/"<?= $path === '/credits/' ? ' aria-current="page"' : '' ?>>Credits</a><span aria-hidden="true">·</span><span class="soon">Source code: public in the next few days</span></p>
+    <p class="fine foot-pages"><a href="/privacy/"<?= $path === '/privacy/' ? ' aria-current="page"' : '' ?>>Privacy</a><span aria-hidden="true">·</span><a href="/credits/"<?= $path === '/credits/' ? ' aria-current="page"' : '' ?>>Credits</a><span aria-hidden="true">·</span><a href="https://github.com/albertoarena/phplives.dev">Source code</a><span aria-hidden="true">·</span><a href="https://github.com/albertoarena/phplives.dev/blob/main/CONTRIBUTING.md">Contributing</a></p>
   </footer>
 </div>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='<?= $e(json_encode(['token' => $analyticsToken])) ?>'></script>
