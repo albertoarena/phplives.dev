@@ -155,7 +155,7 @@ final readonly class Site
      */
     private function robots(): string
     {
-        return "User-agent: *\nContent-Signal: search=yes, ai-input=yes\nAllow: /\n\nSitemap: ".self::URL."/sitemap.xml\n";
+        return "User-agent: *\nContent-Signal: search=yes, ai-input=yes, ai-train=yes\nAllow: /\n\nSitemap: ".self::URL."/sitemap.xml\n";
     }
 
     /**

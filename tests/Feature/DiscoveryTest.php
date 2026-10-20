@@ -59,7 +59,7 @@ it('writes the HTML pages and the files that help people and tools find them', f
 it('lets every crawler in, points to the sitemap and sets the content signals', function () {
     expect(files($this)['robots.txt'])->toBe(<<<'TXT'
         User-agent: *
-        Content-Signal: search=yes, ai-input=yes
+        Content-Signal: search=yes, ai-input=yes, ai-train=yes
         Allow: /
 
         Sitemap: https://phplives.dev/sitemap.xml
