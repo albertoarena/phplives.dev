@@ -38,6 +38,12 @@ open. Do not decide an open question by building it. Never copy anything from
 
 ## Git
 
+- **The repo is public. Check everything before it is posted.** Before each
+  commit, push, PR, issue or comment, read the full text and the diff once more.
+  Nothing may come from `.docs/` or another private place: no private notes, no
+  plans, no aims, no private messages, and no names, links or commit hashes from
+  private repos. When in doubt, leave it out and ask Alberto. This also applies to
+  work done by a sub-agent: check its PR before you report it.
 - **Commit subject:** short and imperative, under about 50 characters
   ("Add the first entries", not "Added entries" or "feat: entries").
 - **Body:** what changed and why, in plain prose. No AI-attribution trailers.
