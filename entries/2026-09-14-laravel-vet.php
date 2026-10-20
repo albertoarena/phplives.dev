@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: Laravel Vet. A dependency audit for PHP that shows you each package change before composer update writes it into vendor. https://github.com/laravel/vet'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',
+    'added' => '2026-10-19',
 ];

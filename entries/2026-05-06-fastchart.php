@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: FastChart. A native PHP extension in C that draws charts fast: 38 chart types and barcodes, as SVG, PNG, JPEG, WebP or PDF, behind a modern PHP API. https://github.com/iliaal/fastchart'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-20',
+    'added' => '2026-10-20',
 ];

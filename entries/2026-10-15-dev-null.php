@@ -25,4 +25,5 @@ return [
     'devnull' => 'Shipped with PHP: dev/null. A social network for developers: sign in with GitHub, follow developers and share commits. https://github.com/nunomaduro/dev-null.sh'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-17',
+    'added' => '2026-10-17',
 ];

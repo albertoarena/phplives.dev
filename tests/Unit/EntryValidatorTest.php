@@ -27,7 +27,7 @@ it('reports a missing field', function (string $field) {
     unset($entry[$field]);
 
     expect(errorsFor($entry))->toContain("Missing field: {$field}.");
-})->with(['name', 'sentence', 'makers', 'shipped', 'proof', 'source', 'stack', 'devnull', 'checked']);
+})->with(['name', 'sentence', 'makers', 'shipped', 'proof', 'source', 'stack', 'devnull', 'checked', 'added']);
 
 it('reports an empty text field', function (string $field) {
     expect(errorsFor(validEntry([$field => '  '])))->toContain("Field {$field} is empty.");
@@ -45,18 +45,28 @@ it('reports a bad date', function (string $field, string $value) {
     ['shipped', '2026-02-30'],
     ['checked', '2026-13-01'],
     ['checked', 'yesterday'],
+    ['added', '20/10/2026'],
+    ['added', '2026-02-29'],
 ]);
 
 it('reports a date in the future', function (string $field) {
     $entry = validEntry(['shipped' => '2026-09-01', 'checked' => '2026-10-16', $field => '2026-10-17']);
 
     expect(errorsFor($entry, '2026-10-17-pest-5.php'))->toContain("Field {$field} is in the future.");
-})->with(['shipped', 'checked']);
+})->with(['shipped', 'checked', 'added']);
 
 it('reports a check made before the ship date', function () {
     $entry = validEntry(['checked' => '2026-08-31']);
 
     expect(errorsFor($entry))->toContain('Field checked is before the shipped date.');
+});
+
+it('reports an entry added before its ship date', function () {
+    expect(errorsFor(validEntry(['added' => '2026-08-31'])))->toContain('Field added is before the shipped date.');
+});
+
+it('accepts an entry added on its ship date', function () {
+    expect(errorsFor(validEntry(['added' => '2026-09-01'])))->toBe([]);
 });
 
 it('reports an unknown stack', function () {

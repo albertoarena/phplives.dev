@@ -15,7 +15,7 @@ final class EntryValidator
     public const int MAX_SENTENCE = 160;
 
     public const array FIELDS = [
-        'name', 'sentence', 'makers', 'shipped', 'proof', 'source', 'stack', 'devnull', 'checked',
+        'name', 'sentence', 'makers', 'shipped', 'proof', 'source', 'stack', 'devnull', 'checked', 'added',
     ];
 
     public const array STACKS = ['laravel', 'symfony', 'nativephp', 'wordpress', 'php'];
@@ -62,9 +62,14 @@ final class EntryValidator
 
         $shipped = isset($entry['shipped']) ? $this->date('shipped', $entry['shipped'], $errors) : null;
         $checked = isset($entry['checked']) ? $this->date('checked', $entry['checked'], $errors) : null;
+        $added = isset($entry['added']) ? $this->date('added', $entry['added'], $errors) : null;
 
         if ($shipped && $checked && $checked < $shipped) {
             $errors[] = 'Field checked is before the shipped date.';
+        }
+
+        if ($shipped && $added && $added < $shipped) {
+            $errors[] = 'Field added is before the shipped date.';
         }
 
         if (isset($entry['makers'])) {

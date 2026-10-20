@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: plMail. A mail client you host yourself: it shows the mailboxes you already have in one inbox, with a calendar beside it. https://github.com/karatektus/pl_mail'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-16',
+    'added' => '2026-10-17',
 ];

@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: Qbix Server. A web server written in pure PHP that replaces nginx and PHP-FPM with one process for static files, PHP scripts and WebSockets. https://github.com/Qbix/webserver'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',
+    'added' => '2026-10-19',
 ];

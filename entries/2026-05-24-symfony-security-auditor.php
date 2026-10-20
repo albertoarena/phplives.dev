@@ -16,4 +16,5 @@ return [
     'devnull' => 'Shipped with PHP: Symfony Security Auditor. A security auditor for Symfony apps where one AI agent attacks the code and another reviews each finding, to catch flaws that static analysis tools miss. https://github.com/vinceAmstoutz/symfony-security-auditor'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-20',
+    'added' => '2026-10-20',
 ];

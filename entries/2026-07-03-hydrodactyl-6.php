@@ -17,4 +17,5 @@ return [
     'devnull' => 'Shipped with PHP: Hydrodactyl v6. A new major version of the game server panel formerly called Pyrodactyl, a fork of Pterodactyl, now with a new name and a full redesign. https://github.com/BlueprintFramework/hydrodactyl'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-20',
+    'added' => '2026-10-20',
 ];
