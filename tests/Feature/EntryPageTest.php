@@ -216,7 +216,7 @@ it('keeps the site rules on the entry page', function () {
     $doc = entryPage($this, 'pest-5', ['nunomaduro']);
     $links = iterator_to_array($doc->querySelectorAll('a[href]'));
 
-    expect($doc->documentElement->outerHTML)->not->toContain("\u{2014}");
+    expect($doc->saveHtml())->not->toContain("\u{2014}");
 
     foreach ($links as $a) {
         $href = $a->getAttribute('href');

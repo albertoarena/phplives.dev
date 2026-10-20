@@ -68,7 +68,7 @@ $onEntryPage = true;
           <div><dt>Licence</dt><dd class="dk-licence mono"><?= $e($entry->licence) ?></dd></div>
 <?php endif ?>
           <div><dt>Shipped</dt><dd class="mono"><time datetime="<?= $entry->shipped->format('Y-m-d') ?>"><?= $e(Format::date($entry->shipped)) ?></time></dd></div>
-          <div><dt>Date from</dt><dd><a class="dk-link" href="<?= $e($entry->proofUrl) ?>"><?= $e(ucfirst(Format::proofLabel($entry->proofKind))) ?><?= $arrowOut ?></a></dd></div>
+          <div><dt>Date from</dt><dd><a class="dk-link" href="<?= $e($entry->proofUrl) ?>"><?= $e(Format::proofLabel($entry->proofKind)) ?><?= $arrowOut ?></a></dd></div>
           <div><dt>Added</dt><dd class="mono"><time datetime="<?= $entry->added->format('Y-m-d') ?>"><?= $e(Format::date($entry->added)) ?></time></dd></div>
           <div><dt>Checked</dt><dd class="mono"><time datetime="<?= $entry->checked->format('Y-m-d') ?>"><?= $e(Format::date($entry->checked)) ?></time></dd></div>
         </dl>

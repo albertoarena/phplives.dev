@@ -305,7 +305,7 @@ body{margin:0;background:var(--field)}
 .depot .route b{font-size:56px}
 .depot .contents h1{margin:0;font-size:clamp(40px,9cqi,56px);line-height:.95;font-weight:850;font-stretch:72%;letter-spacing:-.015em;word-spacing:.12em;text-wrap:balance}
 .depot .contents p{margin-top:14px;font-size:19px;line-height:1.45}
-.depot .ship{min-height:150px}
+.depot .ship{min-height:118px}
 .depot .ship .date{font-size:34px}
 .depot .ship .proof{font-size:14px}
 .depot .pm{width:150px;height:150px;margin-top:-75px;right:14px}
@@ -330,7 +330,7 @@ body{margin:0;background:var(--field)}
 .dk-makers{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 .dk-makers li{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 16px}
 .dk-makers .who{font-weight:700;font-size:16px}
-.dk-makers .mono{font-size:13px;color:var(--ink-2)}
+.dk-makers .mono{font-size:14px}
 .dk-share{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 20px;padding:14px 24px 16px;border-top:2px dashed var(--perf)}
 .dk-share p{margin:0;min-width:0}
 .dk-share .cap{margin-bottom:4px}
@@ -349,10 +349,10 @@ body{margin:0;background:var(--field)}
 .stub::after{content:"";position:absolute;top:8px;bottom:8px;border-left:2px dashed var(--perf)}
 .stub-prev::after{right:10px}
 .stub-next::after{left:10px}
-.stub-body{display:flex;flex-direction:column;gap:6px;padding:16px 26px 14px 16px}
+.stub-body{display:flex;flex-direction:column;justify-content:center;gap:6px;padding:16px 26px 14px 16px}
 .stub-next .stub-body{padding:16px 16px 14px 26px}
 .stub-prev .stub-body{align-items:flex-end;text-align:right}
-.stub-cap{display:inline-flex;align-items:center;gap:6px;font-size:11px;line-height:1.2;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)}
+.stub-cap{white-space:nowrap;display:inline-flex;align-items:center;gap:6px;font-size:11px;line-height:1.2;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)}
 .stub-name{font-size:24px;line-height:1;font-weight:850;font-stretch:72%;letter-spacing:-.01em;word-spacing:.12em;text-wrap:balance;text-decoration-thickness:2px;text-underline-offset:.16em}
 .stub:hover .stub-name{text-decoration-line:underline}
 .stub-meta{display:flex;align-items:center;gap:10px}
@@ -364,17 +364,17 @@ body{margin:0;background:var(--field)}
 /* Wide: the stubs sit on the shelf at the left and right edges, cut off by the edge of the page */
 @container (min-width:1100px){
   .nbr{display:block;margin:0}
-  .pl .stub{position:absolute;top:210px;width:330px;grid-template-columns:96px minmax(0,1fr)}
-  .pl .stub-next{grid-template-columns:minmax(0,1fr) 96px}
-  .pl .stub-prev{left:calc(min(250px,(100cqi - 600px) / 2 - 48px) - 330px);transform:rotate(-1.5deg)}
-  .pl .stub-next{right:calc(min(250px,(100cqi - 600px) / 2 - 48px) - 330px);transform:rotate(1.2deg)}
+  /* Each stub runs from past the page edge to a fixed gap before the label, so the edge always cuts its barcode */
+  .pl .stub{position:absolute;top:210px;grid-template-columns:72px minmax(0,1fr)}
+  .pl .stub-next{grid-template-columns:minmax(0,1fr) 72px}
+  .pl .stub-prev{left:-40px;right:calc(50% + 300px + clamp(40px,5cqi,96px))}
+  .pl .stub-next{right:-40px;left:calc(50% + 300px + clamp(40px,5cqi,96px))}
   .stub-bars{padding:16px 0}
-  .stub-body{min-height:150px}
-  .stub-prev .stub-bars{padding-left:56px}
-  .stub-next .stub-bars{padding-right:56px}
-  .stub-body{padding:20px 30px 18px 18px;gap:8px}
-  .stub-next .stub-body{padding:20px 18px 18px 30px}
-  .stub-name{font-size:28px}
+  .stub-prev .stub-bars{padding:16px 6px 16px 0}
+  .stub-next .stub-bars{padding:16px 0 16px 6px}
+  .stub-body{padding:20px 28px 18px 8px;gap:8px}
+  .stub-next .stub-body{padding:20px 8px 18px 28px}
+  .stub-name{font-size:clamp(22px,2cqi,28px)}
 }
 @container (max-width:700px){
   .back{padding-top:16px}
