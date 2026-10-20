@@ -104,11 +104,17 @@ it('leaves out the list page dates when there are no entries', function () {
     expect(files($this)['sitemap.xml'])->not->toContain('<lastmod>');
 });
 
-it('keeps the entry pages out of the sitemap until they are built', function () {
+it('keeps the entry pages out of the sitemap when they are off', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php');
 
-    expect(Site::ENTRY_PAGES)->toBeFalse()
-        ->and(files($this)['sitemap.xml'])->not->toContain('/entries/');
+    expect(files($this)['sitemap.xml'])->not->toContain('/entries/');
+});
+
+it('lists the entry pages in the sitemap of the real site', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+
+    expect((new Site(Entries::load($this->dir, $this->today), $this->today))->files()['sitemap.xml'])
+        ->toContain('<loc>https://phplives.dev/entries/pest-5/</loc>');
 });
 
 it('lists each entry page in the sitemap, dated by its check, once entry pages are on', function () {

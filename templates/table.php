@@ -5,6 +5,7 @@
  * @var callable $e
  * @var list<\PhpLives\Entry> $entries
  * @var bool $markNewest Tag the first row as the newest parcel.
+ * @var \PhpLives\Site $site
  */
 use PhpLives\Format;
 ?>
@@ -22,7 +23,7 @@ use PhpLives\Format;
               <td class="desc"><?= $e($entry->sentence) ?></td>
               <td class="from"><?= $e(Format::credit($entry->makers)) ?></td>
               <td class="stk"><span class="code"><?= $e(Format::stackCode($entry->stack)) ?></span><span class="code-l"><?= $e(Format::stackLabel($entry->stack)) ?></span></td>
-              <td class="trk mono"><a href="<?= $e($entry->source) ?>"><?= $e(Format::linkText($entry->source)) ?></a></td>
+              <td class="trk"><a class="mono" href="<?= $e($entry->source) ?>"><?= $e(Format::linkText($entry->source)) ?></a><?php if ($site->hasEntryPages()): ?><a class="more" href="<?= $e($site::entryPath($entry)) ?>">Details<span class="sr-only"> for <?= $e($entry->name) ?></span></a><?php endif ?></td>
             </tr>
 <?php endforeach ?>
           </tbody>
