@@ -1,0 +1,44 @@
+#!/bin/sh
+# Makes the fonts that the build uses to draw the share cards, in assets/fonts/card/.
+#
+#   bin/card-fonts
+#
+# GD draws text from TTF files with fixed axes, so this script takes the official
+# variable fonts from the google/fonts repo, fixes the width and the weight, and keeps
+# only the Latin and Latin Extended letters. It needs Python 3 with fontTools
+# (pip install fonttools). The licences are in assets/fonts/OFL-*.txt.
+
+set -eu
+
+# A fixed commit of github.com/google/fonts, so the same files come out every time.
+COMMIT=47d54ca1ebb14fd864695f1d39dc734f39017c33
+BASE="https://raw.githubusercontent.com/google/fonts/${COMMIT}/ofl"
+OUT="$(cd "$(dirname "$0")/.." && pwd)/assets/fonts/card"
+UNICODES='U+0020-007E,U+00A0-024F,U+2010-2027,U+2030-203A,U+20AC,U+2122,U+2190-2193'
+
+# fontTools reads this for the time stamp in the font, so a rebuild gives the same bytes.
+export SOURCE_DATE_EPOCH=1760000000
+
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT
+
+curl -fsSL -o "$TMP/archivo.ttf" "$BASE/archivo/Archivo%5Bwdth,wght%5D.ttf"
+curl -fsSL -o "$TMP/jetbrainsmono.ttf" "$BASE/jetbrainsmono/JetBrainsMono%5Bwght%5D.ttf"
+
+mkdir -p "$OUT"
+
+# instance SOURCE "AXES" NAME
+instance() {
+  python3 -m fontTools varLib.instancer "$TMP/$1" $2 -q -o "$TMP/static.ttf"
+  python3 -m fontTools subset "$TMP/static.ttf" --unicodes="$UNICODES" \
+    --layout-features='kern,liga,tnum' --no-hinting --output-file="$OUT/$3"
+  rm "$TMP/static.ttf"
+}
+
+instance archivo.ttf "wdth=72 wght=850" archivo-72-850.ttf   # the project name
+instance archivo.ttf "wdth=62 wght=900" archivo-62-900.ttf   # the route code
+instance archivo.ttf "wdth=100 wght=800" archivo-100-800.ttf # the postmark ring
+instance archivo.ttf "wdth=100 wght=700" archivo-100-700.ttf # captions and makers
+instance jetbrainsmono.ttf "wght=600" jetbrainsmono-600.ttf  # dates
+
+ls -l "$OUT"

@@ -8,10 +8,10 @@
 $groups = [
     'fonts' => [
         'title' => 'Fonts',
-        'note' => 'This site serves both fonts itself, with their licence files in /fonts/.',
+        'note' => 'This site serves both fonts itself, with their licence files in /fonts/. The build draws the share images with fixed copies of both fonts. These copies are in assets/fonts/card/ in the code of the site.',
         'items' => [
-            ['name' => 'Archivo', 'url' => 'https://fonts.google.com/specimen/Archivo', 'use' => 'The main typeface of the site.', 'from' => 'Omnibus-Type', 'licence' => 'SIL Open Font License 1.1'],
-            ['name' => 'JetBrains Mono', 'url' => 'https://fonts.google.com/specimen/JetBrains+Mono', 'use' => 'The typeface for dates, numbers and code.', 'from' => 'JetBrains, Philipp Nurullin and Konstantin Bulenkov', 'licence' => 'SIL Open Font License 1.1'],
+            ['name' => 'Archivo', 'url' => 'https://fonts.google.com/specimen/Archivo', 'use' => 'The main typeface of the site, and of the share image of each entry.', 'from' => 'Omnibus-Type', 'licence' => 'SIL Open Font License 1.1'],
+            ['name' => 'JetBrains Mono', 'url' => 'https://fonts.google.com/specimen/JetBrains+Mono', 'use' => 'The typeface for dates, numbers and code, on the site and on the share images.', 'from' => 'JetBrains, Philipp Nurullin and Konstantin Bulenkov', 'licence' => 'SIL Open Font License 1.1'],
         ],
     ],
     'icons' => [
@@ -23,7 +23,8 @@ $groups = [
     'build' => [
         'title' => 'Build and hosting',
         'items' => [
-            ['name' => 'PHP', 'url' => 'https://www.php.net', 'use' => 'Runs the build script. The script turns the entry files into static HTML, with no framework.', 'from' => 'The PHP Group and contributors'],
+            ['name' => 'PHP', 'url' => 'https://www.php.net', 'use' => 'Runs the build script. The script turns the entry files into static HTML, with no framework. It draws the share image of each entry with the GD extension of PHP.', 'from' => 'The PHP Group and contributors'],
+            ['name' => 'fontTools', 'url' => 'https://github.com/fonttools/fonttools', 'use' => 'Makes the fixed copies of the fonts that the build uses for the share images.', 'from' => 'Just van Rossum and contributors', 'licence' => 'MIT'],
             ['name' => 'Cloudflare Workers static assets', 'url' => 'https://developers.cloudflare.com/workers/static-assets/', 'use' => 'Hosts the site.', 'from' => 'Cloudflare'],
             ['name' => 'Wrangler', 'url' => 'https://developers.cloudflare.com/workers/wrangler/', 'use' => 'Deploys the site to Cloudflare.', 'from' => 'Cloudflare', 'licence' => 'MIT or Apache 2.0'],
             ['name' => 'GitHub Actions', 'url' => 'https://github.com/features/actions', 'use' => 'Runs the tests. It also builds and deploys the site.', 'from' => 'GitHub'],

@@ -25,8 +25,9 @@ looks.
 
 A small PHP build script, with no framework, turns one PHP file per entry into
 static HTML. It also writes an Atom feed, a sitemap, `robots.txt`, `llms.txt` and
-a Markdown copy of each entry. GitHub Actions runs the tests, builds the site and deploys it to
-Cloudflare Workers. A daily build moves old entries to the archive.
+a Markdown copy of each entry. It draws a share card for each entry page with GD.
+GitHub Actions runs the tests, builds the site and deploys it to Cloudflare Workers.
+A daily build moves old entries to the archive.
 
 ```
 entries/      one file per entry, named YYYY-MM-DD-slug.php
@@ -36,12 +37,14 @@ assets/       styles, scripts, fonts and images
 art/          the icon and the share card (see TRADEMARK.md)
 tests/        Pest (PHP) and Vitest (browser scripts)
 bin/build     builds the site into dist/
+bin/card-fonts makes the fonts of the share cards, in assets/fonts/card/
 ```
 
 ## Run it locally
 
-You need PHP 8.4 or later and Composer. For the browser tests, you also need Node 24
-(see `.nvmrc`).
+You need PHP 8.4 or later and Composer. The share cards need the GD extension with
+FreeType. Without it, the site still builds, and entry pages use the site's own share
+card. For the browser tests, you also need Node 24 (see `.nvmrc`).
 
 ```sh
 composer install

@@ -267,6 +267,8 @@ The theme follows the device by default. A Light / Dark / System toggle in the t
 
 **The One Ink Rule.** The postmark and the waves use Prussian Ink on every label, in both themes. A second blue, or a coloured stack code, breaks the print.
 
+**The Permanent Card Rule.** A share card has no Signal Orange, not even the card of the newest parcel. Other sites keep a shared card for good. The newest parcel does not stay the newest.
+
 ## Typography
 
 **Display Font:** Archivo (with system-ui, sans-serif), a variable font with width 62 to 125 and weight 100 to 900.
@@ -378,6 +380,16 @@ The same label partial is used on the home page and on the entry page.
 ### Entry label
 The shipping label, enlarged on its own entry page. It is 600px wide on the shelf. The blocks have 20px by 24px of padding. The project name is the page's h1, at clamp(40px, 9cqi, 56px). The route code is bigger (56px code, 92px wide block). The date is 34px. The postmark is 150px and the barcode 60px tall. The label does not lift on hover, and it has no Details link. The newest entry's page keeps the Signal Orange strip and the orange postmark.
 
+### Share card
+The image that shows when someone shares an entry page: the entry's shipping label, 1200x630 PNG. The build draws it with GD at twice the size, then scales it down. It is at `/entries/{slug}/card.png`. The page's `og:image` adds `?v=` and a short hash of what the card shows. Other pages use the site card in `art/`.
+- **Field:** Prussian Ink, edge to edge.
+- **Label:** a white label, 586px wide, in the middle of the card, with the paper shadow. Its blocks, split by 3px print rules: FROM (the makers, and the route code at the right), CONTENTS (the name), SHIPPED (the mono date and the waves) and a foot with `phplives.dev` in mono. The postmark sits over the bottom-right corner, turned -9deg, in Prussian Ink with a multiply blend.
+- **Square-safe middle:** /dev/null crops the card to the 630x630 square in the middle. The whole label sits in that square, so the name, the stack code, the date and `phplives.dev` survive the crop. Outside the square there is only decoration: waves on the left, and `phplives.dev` with the line `PHP delivers. PHP lives!` on the right.
+- **Text fitting:** the name is in the title shape (Archivo 850, width 72), up to 88px. It shrinks, or it breaks into two balanced lines. The label grows to fit it. One line wins when it fits at 72% of the two-line size. The makers are one line: one name, two names, or the lead and "and N more". They shrink to fit.
+- **Fonts:** fixed copies of Archivo and JetBrains Mono in `assets/fonts/card/`. `bin/card-fonts` makes them from the official variable fonts.
+- **Colour:** no Signal Orange (see The Permanent Card Rule).
+- **Fallback:** without GD and FreeType, the site still builds and entry pages use the site card.
+
 ### Docket
 A white sheet under the entry label, with the paper shadow and a 6px radius. Its parts, top to bottom:
 1. **Sheet head:** "Parcel details" and the tracking number in mono, closed by a print rule.
@@ -466,3 +478,5 @@ Labels print in once on load: each one reveals from top to bottom with a clip-pa
 - **Don't** show the cancellation waves on a label narrower than 378px.
 - **Don't** dim, fade, lift or rotate a neighbour stub. It is paper, only partly on screen.
 - **Don't** give the docket's command strip a shadow: it is printed on the docket.
+- **Don't** use Signal Orange on a share card.
+- **Don't** put the name, the stack code, the date or `phplives.dev` of a share card outside the square in its middle.

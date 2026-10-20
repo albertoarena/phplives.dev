@@ -9,6 +9,8 @@
  * @var string $content
  * @var string|null $description The page's own description. Null for the site's.
  * @var string|null $markdown The address of the page's Markdown copy, when it has one.
+ * @var string|null $image The page's own share card, with $imageAlt. Null for the site's.
+ * @var string|null $imageAlt
  */
 $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
 ?>
@@ -38,10 +40,10 @@ $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
 <?php if ($path !== null): ?>
 <meta property="og:url" content="https://phplives.dev<?= $e($path) ?>">
 <?php endif ?>
-<meta property="og:image" content="https://phplives.dev/share.png?v=3">
+<meta property="og:image" content="<?= $e($image ?? 'https://phplives.dev/share.png?v=3') ?>">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="PHP delivers. PHP lives! Real things people shipped with PHP in the last 6 months. phplives.dev">
+<meta property="og:image:alt" content="<?= $e($imageAlt ?? 'PHP delivers. PHP lives! Real things people shipped with PHP in the last 6 months. phplives.dev') ?>">
 <meta name="twitter:card" content="summary_large_image">
 <script><?= $themeScript ?></script>
 <link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
