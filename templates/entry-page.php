@@ -86,17 +86,17 @@ $onEntryPage = true;
 <?php if ($before !== null || $after !== null): ?>
       <nav class="nbr" aria-label="Other parcels">
 <?php foreach (['prev' => $before, 'next' => $after] as $rel => $other): if ($other === null) continue; $tid = $site->trackingNumber($other); $y = 0; ?>
-        <a class="stub stub-<?= $rel ?>" rel="<?= $rel ?>" href="<?= $e($site::entryPath($other)) ?>">
-          <svg class="stub-bars" viewBox="0 0 30 <?= array_sum(array_column(Format::barcode($tid), 'width')) * 1.6 ?>" preserveAspectRatio="none" aria-hidden="true">
+        <a class="nstub nstub-<?= $rel ?>" rel="<?= $rel ?>" href="<?= $e($site::entryPath($other)) ?>">
+          <svg class="nstub-bars" viewBox="0 0 30 <?= array_sum(array_column(Format::barcode($tid), 'width')) * 1.6 ?>" preserveAspectRatio="none" aria-hidden="true">
 <?php foreach (Format::barcode($tid) as $bar): $h = $bar['width'] * 1.6; ?>
 <?php if ($bar['ink']): ?>            <rect y="<?= $y ?>" width="30" height="<?= $h ?>"/>
 <?php endif; $y += $h; endforeach ?>
           </svg>
-          <span class="stub-body">
-            <span class="stub-cap"><?php if ($rel === 'prev'): ?><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg><?php endif ?><?= $rel === 'prev' ? 'Shipped before' : 'Shipped after' ?><?php if ($rel === 'next'): ?><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg><?php endif ?></span>
-            <span class="stub-name"><?= $e($other->name) ?></span>
-            <span class="stub-meta"><span class="stub-date mono"><?= $e(Format::date($other->shipped)) ?></span><span class="stub-code" aria-label="Stack: <?= $e(Format::stackLabel($other->stack)) ?>"><?= $e(Format::stackCode($other->stack)) ?></span></span>
-            <span class="stub-tid mono"><?= $e($tid) ?></span>
+          <span class="nstub-body">
+            <span class="nstub-cap"><?php if ($rel === 'prev'): ?><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg><?php endif ?><?= $rel === 'prev' ? 'Shipped before' : 'Shipped after' ?><?php if ($rel === 'next'): ?><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg><?php endif ?></span>
+            <span class="nstub-name"><?= $e($other->name) ?></span>
+            <span class="nstub-meta"><span class="nstub-date mono"><?= $e(Format::date($other->shipped)) ?></span><span class="nstub-code" aria-label="Stack: <?= $e(Format::stackLabel($other->stack)) ?>"><?= $e(Format::stackCode($other->stack)) ?></span></span>
+            <span class="nstub-tid mono"><?= $e($tid) ?></span>
           </span>
         </a>
 <?php endforeach ?>

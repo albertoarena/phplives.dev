@@ -5,10 +5,12 @@
  * @var callable $e
  * @var \PhpLives\Site $site
  * @var \PhpLives\Entry $entry
- * @var int $i Its place in the grid. The first label is the newest parcel.
- * @var bool|null $onEntryPage True on the entry's own page: the name is the page heading, the newest
+ * @var int $i Its place on the page. The first label is the newest parcel.
+ * @var string|null $heading The tag of the project name. h3 when it is not set.
+ * @var bool|null $onEntryPage True on the entry's own page: the name is the page heading (h1), the newest
  *                             parcel is marked by $newest, and the label has no link to its page.
  * @var bool|null $newest On the entry page: true when this is the newest parcel.
+ * @var string|null $newestSlug On the main page: the slug of the newest parcel. Without it, the first label is the newest.
  */
 use PhpLives\Format;
 
@@ -16,8 +18,8 @@ $id = $e($entry->slug);
 $tid = $site->trackingNumber($entry);
 $x = 0;
 $own = $onEntryPage ?? false;
-$isNewest = $own ? ($newest ?? false) : $i === 0;
-$heading = $own ? 'h1' : 'h3';
+$isNewest = $own ? ($newest ?? false) : (isset($newestSlug) ? $entry->slug === $newestSlug : $i === 0);
+$heading = $own ? 'h1' : (in_array($heading ?? null, ['h2', 'h3', 'h4'], true) ? $heading : 'h3');
 ?>
         <article class="lab<?= $isNewest ? ' newest' : '' ?>" style="--i: <?= $i ?>" data-stack="<?= $e($entry->stack) ?>" aria-labelledby="t-<?= $id ?>">
 <?php if ($isNewest): ?>

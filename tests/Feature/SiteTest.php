@@ -18,9 +18,9 @@ afterEach(function () {
     rmdir($this->dir);
 });
 
-function pages(object $test, array $devnullUsers = [], array $posts = []): array
+function pages(object $test, array $devnullUsers = [], array $posts = [], bool $entryPages = false): array
 {
-    $site = new Site(Entries::load($test->dir, $test->today), $test->today, $devnullUsers, $posts);
+    $site = new Site(Entries::load($test->dir, $test->today), $test->today, $devnullUsers, $posts, $entryPages);
 
     return array_map(
         fn (string $html) => HTMLDocument::createFromString($html, LIBXML_NOERROR),
@@ -54,19 +54,171 @@ it('puts the line in the title of the main page', function () {
         ->toBe('phplives.dev: PHP delivers. PHP lives!');
 });
 
-it('lists current entries newest first, and marks only the newest', function () {
-    writeEntry($this->dir, '2026-08-01-older.php', ['name' => 'Older']);
-    writeEntry($this->dir, '2026-10-01-newer.php', ['name' => 'Newer']);
+it('puts the entries added last on full labels, and marks only the newest', function () {
+    writeEntry($this->dir, '2026-08-01-older.php', ['name' => 'Older', 'added' => '2026-10-13']);
+    writeEntry($this->dir, '2026-10-01-newer.php', ['name' => 'Newer', 'added' => '2026-10-14']);
+    writeEntry($this->dir, '2026-09-01-before.php', ['name' => 'Before', 'added' => '2026-10-01']);
+    writeEntry($this->dir, '2026-09-20-stub.php', ['name' => 'Stub', 'added' => '2026-09-21']);
     writeEntry($this->dir, '2026-03-01-archived.php', ['name' => 'Archived']);
 
     $main = pages($this)['index.html'];
 
-    expect(texts($main, '#manifest article h3'))->toBe(['Newer', 'Older'])
+    expect(texts($main, '#this-week article.lab h4'))->toBe(['Newer', 'Older', 'Before'])
+        ->and(texts($main, '#this-week h3'))->toBe(['This week'])
+        ->and(texts($main, '#this-week .bundle-note'))->toBe(['2 parcels have been added since Monday 12/10. The rest were added before.'])
+        ->and(texts($main, '#manifest [data-view="labels"] .stub h4'))->toBe(['Stub'])
+        ->and($main->querySelectorAll('#manifest .lab'))->toHaveCount(3)
         ->and($main->querySelectorAll('.lab-new'))->toHaveCount(1)
         ->and($main->querySelectorAll('.lab.newest'))->toHaveCount(1)
         ->and($main->querySelector('#manifest article')->classList->contains('newest'))->toBeTrue()
         ->and($main->querySelector('#manifest article')->querySelector('.lab-new'))->not->toBeNull();
 });
+
+it('marks the entry that shipped last as the newest, even when it is not the first label', function () {
+    writeEntry($this->dir, '2026-09-01-added-last.php', ['name' => 'Added last', 'added' => '2026-10-15']);
+    writeEntry($this->dir, '2026-10-10-shipped-last.php', ['name' => 'Shipped last', 'added' => '2026-10-14']);
+    writeEntry($this->dir, '2026-08-01-third.php', ['name' => 'Third', 'added' => '2026-10-13']);
+
+    $main = pages($this)['index.html'];
+
+    expect(texts($main, '#this-week article.lab h4'))->toBe(['Added last', 'Shipped last', 'Third'])
+        ->and(texts($main, '#this-week article.lab.newest h4'))->toBe(['Shipped last'])
+        ->and($main->querySelectorAll('.lab-new'))->toHaveCount(1)
+        ->and(texts($main, '#manifest [data-view="list"] .new-tag'))->toBe(['Newest'])
+        ->and(texts($main, '#manifest [data-view="list"] tr:has(.new-tag) .name'))->toBe(['Shipped last Newest']);
+});
+
+it('marks the newest on its stub when the entry that shipped last is not on a full label', function () {
+    writeEntry($this->dir, '2026-10-15-fresh.php', ['name' => 'Fresh', 'added' => '2026-10-15']);
+    foreach (['a', 'b', 'c'] as $i => $name) {
+        writeEntry($this->dir, '2026-09-0'.($i + 1)."-{$name}.php", ['name' => strtoupper($name), 'added' => '2026-10-16']);
+    }
+
+    $main = pages($this)['index.html'];
+
+    expect(texts($main, '#this-week article.lab h4'))->not->toContain('Fresh')
+        ->and($main->querySelectorAll('.lab.newest'))->toHaveCount(0)
+        ->and($main->querySelectorAll('.lab-new'))->toHaveCount(0)
+        ->and(texts($main, '.stub.newest h4'))->toBe(['Fresh'])
+        ->and(texts($main, '.stub.newest .new-tag'))->toBe(['Newest'])
+        ->and($main->querySelectorAll('.stub .new-tag'))->toHaveCount(1);
+});
+
+it('says how many full labels were added this week', function (array $added, string $title, string $note) {
+    foreach ($added as $i => $day) {
+        writeEntry($this->dir, '2026-09-0'.($i + 1)."-e{$i}.php", ['added' => $day]);
+    }
+
+    $main = pages($this)['index.html'];
+
+    expect(texts($main, '#this-week h3'))->toBe([$title])
+        ->and(texts($main, '#this-week .bundle-note'))->toBe([$note]);
+})->with([
+    'none' => [['2026-10-01', '2026-10-02', '2026-10-03'], 'Added last', 'Nothing has been added since Monday 12/10. These 3 were added last.'],
+    'one' => [['2026-10-12', '2026-10-02', '2026-10-03'], 'This week', '1 parcel has been added since Monday 12/10. The rest were added before.'],
+    'all three' => [['2026-10-12', '2026-10-13', '2026-10-16'], 'This week', 'All 3 have been added since Monday 12/10.'],
+    'more' => [['2026-10-12', '2026-10-13', '2026-10-16', '2026-10-16'], 'This week', '4 parcels have been added since Monday 12/10. Here are the newest 3. The others are in the bundles below, by shipped date.'],
+]);
+
+it('bundles the other entries by the week or the month they shipped, with a count', function () {
+    foreach (['2026-10-14' => 'a', '2026-10-13' => 'b', '2026-10-12' => 'c'] as $day => $slug) {
+        writeEntry($this->dir, "{$day}-{$slug}.php", ['added' => '2026-10-16']);
+    }
+    writeEntry($this->dir, '2026-10-15-this-week.php', ['name' => 'This week', 'added' => '2026-10-15']);
+    writeEntry($this->dir, '2026-10-06-week-41.php', ['name' => 'Week 41', 'added' => '2026-10-06']);
+    writeEntry($this->dir, '2026-09-10-september.php', ['name' => 'September', 'added' => '2026-09-10']);
+    writeEntry($this->dir, '2026-09-09-september-too.php', ['name' => 'September too', 'added' => '2026-09-10']);
+
+    $labels = pages($this)['index.html']->querySelector('#manifest [data-view="labels"]');
+    $bundles = iterator_to_array($labels->querySelectorAll('.bundle'));
+
+    expect(array_map(fn ($b) => trim($b->querySelector('h3')->textContent), $bundles))
+        ->toBe(['Week 42, 12/10 to 18/10', 'Week 41, 05/10 to 11/10', 'September 2026'])
+        ->and(array_map(fn ($b) => trim($b->querySelector('[data-group-count]')->textContent), $bundles))
+        ->toBe(['1 parcel', '1 parcel', '2 parcels'])
+        ->and(array_map(fn ($b) => $b->getAttribute('id'), $bundles))->toBe(['week-2026-42', 'week-2026-41', 'month-2026-09'])
+        ->and(array_map(fn ($b) => $b->hasAttribute('data-group'), $bundles))->toBe([true, true, true])
+        ->and(array_map(fn ($b) => texts($labels->ownerDocument, '#'.$b->getAttribute('id').' .stub h4'), $bundles))
+        ->toBe([['This week'], ['Week 41'], ['September', 'September too']])
+        ->and($labels->querySelector('#this-week')->hasAttribute('data-group'))->toBeTrue()
+        ->and(array_map(fn ($b) => $b->parentElement->classList->contains('weeks'), $bundles))->toBe([true, true, false])
+        ->and($labels->querySelectorAll('.weeks'))->toHaveCount(1);
+});
+
+it('shows a stub with the route code, the name, the sentence, the makers and the date', function () {
+    for ($day = 1; $day <= 3; $day++) {
+        writeEntry($this->dir, "2026-10-0{$day}-new-{$day}.php", ['added' => '2026-10-16']);
+    }
+    writeEntry($this->dir, '2026-09-01-pest-5.php', [
+        'added' => '2026-09-02',
+        'stack' => 'laravel',
+        'makers' => [['name' => 'Nuno Maduro', 'github' => 'nunomaduro'], ['name' => 'Brent Roose']],
+    ]);
+
+    $stub = pages($this)['index.html']->querySelector('#manifest .stub');
+
+    expect($stub->getAttribute('data-stack'))->toBe('laravel')
+        ->and($stub->getAttribute('aria-labelledby'))->toBe($stub->querySelector('h4')->getAttribute('id'))
+        ->and(trim($stub->querySelector('h4')->textContent))->toBe('Pest 5')
+        ->and(trim($stub->querySelector('.route b')->textContent))->toBe('LRV')
+        ->and($stub->querySelector('.route')->getAttribute('aria-label'))->toBe('Stack: Laravel')
+        ->and(trim($stub->querySelector('.stub-sentence')->textContent))->toBe('A testing framework for PHP, focused on simplicity.')
+        ->and(trim($stub->querySelector('.stub-from')->textContent))->toBe('Nuno Maduro, with Brent Roose')
+        ->and($stub->querySelector('.stub-date time')->getAttribute('datetime'))->toBe('2026-09-01')
+        ->and(trim($stub->querySelector('.stub-date time')->textContent))->toBe('01/09/2026')
+        ->and($stub->querySelectorAll('.bars, .pm, .waves, .tid, .lab-new'))->toHaveCount(0);
+});
+
+it('links each stub to its entry page, or to its source while there are no entry pages', function () {
+    for ($day = 1; $day <= 4; $day++) {
+        writeEntry($this->dir, "2026-10-0{$day}-e-{$day}.php", ['added' => "2026-10-0{$day}"]);
+    }
+
+    $without = pages($this)['index.html']->querySelector('#manifest .stub .stub-more');
+    $with = pages($this, entryPages: true)['index.html']->querySelector('#manifest .stub .stub-more');
+
+    expect($with->getAttribute('href'))->toBe('/entries/e-1/')
+        ->and(preg_replace('/\s+/', ' ', trim($with->textContent)))->toBe('Details about Pest 5')
+        ->and($with->querySelector('.sr-only')?->textContent)->toBe(' about Pest 5')
+        ->and($without->getAttribute('href'))->toBe('https://github.com/pestphp/pest')
+        ->and(preg_replace('/\s+/', ' ', trim($without->textContent)))->toBe('Source of Pest 5');
+});
+
+it('groups the List view the same way as the labels', function () {
+    writeEntry($this->dir, '2026-10-14-a.php', ['name' => 'A', 'added' => '2026-10-16']);
+    writeEntry($this->dir, '2026-10-13-b.php', ['name' => 'B', 'added' => '2026-10-15']);
+    writeEntry($this->dir, '2026-10-12-c.php', ['name' => 'C', 'added' => '2026-10-14']);
+    writeEntry($this->dir, '2026-09-10-d.php', ['name' => 'D', 'added' => '2026-09-11']);
+
+    $list = pages($this)['index.html']->querySelector('#manifest [data-view="list"]');
+    $groups = iterator_to_array($list->querySelectorAll('tbody[data-group]'));
+
+    expect(array_map(fn ($g) => trim($g->querySelector('.grp th')->firstChild->textContent), $groups))->toBe(['This week', 'September 2026'])
+        ->and(array_map(fn ($g) => trim($g->querySelector('[data-group-count]')->textContent), $groups))->toBe(['3 parcels', '1 parcel'])
+        ->and(array_map(fn ($g) => texts($list->ownerDocument, '#'.$g->getAttribute('id').' tr[data-stack] .no'), $groups))
+        ->toBe([['004', '003', '002'], ['001']])
+        ->and(texts($list->ownerDocument, '#manifest [data-view="list"] .new-tag'))->toBe(['Newest']);
+});
+
+it('groups the archive by month', function () {
+    writeEntry($this->dir, '2026-03-20-a.php', ['name' => 'A']);
+    writeEntry($this->dir, '2026-03-02-b.php', ['name' => 'B']);
+    writeEntry($this->dir, '2026-01-02-c.php', ['name' => 'C']);
+
+    $archive = pages($this)['archive/index.html'];
+
+    expect(array_map(fn ($th) => trim($th->firstChild->textContent), iterator_to_array($archive->querySelectorAll('tbody[data-group] .grp th'))))
+        ->toBe(['March 2026', 'January 2026'])
+        ->and(texts($archive, 'tbody[data-group] [data-group-count]'))->toBe(['2 parcels', '1 parcel'])
+        ->and(texts($archive, 'tbody .name'))->toBe(['A', 'B', 'C']);
+});
+
+it('links to the feed from the footer of every page', function (string $page) {
+    $doc = pages($this)[$page];
+
+    expect(hrefs($doc, 'footer .foot-pages a'))->toBe(['/privacy/', '/credits/', '/feed.xml'])
+        ->and(texts($doc, 'footer .foot-pages a'))->toBe(['Privacy', 'Credits', 'Feed']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', '404.html']);
 
 it('shows every part of an entry', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php', [
@@ -79,7 +231,7 @@ it('shows every part of an entry', function () {
 
     $entry = pages($this)['index.html']->querySelector('#manifest article');
 
-    expect($entry->querySelector('h3')->textContent)->toBe('Pest 5')
+    expect($entry->querySelector('h4')->textContent)->toBe('Pest 5')
         ->and($entry->querySelector('.contents p')->textContent)->toBe('A testing framework for PHP, focused on simplicity.')
         ->and(trim($entry->querySelector('.date')->textContent))->toBe('01/09/2026')
         ->and($entry->querySelector('.route b')->textContent)->toBe('LRV')
@@ -130,7 +282,7 @@ it('escapes entry text', function () {
 
     $main = pages($this)['index.html'];
 
-    expect(texts($main, '#manifest h3'))->toBe(['<script>alert(1)</script>'])
+    expect(texts($main, '#manifest h4'))->toBe(['<script>alert(1)</script>'])
         ->and($main->querySelectorAll('#manifest script'))->toHaveCount(0);
 });
 
@@ -466,7 +618,7 @@ it('shows the main list as labels and as a list, each entry tagged with its stac
     $list = $main->querySelector('#manifest [data-view="list"]');
 
     expect(array_map(fn ($a) => $a->getAttribute('data-stack'), iterator_to_array($labels->querySelectorAll('article'))))->toBe(['php', 'laravel', 'laravel'])
-        ->and(array_map(fn ($r) => $r->getAttribute('data-stack'), iterator_to_array($list->querySelectorAll('tbody tr'))))->toBe(['php', 'laravel', 'laravel'])
+        ->and(array_map(fn ($r) => $r->getAttribute('data-stack'), iterator_to_array($list->querySelectorAll('tbody tr[data-stack]'))))->toBe(['php', 'laravel', 'laravel'])
         ->and(texts($main, '#manifest [data-view="list"] tbody .name'))->toBe(['A Newest', 'B', 'C'])
         ->and($labels->hasAttribute('hidden'))->toBeFalse()
         ->and($list->hasAttribute('hidden'))->toBeTrue();
@@ -499,7 +651,7 @@ it('filters the archive too', function () {
     $archive = pages($this)['archive/index.html'];
 
     expect(texts($archive, '[data-stack-choice]'))->toBe(['All 1', 'SYM 1'])
-        ->and(array_map(fn ($r) => $r->getAttribute('data-stack'), iterator_to_array($archive->querySelectorAll('tbody tr'))))->toBe(['symfony'])
+        ->and(array_map(fn ($r) => $r->getAttribute('data-stack'), iterator_to_array($archive->querySelectorAll('tbody tr[data-stack]'))))->toBe(['symfony'])
         ->and($archive->querySelector('[data-filter-status]')->getAttribute('role'))->toBe('status')
         ->and($archive->body->querySelectorAll('script:not([src])'))->toHaveCount(1);
 });
@@ -533,7 +685,7 @@ it('invites everyone to contribute in every footer', function (string $page) {
         ])
         ->and(texts($doc, 'footer .foot-open a'))->toBe(['See the code on GitHub', 'Read how to contribute'])
         ->and($open->querySelector('a.tag svg.gh')?->getAttribute('aria-hidden'))->toBe('true')
-        ->and(hrefs($doc, 'footer .foot-pages a'))->toBe(['/privacy/', '/credits/']);
+        ->and(hrefs($doc, 'footer .foot-pages a'))->toBe(['/privacy/', '/credits/', '/feed.xml']);
 })->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
 
 it('asks visitors on the main page to add their own project', function () {

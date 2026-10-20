@@ -8,6 +8,8 @@
   var panes = document.querySelectorAll('[data-view]');
   var status = document.querySelector('[data-filter-status]');
   var tools = document.querySelectorAll('[data-tools]');
+  // Bundles of entries (a week, a month). A bundle with no entry left to show is hidden.
+  var groups = document.querySelectorAll('[data-group]');
 
   // Each choice: { stack, label, count }. The first one is "All".
   var choices = [];
@@ -48,6 +50,7 @@
 
   function render() {
     for (var j = 0; j < items.length; j++) items[j].hidden = stack !== '' && items[j].getAttribute('data-stack') !== stack;
+    for (j = 0; j < groups.length; j++) count(groups[j]);
     for (j = 0; j < chips.length; j++) chips[j].setAttribute('aria-pressed', chips[j].getAttribute('data-stack-choice') === stack ? 'true' : 'false');
     if (dropdown) dropdown.value = stack;
     for (j = 0; j < viewButtons.length; j++) viewButtons[j].setAttribute('aria-pressed', viewButtons[j].getAttribute('data-view-choice') === view ? 'true' : 'false');
@@ -68,6 +71,15 @@
       if (parts.length) history.replaceState(null, '', location.pathname + '#' + parts.join('&'));
       else if (own) history.replaceState(null, '', location.pathname);
     }
+  }
+
+  function count(group) {
+    var members = group.querySelectorAll('[data-stack]');
+    var shown = 0;
+    for (var k = 0; k < members.length; k++) if (!members[k].hidden) shown++;
+    group.hidden = shown === 0;
+    var label = group.querySelector('[data-group-count]');
+    if (label) label.textContent = shown + (shown === 1 ? ' parcel' : ' parcels');
   }
 
   function pick(next) {
