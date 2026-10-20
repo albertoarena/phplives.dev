@@ -569,7 +569,7 @@ it('credits the software, services and data the site uses', function () {
         ->and(texts($doc, '.credits .item'))->toBe([
             'Archivo', 'JetBrains Mono',
             'Octicons',
-            'PHP', 'Cloudflare Workers static assets', 'Wrangler', 'GitHub Actions', 'Cloudflare Web Analytics',
+            'PHP', 'fontTools', 'Cloudflare Workers static assets', 'Wrangler', 'GitHub Actions', 'Cloudflare Web Analytics',
             'Pest', 'Vitest',
             '/dev/null',
             '/dev/null wallpaper',
@@ -579,6 +579,7 @@ it('credits the software, services and data the site uses', function () {
             'https://fonts.google.com/specimen/JetBrains+Mono',
             'https://primer.style/octicons/',
             'https://www.php.net',
+            'https://github.com/fonttools/fonttools',
             'https://developers.cloudflare.com/workers/static-assets/',
             'https://developers.cloudflare.com/workers/wrangler/',
             'https://github.com/features/actions',
@@ -597,6 +598,14 @@ it('names the makers and licences of the fonts', function () {
         'Omnibus-Type',
         'JetBrains, Philipp Nurullin and Konstantin Bulenkov',
     ])->and(texts($doc, '#credits-fonts .cr-lic'))->toBe(['SIL Open Font License 1.1', 'SIL Open Font License 1.1']);
+});
+
+it('says the fonts also draw the share images', function () {
+    $doc = pages($this)['credits/index.html'];
+
+    expect(texts($doc, '#credits-fonts .use'))->each->toContain('share image')
+        ->and(texts($doc, '#credits-fonts .cr-note')[0])->toContain('assets/fonts/card/')
+        ->and(texts($doc, '#credits-build .use')[0])->toContain('GD');
 });
 
 it('says when the credits were last updated', function () {
