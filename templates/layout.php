@@ -2,10 +2,13 @@
 /**
  * @var callable $e
  * @var string $title
+ * @var string|null $shareTitle The title on share cards, when it differs from the page title.
  * @var string|null $path Null on the page for missing addresses.
  * @var string $themeScript
  * @var string $analyticsToken
  * @var string $content
+ * @var string|null $description The page's own description. Null for the site's.
+ * @var string|null $markdown The address of the page's Markdown copy, when it has one.
  */
 $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
 ?>
@@ -14,7 +17,7 @@ $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<?php $description = 'A manifest of real things people shipped with PHP in the last 6 months. Each one links to its own source and shows the date it shipped.'; ?>
+<?php $description ??= 'A manifest of real things people shipped with PHP in the last 6 months. Each one links to its own source and shows the date it shipped.'; ?>
 <title><?= $e($title) ?></title>
 <meta name="description" content="<?= $e($description) ?>">
 <meta name="author" content="Alberto Arena">
@@ -25,9 +28,12 @@ $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
 <?php endif ?>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/atom+xml" title="phplives.dev" href="/feed.xml">
+<?php if ($markdown !== null): ?>
+<link rel="alternate" type="text/markdown" href="<?= $e($markdown) ?>">
+<?php endif ?>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="phplives.dev">
-<meta property="og:title" content="<?= $e($title) ?>">
+<meta property="og:title" content="<?= $e($shareTitle ?? $title) ?>">
 <meta property="og:description" content="<?= $e($description) ?>">
 <?php if ($path !== null): ?>
 <meta property="og:url" content="https://phplives.dev<?= $e($path) ?>">

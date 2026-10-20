@@ -1,20 +1,26 @@
 <?php
 /**
- * One label in the manifest grid.
+ * One shipping label. The manifest grid and the entry page share it, so the two never drift apart.
  *
  * @var callable $e
  * @var \PhpLives\Site $site
  * @var \PhpLives\Entry $entry
- * @var int $i
+ * @var int $i Its place in the grid. The first label is the newest parcel.
+ * @var bool|null $onEntryPage True on the entry's own page: the name is the page heading, the newest
+ *                             parcel is marked by $newest, and the label has no link to its page.
+ * @var bool|null $newest On the entry page: true when this is the newest parcel.
  */
 use PhpLives\Format;
 
 $id = $e($entry->slug);
 $tid = $site->trackingNumber($entry);
 $x = 0;
+$own = $onEntryPage ?? false;
+$isNewest = $own ? ($newest ?? false) : $i === 0;
+$heading = $own ? 'h1' : 'h3';
 ?>
-        <article class="lab<?= $i === 0 ? ' newest' : '' ?>" style="--i: <?= $i ?>" data-stack="<?= $e($entry->stack) ?>" aria-labelledby="t-<?= $id ?>">
-<?php if ($i === 0): ?>
+        <article class="lab<?= $isNewest ? ' newest' : '' ?>" style="--i: <?= $i ?>" data-stack="<?= $e($entry->stack) ?>" aria-labelledby="t-<?= $id ?>">
+<?php if ($isNewest): ?>
           <div class="lab-new">Newest parcel</div>
 <?php endif ?>
           <div class="blk from">
@@ -44,7 +50,7 @@ $x = 0;
           </div>
           <div class="blk contents">
             <span class="cap">Contents</span>
-            <h3 id="t-<?= $id ?>"><?= $e($entry->name) ?></h3>
+            <<?= $heading ?> id="t-<?= $id ?>"><?= $e($entry->name) ?></<?= $heading ?>>
             <p><?= $e($entry->sentence) ?></p>
           </div>
           <div class="blk ship">
@@ -81,6 +87,15 @@ $x = 0;
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
               </a>
             </div>
+<?php if ($site->hasEntryPages() && ! $own): ?>
+            <div class="lab-foot">
+              <p class="tid mono"><?= $e($tid) ?></p>
+              <a class="more" href="<?= $e($site::entryPath($entry)) ?>">Details<span class="sr-only"> for <?= $e($entry->name) ?></span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+              </a>
+            </div>
+<?php else: ?>
             <p class="tid mono"><?= $e($tid) ?></p>
+<?php endif ?>
           </div>
         </article>

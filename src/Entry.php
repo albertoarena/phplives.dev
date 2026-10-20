@@ -14,6 +14,10 @@ final readonly class Entry
     /**
      * @param  list<Maker>  $makers  The first maker is the lead.
      * @param  DateTimeImmutable  $added  The day the entry was added to the site.
+     * @param  string|null  $details  A few sentences more, from the project's own source.
+     * @param  string|null  $package  The Packagist name, such as vendor/name.
+     * @param  string|null  $licence  A short SPDX licence id, such as MIT.
+     * @param  string|null  $docs  The link to the project's docs.
      */
     public function __construct(
         public string $slug,
@@ -28,6 +32,10 @@ final readonly class Entry
         public string $devnull,
         public DateTimeImmutable $checked,
         public DateTimeImmutable $added,
+        public ?string $details = null,
+        public ?string $package = null,
+        public ?string $licence = null,
+        public ?string $docs = null,
     ) {}
 
     /**
@@ -51,6 +59,10 @@ final readonly class Entry
             devnull: trim($data['devnull']),
             checked: new DateTimeImmutable($data['checked']),
             added: new DateTimeImmutable($data['added']),
+            details: isset($data['details']) ? trim($data['details']) : null,
+            package: $data['package'] ?? null,
+            licence: $data['licence'] ?? null,
+            docs: $data['docs'] ?? null,
         );
     }
 }

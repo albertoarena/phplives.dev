@@ -44,8 +44,9 @@ it('writes the site into the output folder', function () {
     [$status, $output] = build($this->tmp);
 
     expect($status)->toBe(0)
-        ->and($output)->toContain('Built 5 pages from 1 entry')
+        ->and($output)->toContain('Built 6 pages from 1 entry')
         ->and($this->tmp.'/dist/index.html')->toBeFile()
+        ->and($this->tmp.'/dist/entries/pest-5/index.html')->toBeFile()
         ->and($this->tmp.'/dist/archive/index.html')->toBeFile()
         ->and($this->tmp.'/dist/privacy/index.html')->toBeFile()
         ->and($this->tmp.'/dist/credits/index.html')->toBeFile()

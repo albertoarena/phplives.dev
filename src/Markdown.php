@@ -61,10 +61,14 @@ final class Markdown
 
         return '# '.self::escape($entry->name)."\n\n"
             .self::escape($entry->sentence)."\n\n"
+            .($entry->details === null ? '' : self::escape($entry->details)."\n\n")
             .'- Made by: '.implode(', ', $makers)."\n"
             .'- Shipped: '.Format::date($entry->shipped)."\n"
             .'- Date from: '.self::link(Format::proofLabel($entry->proofKind), $entry->proofUrl)."\n"
             .'- Source: '.self::link(Format::linkText($entry->source), $entry->source)."\n"
+            .($entry->docs === null ? '' : '- Docs: '.self::link(Format::linkText($entry->docs), $entry->docs)."\n")
+            .($entry->package === null ? '' : '- Install: `composer require '.$entry->package."`\n")
+            .($entry->licence === null ? '' : '- Licence: '.$entry->licence."\n")
             .'- Stack: '.Format::stackLabel($entry->stack)."\n"
             .'- Checked: '.Format::date($entry->checked)."\n"
             .'- Added: '.Format::date($entry->added)."\n\n"

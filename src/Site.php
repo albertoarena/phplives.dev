@@ -28,10 +28,10 @@ final readonly class Site
     public const string URL = 'https://phplives.dev';
 
     /**
-     * The switch for entry pages. They are not built yet. When they are, set this to
-     * true: the sitemap then lists each entry page, and the feed links to it.
+     * The switch for entry pages. When it is on, each entry has its own page, the
+     * sitemap lists each one, the feed links to it, and the lists link to it.
      */
-    public const bool ENTRY_PAGES = false;
+    public const bool ENTRY_PAGES = true;
 
     /** @var array<string, true> Lower-case GitHub usernames that have a /dev/null profile. */
     private array $devnullUsers;
@@ -78,7 +78,54 @@ final readonly class Site
             'privacy/index.html' => $this->page('privacy', 'phplives.dev: privacy', '/privacy/', []),
             'credits/index.html' => $this->page('credits', 'phplives.dev: credits', '/credits/', []),
             '404.html' => $this->page('not-found', 'phplives.dev: page not found', null, []),
-        ];
+        ] + $this->entryPages();
+    }
+
+    /**
+     * One page for each entry, current or archived.
+     *
+     * @return array<string, string>
+     */
+    private function entryPages(): array
+    {
+        if (! $this->entryPages) {
+            return [];
+        }
+
+        $pages = [];
+        $all = $this->entries->all();
+        $newest = $this->entries->current()[0] ?? null;
+        $archived = $this->entries->archived();
+
+        foreach ($all as $index => $entry) {
+            $pages[ltrim(self::entryPath($entry), '/').'index.html'] = $this->page(
+                'entry-page',
+                "{$entry->name}: shipped with PHP | phplives.dev",
+                self::entryPath($entry),
+                [
+                    'entry' => $entry,
+                    'newest' => $entry === $newest,
+                    'archived' => in_array($entry, $archived, true),
+                    'before' => $all[$index + 1] ?? null,
+                    'after' => $all[$index - 1] ?? null,
+                    'url' => self::URL.self::entryPath($entry),
+                    'shareTitle' => self::shareTitle($entry),
+                    'copyScript' => $this->script('copy.js'),
+                    'shareScript' => $this->script('share.js'),
+                ],
+                ['description' => $entry->sentence, 'markdown' => Markdown::entryPath($entry), 'shareTitle' => self::shareTitle($entry)],
+            );
+        }
+
+        return $pages;
+    }
+
+    /**
+     * True when each entry has its own page. See ENTRY_PAGES.
+     */
+    public function hasEntryPages(): bool
+    {
+        return $this->entryPages;
     }
 
     /**
@@ -223,10 +270,15 @@ final readonly class Site
 
     /**
      * @param  string|null  $path  The page's own address. Null for the page that answers missing addresses.
+     * @param  array{description?: string, markdown?: string, shareTitle?: string}  $head  A page's own description, its Markdown copy
+     *                                                                                  and its title on share cards.
      */
-    private function page(string $template, string $title, ?string $path, array $vars): string
+    private function page(string $template, string $title, ?string $path, array $vars, array $head = []): string
     {
-        return self::externalLinksInNewTab($this->render('layout', [
+        return self::externalLinksInNewTab($this->render('layout', $head + [
+            'description' => null,
+            'markdown' => null,
+            'shareTitle' => null,
             'title' => $title,
             'path' => $path,
             'today' => Format::date($this->today),
@@ -234,6 +286,14 @@ final readonly class Site
             'analyticsToken' => self::ANALYTICS_TOKEN,
             'content' => $this->render($template, $vars + ['today' => Format::date($this->today)]),
         ]));
+    }
+
+    /**
+     * An entry's title on share cards. Cards already show the site's name, so it is left out.
+     */
+    private static function shareTitle(Entry $entry): string
+    {
+        return "{$entry->name}: shipped with PHP";
     }
 
     /**

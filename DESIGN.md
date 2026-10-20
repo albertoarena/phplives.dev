@@ -152,6 +152,35 @@ components:
     rounded: "{rounded.strip}"
     padding: "0 14px"
     height: "36px"
+  entry-label:
+    backgroundColor: "{colors.thermal-white}"
+    textColor: "{colors.print-black}"
+    rounded: "{rounded.sheet}"
+    padding: "20px 24px"
+    width: "600px"
+  docket:
+    backgroundColor: "{colors.thermal-white}"
+    textColor: "{colors.print-black}"
+    rounded: "{rounded.sheet}"
+    width: "600px"
+  docket-command-strip:
+    backgroundColor: "{colors.soft-rule}"
+    textColor: "{colors.print-black}"
+    typography: "{typography.mono-data}"
+    rounded: "{rounded.sticker}"
+  neighbour-stub:
+    backgroundColor: "{colors.thermal-white}"
+    textColor: "{colors.print-black}"
+    rounded: "{rounded.sheet}"
+    padding: "16px 26px 14px 16px"
+  stub-code:
+    backgroundColor: "{colors.print-black}"
+    textColor: "{colors.thermal-white}"
+    rounded: "{rounded.tag}"
+    padding: "4px 6px 3px"
+  details-link:
+    textColor: "{colors.print-black}"
+    height: "24px"
 ---
 
 # Design System: phplives.dev
@@ -221,14 +250,16 @@ The theme follows the device by default. A Light / Dark / System toggle in the t
 
 ### Hierarchy
 - **Display** (`display`): the line `PHP delivers. PHP lives!` only. "PHP lives!" sits on a white sticker, turned -1.2deg. The line drops to 54px on narrow screens.
+- **Entry name** (850, clamp(40px, 9cqi, 56px), line height .95, width 72%): the project name as the h1 on its own entry page, inside the CONTENTS block. It is the title shape, made bigger. It is not the display line.
 - **Headline** (`headline`): page heads on the archive, Privacy and Credits pages. The /dev/null band heading uses the same shape at clamp(40px, 4.6cqi, 64px).
-- **Title** (`title`): the project name in the CONTENTS block of a label. Sheet and slip heads use the same width at 22px to 26px.
+- **Title** (`title`): the project name in the CONTENTS block of a label. Sheet and slip heads use the same width at 22px to 26px. The name on a neighbour stub uses it at 24px (20px on narrow screens, clamp(22px, 2cqi, 28px) from 1100px).
 - **Section** (`section`): section heads on the field, such as "Shipped since DD/MM/YYYY". They drop to 26px on narrow screens.
-- **Body** (`body`): reading text. The lede is 19px. Read-mode pages (Privacy) use 17px with line height 1.6 and a 65ch measure.
-- **Label** (`label`): uppercase field captions on paper (FROM, CONTENTS, SHIPPED, TRACK) and table heads.
-- **Route code** (`route-code`): the three-letter stack code (LRV, SYM, NTV, WRD, PHP) in its inverse block. Filter chips and table cells use the same width at 17px to 18px.
-- **Mono date** (`mono-date`): the shipped date on a label.
-- **Mono data** (`mono-data`): tracking numbers, link text on the TRACK line, counts, the slip values and the terminal command. Sizes run from 11px to 15px.
+- **Body** (`body`): reading text. The lede is 19px. Read-mode pages (Privacy) use 17px with line height 1.6 and a 65ch measure. On the entry page, the sentence on the label is 19px (17px on narrow screens) and the docket details text is 17px. Docket values are 15px weight 600, maker names 16px weight 700, docket terms 13px weight 600 in Print Grey. The back link is 15px weight 700.
+- **Label** (`label`): uppercase field captions on paper (FROM, CONTENTS, SHIPPED, TRACK) and table heads. The stub caption (Shipped before, Shipped after) uses it too.
+- **Route code** (`route-code`): the three-letter stack code (LRV, SYM, NTV, WRD, PHP) in its inverse block. Filter chips and table cells use the same width at 17px to 18px. On the entry page the code grows to 56px (46px on narrow screens). On a stub it is 16px.
+- **Mono date** (`mono-date`): the shipped date on a label. It is 34px on the entry page (28px on narrow screens).
+- **Mono data** (`mono-data`): tracking numbers, link text on the TRACK line, counts, the slip values and the terminal command. Sizes run from 11px to 15px. On the entry page the stub date and the docket links are 14px, and the label's tracking number is 12px.
+- **Details link** (Archivo 700, 13px on a label, 12px in a table row): the only small link that is not mono, because it is a word, not data.
 
 ### Named Rules
 **The Wide Words Rule.** Every condensed heading (display, headline, title, section) gets word spacing of .12em. Condensed Archivo runs words together without it.
@@ -249,9 +280,18 @@ The page is one column of sections inside a 1320px wrap with a 40px side gutter.
 - **Narrow screens:** below 700px the gutter drops to 16px and the "Commit it on /dev/null" nav link hides. Below 860px each table row becomes a small grid: date and stack code on top, then name, sentence, maker and link.
 - **Rhythm:** sections end with 96px of space (64px on narrow screens). Label blocks have 16px by 18px of padding.
 
+### Entry page (`/entries/{slug}/`)
+One page per entry. Top to bottom:
+- **Back link:** inside the wrap, with a left arrow. It reads "Back to the manifest", or "Back to the archive" for an archived entry. It is 44px tall.
+- **Depot:** a full-bleed area outside the wrap, so it runs from page edge to page edge. It clips anything that goes past the sides. It has 16px of space on top and 96px at the end (8px and 64px on narrow screens).
+- **Shelf:** a 600px column, centred in the depot. On narrow screens it is the full width minus the gutters (100% minus 80px, then minus 32px below 700px). It holds the entry label, then the docket 28px under it.
+- **Neighbour stubs, from 1100px:** absolutely placed beside the label, 210px from the top of the depot. Each stub starts 40px past the page edge, so the edge always cuts its barcode and the stub reads as torn off. It is at most 360px wide, and it always leaves a gap of at least clamp(40px, 5cqi, 96px) before the label. On wide screens the gap grows, and the stub keeps its size.
+- **Neighbour stubs, below 1100px:** a two-cell row under the docket, 28px below it, with a 16px gap (12px below 700px). The earlier parcel is always in the left cell and the later one in the right cell. The first and last entries show one stub, in its own cell.
+- **Below 700px:** the label blocks drop to 16px by 18px of padding, the postmark to 124px, and the docket's side padding to 18px.
+
 ## Elevation & Depth
 
-Depth is paper lying on a surface. Every sheet of paper (label, slip, sheet, sticker, CTA, command strip) has one soft drop shadow tinted with Prussian blue. Nothing else casts a shadow. A label lifts 3px on hover, and its shadow grows. In the dark theme the shadows are black and deeper.
+Depth is paper lying on a surface. Every sheet of paper (label, slip, sheet, sticker, CTA, command strip, docket, stub) has one soft drop shadow tinted with Prussian blue. Nothing else casts a shadow. A label lifts 3px on hover, and its shadow grows. On its own entry page the label does not lift, because it is not a link there. Neighbour stubs never lift: they keep the rest shadow. The command strip inside the docket has no shadow, because it is printed on the docket, not laid on it. In the dark theme the shadows are black and deeper.
 
 ### Shadow Vocabulary
 - **Paper rest** (`--shadow`): every sheet of paper at rest. A 1px contact line plus a long soft fall.
@@ -268,7 +308,7 @@ The paper carries print marks, not borders:
 - **Print rule:** 3px solid Print Black. It splits label blocks and closes sheet heads and feet.
 - **Table rule:** 2px Print Black under table heads.
 - **Soft rule:** 1px Soft Rule between rows.
-- **Perforation:** dashed Perforation lines. The slip foot uses 2px dashes. Dispatch posts use 1px dashes.
+- **Perforation:** dashed Perforation lines. The slip foot, the docket's share foot and the stub tear line use 2px dashes. Dispatch posts use 1px dashes.
 - **Torn edge:** the dispatch strip has a scalloped top edge, cut with a radial-gradient mask.
 
 ### Named Rules
@@ -281,7 +321,7 @@ Tactile and plain, like a sticker on a box.
 - **Shape:** sticker corners (5px).
 - **CTA:** "Commit it on /dev/null ↗" on the /dev/null band. White paper with Print Black text, weight 800, 48px tall, with the paper shadow and an inline arrow icon. It rises 1px on hover.
 - **Contribute CTA:** the same paper button with the GitHub mark (Octicons, 20px) before the text: "Add your project" in the hero, "See the code on GitHub" in the footer. A bold underlined text link sits next to it for the second route ("or suggest one in an issue", "Read how to contribute").
-- **Copy:** in the command strip. A 2px Print Black outline on paper, weight 800, 36px tall. It shows "Copied" or "Not copied" for 2 seconds. It is hidden when the browser has no clipboard.
+- **Copy:** in the command strip, and "Copy link" in the docket's share foot. A 2px Print Black outline on paper, weight 800, 36px tall. It shows "Copied" or "Not copied" for 2 seconds, then returns to its own text. A hidden status line tells screen readers the result. It is hidden when the browser has no clipboard.
 - **Focus:** a 2px outline in the colour of the text around it, with a 2px to 3px offset.
 
 ### Toggles and chips
@@ -297,7 +337,31 @@ A 4x6 thermal label, one per entry. White paper, 6px radius, paper shadow. The l
 2. **FROM:** one line per maker. The name links to their GitHub. A small mono "/dev/null ↗" link follows when they have a profile there. The route code block sits on the right.
 3. **CONTENTS:** the project name (title) and one plain sentence.
 4. **SHIPPED:** the mono date, the date proof link, the waves and the ring postmark. The postmark is 118px, turned -9deg, at 90% opacity, with a multiply blend. Its ring reads PHPLIVES.DEV over SHIPPED around the date. The waves fill only the gap between the date and the ring. They hide when the label is narrower than 378px.
-5. **Barcode, TRACK and tracking number:** a full-width barcode, then TRACK with the source link and an arrow, then the tracking number in letter-spaced mono.
+5. **Barcode, TRACK and tracking number:** a full-width barcode, then TRACK with the source link and an arrow, then the tracking number in letter-spaced mono. On the home page a Details link sits on the same line as the tracking number, at the right.
+
+The same label partial is used on the home page and on the entry page.
+
+### Entry label
+The shipping label, enlarged on its own entry page. It is 600px wide on the shelf. The blocks have 20px by 24px of padding. The project name is the page's h1, at clamp(40px, 9cqi, 56px). The route code is bigger (56px code, 92px wide block). The date is 34px. The postmark is 150px and the barcode 60px tall. The label does not lift on hover, and it has no Details link. The newest entry's page keeps the Signal Orange strip and the orange postmark.
+
+### Docket
+A white sheet under the entry label, with the paper shadow and a 6px radius. Its parts, top to bottom:
+1. **Sheet head:** "Parcel details" and the tracking number in mono, closed by a print rule.
+2. **Details text** (optional): two or three plain sentences, at 17px.
+3. **Install** (only when the entry has a package): the command strip with `composer require` and the Copy button. Here the strip is a Soft Rule tint with no shadow.
+4. **Facts:** a list of term and value, split by Soft Rule lines. The order is fixed: Made by, Source, Docs, Licence, Shipped, Date from, Added, Checked. Docs and Licence show only when the entry gives them. Terms sit in a 110px column (88px on narrow screens). Links carry a small out arrow. Made by lists each maker, with their GitHub and /dev/null links.
+5. **Share foot:** a 2px perforation above it. "Share this parcel", the page address in mono, then the "Copy link" and "Share" buttons side by side, in the same outline style. "Copy link" is hidden when the browser has no clipboard. "Share" opens the device's own share menu, and it is hidden when the browser has none. The share card title is "Name: shipped with PHP", without the site name, because cards already show it.
+
+### Neighbour stubs
+The tear-off stubs of the parcels shipped just before and just after this one. They show that the list goes on. Each stub is a link.
+- **Paper:** Thermal White (Night Label in the dark theme), 6px radius, the rest shadow. No lift, no rotation, no dimming.
+- **Barcode:** a vertical barcode drawn from the neighbour's tracking number, on the outer side (left for before, right for after). It takes the full height of the stub. From 1100px it fills the paper from the page edge up to the text, so no blank paper shows between them. The text block is at most 210px wide.
+- **Perforation:** a 2px dashed Perforation line on the side that faces the label.
+- **Text:** the caption "Shipped before" with a left arrow, or "Shipped after" with a right arrow. Then the name in the title shape, the mono date, a small inverse stack code (2px radius) and the tracking number. The earlier stub is right-aligned, so its text sits next to the label. The name underlines on hover.
+- **Placement:** see Layout. From 1100px they sit beside the label and the page edge cuts them. Below 1100px they sit as a row under the docket.
+
+### Details link
+A small bold link to the entry page, with a right arrow. On each home label it sits in the foot, beside the tracking number (13px). In the List view and the archive it sits under the source link in the Track column (12px). It is Archivo, not mono. Screen readers hear "Details for {name}".
 
 ### Route code
 The stack code printed inverse: Print Black block, white condensed weight 900 code, the stack name in small type below it. The same block, smaller, marks the stack in table rows.
@@ -321,7 +385,7 @@ On every page. It opens with the **contribute row**: a section-style heading ("O
 The top bar: the wordmark "phplives.dev" (condensed 75%, weight 800) on the left, then Manifest, Archive and "Commit it on /dev/null", then the theme toggle. The current page is underlined with a 2px line. Links on paper and on the field underline at 1px and thicken to 2px on hover.
 
 ### Motion
-Labels print in once on load: each one reveals from top to bottom with a clip-path over .95s, 70ms after the one before. Then each postmark stamps down, scaling from 1.3 to 1 over .4s, 700ms after its label starts. Both are off under `prefers-reduced-motion`. The theme change fades the field over .3s.
+Labels print in once on load: each one reveals from top to bottom with a clip-path over .95s, 70ms after the one before. Then each postmark stamps down, scaling from 1.3 to 1 over .4s, 700ms after its label starts. Both are off under `prefers-reduced-motion`. The label on an entry page prints in and stamps in the same way. The docket and the stubs do not move. The theme change fades the field over .3s.
 
 ## Do's and Don'ts
 
@@ -334,6 +398,8 @@ Labels print in once on load: each one reveals from top to bottom with a clip-pa
 - **Do** use JetBrains Mono for dates and machine data, and write dates as DD/MM/YYYY.
 - **Do** keep the page fully usable without JavaScript: all entries as labels, tools hidden.
 - **Do** turn off the print-in and the stamp under `prefers-reduced-motion`.
+- **Do** keep neighbour stubs full-contrast paper with the rest shadow, and let the page edge cut their barcode from 1100px.
+- **Do** keep the earlier parcel on the left and the later parcel on the right, at every width.
 
 ### Don't:
 - **Don't** build a showcase grid of logo cards or an awesome-list link dump.
@@ -343,3 +409,5 @@ Labels print in once on load: each one reveals from top to bottom with a clip-pa
 - **Don't** round corners past 6px or use pill shapes.
 - **Don't** add motion beyond the print-in, the stamp, the label lift and the theme fade.
 - **Don't** show the cancellation waves on a label narrower than 378px.
+- **Don't** dim, fade, lift or rotate a neighbour stub. It is paper, only partly on screen.
+- **Don't** give the docket's command strip a shadow: it is printed on the docket.

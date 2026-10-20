@@ -75,6 +75,12 @@ return [
 | `devnull` | A draft of the post that announces the entry on /dev/null. The editor may rewrite it. |
 | `checked` | The date you checked the facts, as `YYYY-MM-DD`. |
 | `added` | The date the entry goes on the site, as `YYYY-MM-DD`. Use the day you send the pull request. The editor may change the date when he merges the pull request. The site's feed lists new entries by this date. |
+| `details` | Optional. Two or three plain sentences that say more about the project. 400 characters at most. Say only what the project's own source says. |
+| `package` | Optional. The Packagist name, such as `pestphp/pest`. The entry page then shows the `composer require` command. |
+| `licence` | Optional. A short SPDX licence id, such as `MIT` or `Apache-2.0`, as the project's own source gives it. |
+| `docs` | Optional. An HTTPS link to the project's docs. |
+
+The entry page shows each optional field only when the entry gives it.
 
 **Stack codes:** `laravel`, `symfony`, `nativephp`, `wordpress` or `php` (plain
 PHP). A stack code names a framework or a platform, not a package. A project built
@@ -102,7 +108,8 @@ php bin/build
 ```
 
 The build checks every entry file. It stops on a missing field, a bad date, an
-unknown stack, a long sentence, an em dash or a link that is not HTTPS. On a pull
+unknown stack, a text that is too long, an em dash or a link that is not HTTPS.
+It also stops on a bad package name or licence id. On a pull
 request, CI also checks that each link in the entry works.
 
 ## Changes to the code

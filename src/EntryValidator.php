@@ -14,19 +14,30 @@ final class EntryValidator
 {
     public const int MAX_SENTENCE = 160;
 
+    public const int MAX_DETAILS = 400;
+
     public const array FIELDS = [
         'name', 'sentence', 'makers', 'shipped', 'proof', 'source', 'stack', 'devnull', 'checked', 'added',
     ];
+
+    /** Fields an entry may leave out. The entry page shows each one only when it is given. */
+    public const array OPTIONAL_FIELDS = ['details', 'package', 'licence', 'docs'];
 
     public const array STACKS = ['laravel', 'symfony', 'nativephp', 'wordpress', 'php'];
 
     public const array PROOF_KINDS = ['release', 'tag', 'post'];
 
-    private const array TEXT_FIELDS = ['name', 'sentence', 'devnull'];
+    private const array TEXT_FIELDS = ['name', 'sentence', 'devnull', 'details'];
 
     private const string EM_DASH = "\u{2014}";
 
     private const string GITHUB_USERNAME = '/^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/';
+
+    /** Packagist's own rule for a package name. */
+    private const string PACKAGE = '#^[a-z0-9]([_.-]?[a-z0-9]+)*/[a-z0-9](([_.]?|-{0,2})[a-z0-9]+)*$#';
+
+    /** A short SPDX licence id, such as MIT or Apache-2.0. */
+    private const string LICENCE = '/^[A-Za-z0-9][A-Za-z0-9.+-]{0,39}$/';
 
     private const string FILE_NAME = '/^(\d{4}-\d{2}-\d{2})-[a-z0-9]+(?:-[a-z0-9]+)*\.php$/';
 
@@ -45,7 +56,7 @@ final class EntryValidator
             }
         }
 
-        foreach (array_diff(array_keys($entry), self::FIELDS) as $field) {
+        foreach (array_diff(array_keys($entry), self::FIELDS, self::OPTIONAL_FIELDS) as $field) {
             $errors[] = "Unknown field: {$field}.";
         }
 
@@ -58,6 +69,25 @@ final class EntryValidator
         if (isset($entry['sentence']) && is_string($entry['sentence'])
             && mb_strlen(trim($entry['sentence'])) > self::MAX_SENTENCE) {
             $errors[] = 'The sentence is longer than '.self::MAX_SENTENCE.' characters.';
+        }
+
+        if (isset($entry['details']) && is_string($entry['details'])
+            && mb_strlen(trim($entry['details'])) > self::MAX_DETAILS) {
+            $errors[] = 'The details are longer than '.self::MAX_DETAILS.' characters.';
+        }
+
+        if (array_key_exists('package', $entry)
+            && ! (is_string($entry['package']) && preg_match(self::PACKAGE, $entry['package']))) {
+            $errors[] = 'Field package is not a Packagist name, such as vendor/name.';
+        }
+
+        if (array_key_exists('licence', $entry)
+            && ! (is_string($entry['licence']) && preg_match(self::LICENCE, $entry['licence']))) {
+            $errors[] = 'Field licence is not a short SPDX id, such as MIT.';
+        }
+
+        if (array_key_exists('docs', $entry) && ! $this->isHttps($entry['docs'])) {
+            $errors[] = 'Field docs is not an HTTPS link.';
         }
 
         $shipped = isset($entry['shipped']) ? $this->date('shipped', $entry['shipped'], $errors) : null;

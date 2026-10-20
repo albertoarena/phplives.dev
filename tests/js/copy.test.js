@@ -15,8 +15,8 @@ function element(attrs = {}, textContent = '') {
   }
 }
 
-function run({ clipboard } = {}) {
-  const button = element({ 'data-copy': 'curl -fsSL https://dev-null.sh/commit | bash', 'data-copy-status': 'cli-status' }, 'Copy')
+function run({ clipboard, attrs = {}, label = 'Copy' } = {}) {
+  const button = element({ 'data-copy': 'curl -fsSL https://dev-null.sh/commit | bash', 'data-copy-status': 'cli-status', ...attrs }, label)
   const status = element({}, '')
   const copied = []
   const timers = []
@@ -76,5 +76,30 @@ describe('copy script', () => {
 
     expect(page.button.textContent).toBe('Not copied')
     expect(page.status.textContent).toBe('Could not copy. Select the command and copy it.')
+  })
+
+  it('goes back to the button\'s own label', async () => {
+    const page = run({ attrs: { 'data-copy': 'https://phplives.dev/entries/pest-5/' }, label: 'Copy link' })
+
+    page.button.click()
+    await page.settle()
+    expect(page.copied).toEqual(['https://phplives.dev/entries/pest-5/'])
+    expect(page.button.textContent).toBe('Copied')
+
+    page.timers.at(-1).fn()
+    expect(page.button.textContent).toBe('Copy link')
+  })
+
+  it('uses the button\'s own message when the browser refuses to copy', async () => {
+    const page = run({
+      clipboard: { writeText: () => Promise.reject(new Error('denied')) },
+      attrs: { 'data-copy-fail': 'Could not copy. Select the link and copy it.' },
+    })
+
+    page.button.click()
+    await page.settle()
+    await page.settle()
+
+    expect(page.status.textContent).toBe('Could not copy. Select the link and copy it.')
   })
 })

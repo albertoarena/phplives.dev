@@ -65,6 +65,14 @@ final class Format
         return rtrim(preg_replace(['#^https?://#', '#[?\#].*$#'], '', $url), '/');
     }
 
+    /**
+     * The package's page on Packagist.
+     */
+    public static function packagistUrl(string $package): string
+    {
+        return "https://packagist.org/packages/{$package}";
+    }
+
     public static function stackCode(string $stack): string
     {
         return self::STACKS[$stack][0];
