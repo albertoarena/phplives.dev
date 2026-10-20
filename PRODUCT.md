@@ -18,7 +18,8 @@ real, recent work in PHP. They open the page, skim it, and copy the URL.
 
 Two other audiences, served second:
 - Developers from other stacks, who arrive from that shared link.
-- People shipping in PHP, who want their project listed and may send a PR.
+- People shipping in PHP, who want their project listed and may send a PR. Once it
+  is listed, they share its own page.
 
 ## Product Purpose
 
@@ -42,9 +43,18 @@ never makes the case for PHP itself.
 
 ## Capabilities and Constraints
 
-- Two pages: the main list (last 6 months, newest first) and an archive.
+- The main page lists the last 6 months. The entries added last show as full
+  labels. Every other entry is a stub, grouped by week and then by month.
+- An archive lists the older entries, grouped by month.
+- Each entry has its own page, with its full label, its details and its own share
+  image.
+- A Privacy page and a Credits page.
 - One entry: name, one plain sentence, maker (with a dev/null link when found),
-  date as `DD/MM/YYYY`, source link, one stack tag.
+  shipped date as `DD/MM/YYYY`, the date it was added, source link, one stack tag.
+  It may also have a short details text, a Composer package, a licence and a docs
+  link.
+- For feed readers, search engines and AI tools: an Atom feed (and one per stack),
+  a sitemap, `robots.txt`, `llms.txt` and a Markdown copy of each entry.
 - A strip of Alberto's dev/null commits that link to phplives.dev. It is hidden
   when the dev/null API is down.
 - Static. No accounts, no database, no form, no cookies, no consent banner.
@@ -57,8 +67,7 @@ never makes the case for PHP itself.
 - Simple English, for readers with English as a second language.
 - No em dashes in any text.
 - No attribution to any AI, anywhere.
-- No logo or art exists yet. Any art made for the site is covered by the future
-  `TRADEMARK.md`.
+- The site's name, line, art and copy are covered by `TRADEMARK.md`.
 
 ## Evidence on Hand
 
