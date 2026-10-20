@@ -8,18 +8,20 @@
   for (var i = 0; i < buttons.length; i++) {
     (function (button) {
       var status = document.getElementById(button.getAttribute('data-copy-status'));
+      var label = button.textContent;
+      var fail = button.getAttribute('data-copy-fail') || 'Could not copy. Select the command and copy it.';
 
-      function say(label, message) {
-        button.textContent = label;
+      function say(text, message) {
+        button.textContent = text;
         if (status) status.textContent = message;
       }
 
       button.addEventListener('click', function () {
         return clipboard.writeText(button.getAttribute('data-copy')).then(
           function () { say('Copied', 'Copied to the clipboard.'); },
-          function () { say('Not copied', 'Could not copy. Select the command and copy it.'); }
+          function () { say('Not copied', fail); }
         ).then(function () {
-          setTimeout(function () { say('Copy', ''); }, 2000);
+          setTimeout(function () { say(label, ''); }, 2000);
         });
       });
 

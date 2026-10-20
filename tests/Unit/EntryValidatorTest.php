@@ -149,3 +149,55 @@ it('reports a badly formed file name', function (string $file) {
     expect(errorsFor(validEntry(), $file))
         ->toContain('The file name must be YYYY-MM-DD-slug.php, with a lower-case slug.');
 })->with(['pest-5.php', '2026-09-01-Pest_5.php', '2026-09-01-.php', '2026-09-01-pest-5.txt']);
+
+it('accepts the optional fields', function () {
+    $entry = validEntry([
+        'details' => 'Pest 5 adds browser testing. It runs on PHP 8.4 or later.',
+        'package' => 'pestphp/pest',
+        'licence' => 'MIT',
+        'docs' => 'https://pestphp.com/docs',
+    ]);
+
+    expect(errorsFor($entry))->toBe([]);
+});
+
+it('reports an empty or non-text details field', function (mixed $details, string $error) {
+    expect(errorsFor(validEntry(['details' => $details])))->toContain($error);
+})->with([
+    ['  ', 'Field details is empty.'],
+    [['x'], 'Field details must be text.'],
+]);
+
+it('reports an em dash in the details', function () {
+    expect(errorsFor(validEntry(['details' => "Fast \u{2014} and small."])))
+        ->toContain('Field details has an em dash.');
+});
+
+it('reports details that are too long, counting characters', function () {
+    expect(errorsFor(validEntry(['details' => str_repeat('a', EntryValidator::MAX_DETAILS + 1)])))
+        ->toContain('The details are longer than '.EntryValidator::MAX_DETAILS.' characters.')
+        ->and(errorsFor(validEntry(['details' => str_repeat('é', EntryValidator::MAX_DETAILS)])))->toBe([]);
+});
+
+it('accepts a Packagist package name', function (string $package) {
+    expect(errorsFor(validEntry(['package' => $package])))->toBe([]);
+})->with(['pestphp/pest', 'laravel/vet', 'symfony/http-foundation', 'api-platform/core', 'vendor.name/pack_age']);
+
+it('reports a package that is not a Packagist name', function (mixed $package) {
+    expect(errorsFor(validEntry(['package' => $package])))
+        ->toContain('Field package is not a Packagist name, such as vendor/name.');
+})->with(['pest', 'PestPHP/Pest', 'pestphp/pest extra', 'composer require pestphp/pest', '/pest', [['pestphp/pest']]]);
+
+it('accepts a short SPDX licence id', function (string $licence) {
+    expect(errorsFor(validEntry(['licence' => $licence])))->toBe([]);
+})->with(['MIT', 'Apache-2.0', 'GPL-3.0-or-later', 'BSD-3-Clause', 'AGPL-3.0-only']);
+
+it('reports a licence that is not a short SPDX id', function (mixed $licence) {
+    expect(errorsFor(validEntry(['licence' => $licence])))
+        ->toContain('Field licence is not a short SPDX id, such as MIT.');
+})->with(['', 'MIT License', 'MIT OR Apache-2.0', str_repeat('A', 41), [['MIT']]]);
+
+it('reports a docs link that is not HTTPS', function () {
+    expect(errorsFor(validEntry(['docs' => 'http://pestphp.com/docs'])))
+        ->toContain('Field docs is not an HTTPS link.');
+});

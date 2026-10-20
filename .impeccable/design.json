@@ -331,7 +331,7 @@
       {
         "name": "paper-rest",
         "value": "0 1px 0 rgba(18,40,90,.14),0 16px 30px -16px rgba(18,40,90,.38)",
-        "purpose": "Every sheet of paper at rest, light theme."
+        "purpose": "Every sheet of paper at rest, light theme. Also the docket and the neighbour stubs, which never lift."
       },
       {
         "name": "paper-lifted",
@@ -341,7 +341,7 @@
       {
         "name": "paper-rest-dark",
         "value": "0 1px 0 rgba(0,0,0,.35),0 18px 34px -14px rgba(0,0,0,.7)",
-        "purpose": "Every sheet of paper at rest, dark theme."
+        "purpose": "Every sheet of paper at rest, dark theme. Also the docket and the neighbour stubs, which never lift."
       },
       {
         "name": "paper-lifted-dark",
@@ -368,12 +368,12 @@
       {
         "name": "print-in",
         "value": ".95s, clip-path inset(0 0 100% 0) to inset(0 0 0 0), 70ms stagger per label",
-        "purpose": "Full labels print in once on load. Off under prefers-reduced-motion."
+        "purpose": "Full labels print in once on load. Off under prefers-reduced-motion. The label on an entry page does the same."
       },
       {
         "name": "stamp",
         "value": ".4s, scale 1.3 to 1 at rotate(-9deg), opacity 0 to .9, 700ms after its label",
-        "purpose": "Each postmark stamps after its label prints. Off under prefers-reduced-motion."
+        "purpose": "Each postmark stamps after its label prints. Off under prefers-reduced-motion. The label on an entry page does the same."
       },
       {
         "name": "tear-in",
@@ -383,7 +383,7 @@
       {
         "name": "label-lift",
         "value": ".25s, translateY(-3px)",
-        "purpose": "A label rises on hover."
+        "purpose": "A label rises on hover. Not on its own entry page, and never on a neighbour stub."
       },
       {
         "name": "theme-fade",
@@ -395,7 +395,7 @@
       {
         "name": "page-wide",
         "value": "1100px",
-        "purpose": "Container query on the page: 3 stub columns; the hero becomes one column."
+        "purpose": "Container query on the page: 3 stub columns; the hero becomes one column. On the entry page, the neighbour stubs sit beside the label from this width, and move under the docket below it."
       },
       {
         "name": "page-labels-row",
@@ -410,7 +410,7 @@
       {
         "name": "page-narrow",
         "value": "700px",
-        "purpose": "Container query on the page: 2 stub columns, full label columns 86% wide, 16px gutter."
+        "purpose": "Container query on the page: 2 stub columns, full label columns 86% wide, 16px gutter. On the entry page, the shelf takes the full width minus the gutters, and the label and docket padding drop."
       },
       {
         "name": "page-single",
@@ -421,11 +421,19 @@
         "name": "label-waves",
         "value": "378px",
         "purpose": "Container query on the label: waves hide below this width."
+      },
+      {
+        "name": "entry-shelf",
+        "value": "600px",
+        "purpose": "The width of the entry label and the docket on the entry page (100% minus the gutters on narrow screens)."
       }
     ],
     "typeNotes": {
       "wordSpacing": ".12em on every condensed heading",
-      "fonts": "Archivo variable (wdth 62..125, wght 100..900) and JetBrains Mono 400/600, from Google Fonts"
+      "fonts": "Archivo variable (wdth 62..125, wght 100..900) and JetBrains Mono 400/600, from Google Fonts",
+      "entryName": "The project name as h1 on its entry page: Archivo 850, clamp(40px, 9cqi, 56px), line height .95, width 72%.",
+      "entryPageSizes": "The entry page uses 12, 14, 15, 16, 19, 20, 24, 28 and 46px beside the base tokens: tracking number 12, mono links and stub date 14, back link and docket values 15, maker names 16, label sentence 19, stub name 24 (20 narrow), date 28 narrow, route code 46 narrow.",
+      "detailsLink": "The Details link is Archivo 700, 13px on a label and 12px in a table row. It is a word, not data, so it is not mono."
     }
   },
   "components": [
@@ -508,6 +516,30 @@
       "description": "Marks the first row in the List view. The only orange outside the newest label.",
       "html": "<div class=\"ds-row\"><span class=\"ds-name\">Project name</span><span class=\"ds-new-tag\">Newest</span></div>",
       "css": ".ds-row{font-family:'Archivo',system-ui,sans-serif;background:var(--label, #ffffff);color:var(--ink, #121212);padding:14px} .ds-name{font-weight:800;font-stretch:80%;font-size:17px} .ds-new-tag{display:inline-block;margin-left:8px;vertical-align:2px;background:var(--signal, #ff5a1f);color:var(--ink, #121212);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:2px}"
+    },
+    {
+      "name": "Docket",
+      "kind": "card",
+      "refersTo": "docket",
+      "description": "The white sheet under the entry label: Parcel details, optional text, Install, the facts in fixed order, and a perforated share foot.",
+      "html": "<section class=\"ds-docket\"><div class=\"ds-dk-head\"><h2>Parcel details</h2><span>2026091428</span></div><div class=\"ds-dk-install\"><span class=\"ds-cap\">Install</span><div class=\"ds-dk-cli\"><code>$ composer require laravel/vet</code><button type=\"button\">Copy</button></div></div><dl class=\"ds-dk-facts\"><div><dt>Source</dt><dd><a href=\"#\">github.com/laravel/vet</a></dd></div><div><dt>Shipped</dt><dd class=\"ds-mono\">14/09/2026</dd></div><div><dt>Checked</dt><dd class=\"ds-mono\">18/10/2026</dd></div></dl><div class=\"ds-dk-share\"><p><span class=\"ds-cap\">Share this parcel</span><span class=\"ds-mono\">phplives.dev/entries/laravel-vet/</span></p><button type=\"button\">Copy link</button></div></section>",
+      "css": ".ds-docket{font-family:'Archivo',system-ui,sans-serif;max-width:600px;background:var(--label, #ffffff);color:var(--ink, #121212);border-radius:6px;box-shadow:var(--shadow, 0 1px 0 rgba(18,40,90,.14),0 16px 30px -16px rgba(18,40,90,.38));overflow:hidden} .ds-dk-head{display:flex;justify-content:space-between;align-items:baseline;padding:18px 22px 14px;border-bottom:3px solid var(--ink, #121212)} .ds-dk-head h2{margin:0;font-size:24px;font-weight:850;font-stretch:72%;word-spacing:.12em} .ds-dk-head span,.ds-mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:14px;font-weight:600} .ds-cap{display:block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2, #4a4a46);margin-bottom:6px} .ds-dk-install{padding:16px 24px 18px;border-bottom:1px solid var(--rule-soft, #d9d9d2)} .ds-dk-cli{display:flex;align-items:center;gap:12px;background:var(--rule-soft, #d9d9d2);border-radius:5px;padding:6px 6px 6px 14px} .ds-dk-cli code{flex:1;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:13px;font-weight:600} .ds-docket button{flex:none;font:inherit;font-size:13px;font-weight:800;min-height:36px;padding:0 14px;border:2px solid var(--ink, #121212);border-radius:4px;background:transparent;color:var(--ink, #121212);cursor:pointer} .ds-docket button:focus-visible,.ds-docket a:focus-visible{outline:2px solid var(--ink, #121212);outline-offset:2px} .ds-dk-facts{margin:0;padding:4px 24px} .ds-dk-facts>div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;padding:11px 0;border-bottom:1px solid var(--rule-soft, #d9d9d2)} .ds-dk-facts>div:last-child{border-bottom:0} .ds-dk-facts dt{font-size:13px;font-weight:600;color:var(--ink-2, #4a4a46)} .ds-dk-facts dd{margin:0;font-size:15px;font-weight:600} .ds-dk-facts a{color:inherit;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:14px;text-decoration-thickness:1px} .ds-dk-facts a:hover{text-decoration-thickness:2px} .ds-dk-share{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;padding:14px 24px 16px;border-top:2px dashed var(--perf, #b9b9b2)} .ds-dk-share p{margin:0}"
+    },
+    {
+      "name": "Neighbour Stub",
+      "kind": "custom",
+      "refersTo": "neighbour-stub",
+      "description": "The tear-off stub of the parcel shipped before or after: paper, rest shadow, outer barcode, perforation facing the label. Never dimmed, lifted or rotated.",
+      "html": "<a class=\"ds-stub\" href=\"#\"><span class=\"ds-stub-body\"><span class=\"ds-stub-cap\">Shipped after <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m13 6 6 6-6 6\"/></svg></span><span class=\"ds-stub-name\">Laravel MCP v1.0</span><span class=\"ds-stub-meta\"><span class=\"ds-stub-date\">14/09/2026</span><span class=\"ds-stub-code\">LRV</span></span><span class=\"ds-stub-tid\">2026091429</span></span><svg class=\"ds-stub-bars\" viewBox=\"0 0 30 60\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><rect y=\"0\" width=\"30\" height=\"3\"/><rect y=\"5\" width=\"30\" height=\"2\"/><rect y=\"9\" width=\"30\" height=\"5\"/><rect y=\"16\" width=\"30\" height=\"2\"/><rect y=\"21\" width=\"30\" height=\"4\"/><rect y=\"28\" width=\"30\" height=\"2\"/><rect y=\"32\" width=\"30\" height=\"6\"/><rect y=\"40\" width=\"30\" height=\"2\"/><rect y=\"45\" width=\"30\" height=\"3\"/><rect y=\"51\" width=\"30\" height=\"2\"/><rect y=\"55\" width=\"30\" height=\"5\"/></svg></a>",
+      "css": ".ds-stub{font-family:'Archivo',system-ui,sans-serif;position:relative;display:grid;grid-template-columns:minmax(0,1fr) 28px;max-width:320px;background:var(--label, #ffffff);color:var(--ink, #121212);border-radius:6px;box-shadow:var(--shadow, 0 1px 0 rgba(18,40,90,.14),0 16px 30px -16px rgba(18,40,90,.38));text-decoration:none} .ds-stub-bars{display:block;width:100%;height:0;min-height:100%;fill:var(--ink, #121212);padding:12px 10px 12px 0;box-sizing:border-box} .ds-stub::after{content:'';position:absolute;top:8px;bottom:8px;left:10px;border-left:2px dashed var(--perf, #b9b9b2)} .ds-stub-body{display:flex;flex-direction:column;gap:6px;padding:16px 16px 14px 26px} .ds-stub-cap{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2, #4a4a46)} .ds-stub-name{font-size:24px;line-height:1;font-weight:850;font-stretch:72%;letter-spacing:-.01em;word-spacing:.12em;text-decoration-thickness:2px;text-underline-offset:.16em} .ds-stub:hover .ds-stub-name{text-decoration-line:underline} .ds-stub-meta{display:flex;align-items:center;gap:10px} .ds-stub-date,.ds-stub-tid{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-weight:600} .ds-stub-date{font-size:14px} .ds-stub-code{background:var(--ink, #121212);color:var(--label, #ffffff);font-weight:900;font-stretch:62%;font-size:16px;line-height:1;padding:4px 6px 3px;border-radius:2px;letter-spacing:.02em} .ds-stub-tid{font-size:11px;color:var(--ink-2, #4a4a46);letter-spacing:.12em} .ds-stub:focus-visible{outline:2px solid var(--on-field, #12285a);outline-offset:3px}"
+    },
+    {
+      "name": "Details Link",
+      "kind": "custom",
+      "refersTo": "details-link",
+      "description": "A small bold link to the entry page with a right arrow, in each label foot and in the Track column of list rows.",
+      "html": "<div class=\"ds-lab-foot\"><p class=\"ds-tid\">2026091428</p><a class=\"ds-more\" href=\"#\">Details<span class=\"ds-sr\"> for Laravel Vet</span><svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m13 6 6 6-6 6\"/></svg></a></div>",
+      "css": ".ds-lab-foot{font-family:'Archivo',system-ui,sans-serif;display:flex;justify-content:space-between;align-items:baseline;gap:12px;max-width:380px;background:var(--label, #ffffff);color:var(--ink, #121212);padding:12px 18px} .ds-tid{margin:0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.12em;color:var(--ink-2, #4a4a46)} .ds-more{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;color:var(--ink, #121212);min-height:24px;text-decoration-thickness:1px} .ds-more:hover{text-decoration-thickness:2px} .ds-more:focus-visible{outline:2px solid var(--ink, #121212);outline-offset:2px} .ds-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}"
     }
   ],
   "narrative": {
@@ -568,9 +600,11 @@
       "**Do** set condensed headings in Archivo with .12em word spacing.",
       "**Do** use JetBrains Mono for dates and machine data, and write dates as DD/MM/YYYY.",
       "**Do** keep the page fully usable without JavaScript: full labels and bundles of stubs, tools hidden.",
-      "**Do** give a stub only the top of a label: route code, name, sentence, credits row and one link.",
-      "**Do** cast a stub's shadow with the drop-shadow filter (`--shadow-drop`), so it follows the torn edge.",
-      "**Do** turn off the print-in, the stamp and the tear-in under `prefers-reduced-motion`."
+      "**Do** give a home stub only the top of a label: route code, name, sentence, credits row and one link.",
+      "**Do** cast a home stub's shadow with the drop-shadow filter (`--shadow-drop`), so it follows the torn edge.",
+      "**Do** turn off the print-in, the stamp and the tear-in under `prefers-reduced-motion`.",
+      "**Do** keep neighbour stubs full-contrast paper with the rest shadow, and let the page edge cut their barcode from 1100px.",
+      "**Do** keep the earlier parcel on the left and the later parcel on the right, at every width."
     ],
     "donts": [
       "**Don't** build a showcase grid of logo cards or an awesome-list link dump.",
@@ -578,9 +612,11 @@
       "**Don't** add a second accent colour or colour-code the stacks.",
       "**Don't** add shadows to anything that is not paper, or use hard offset shadows.",
       "**Don't** round corners past 6px or use pill shapes.",
-      "**Don't** add motion beyond the print-in, the stamp, the stub tear-in, the label lift and the theme fade.",
-      "**Don't** add a barcode, postmark, waves or tracking number to a stub.",
-      "**Don't** show the cancellation waves on a label narrower than 378px."
+      "**Don't** add motion beyond the print-in, the stamp, the home stub tear-in, the label lift and the theme fade.",
+      "**Don't** add a barcode, postmark, waves or tracking number to a home stub.",
+      "**Don't** show the cancellation waves on a label narrower than 378px.",
+      "**Don't** dim, fade, lift or rotate a neighbour stub. It is paper, only partly on screen.",
+      "**Don't** give the docket's command strip a shadow: it is printed on the docket."
     ]
   }
 }

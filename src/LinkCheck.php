@@ -31,6 +31,14 @@ final readonly class LinkCheck
     {
         $links = [$entry->proofUrl, $entry->source];
 
+        if ($entry->docs !== null) {
+            $links[] = $entry->docs;
+        }
+
+        if ($entry->package !== null) {
+            $links[] = Format::packagistUrl($entry->package);
+        }
+
         foreach ($entry->makers as $maker) {
             if ($maker->github !== null) {
                 $links[] = "https://github.com/{$maker->github}";

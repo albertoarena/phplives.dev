@@ -59,7 +59,7 @@ it('writes the HTML pages and the files that help people and tools find them', f
 it('lets every crawler in, points to the sitemap and sets the content signals', function () {
     expect(files($this)['robots.txt'])->toBe(<<<'TXT'
         User-agent: *
-        Content-Signal: search=yes, ai-input=yes
+        Content-Signal: search=yes, ai-input=yes, ai-train=yes
         Allow: /
 
         Sitemap: https://phplives.dev/sitemap.xml
@@ -104,11 +104,17 @@ it('leaves out the list page dates when there are no entries', function () {
     expect(files($this)['sitemap.xml'])->not->toContain('<lastmod>');
 });
 
-it('keeps the entry pages out of the sitemap until they are built', function () {
+it('keeps the entry pages out of the sitemap when they are off', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php');
 
-    expect(Site::ENTRY_PAGES)->toBeFalse()
-        ->and(files($this)['sitemap.xml'])->not->toContain('/entries/');
+    expect(files($this)['sitemap.xml'])->not->toContain('/entries/');
+});
+
+it('lists the entry pages in the sitemap of the real site', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+
+    expect((new Site(Entries::load($this->dir, $this->today), $this->today))->files()['sitemap.xml'])
+        ->toContain('<loc>https://phplives.dev/entries/pest-5/</loc>');
 });
 
 it('lists each entry page in the sitemap, dated by its check, once entry pages are on', function () {
@@ -189,6 +195,39 @@ it('writes a Markdown copy of each entry', function () {
         - Date from: [version tag](https://github.com/laravel/vet/releases/tag/v0.1.0)
         - Source: [github.com/laravel/vet](https://github.com/laravel/vet)
         - Stack: Laravel
+        - Checked: 18/10/2026
+        - Added: 19/10/2026
+
+        See more at [phplives.dev](https://phplives.dev)
+
+        MD);
+});
+
+it('adds the optional facts to the Markdown copy when an entry gives them', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php', [
+        'details' => 'Pest 5 adds browser testing. It needs PHP 8.4.',
+        'package' => 'pestphp/pest',
+        'licence' => 'MIT',
+        'docs' => 'https://pestphp.com/docs',
+        'checked' => '2026-10-18',
+        'added' => '2026-10-19',
+    ]);
+
+    expect(files($this)['entries/pest-5.md'])->toBe(<<<'MD'
+        # Pest 5
+
+        A testing framework for PHP, focused on simplicity.
+
+        Pest 5 adds browser testing. It needs PHP 8.4.
+
+        - Made by: [Nuno Maduro](https://github.com/nunomaduro)
+        - Shipped: 01/09/2026
+        - Date from: [release](https://github.com/pestphp/pest/releases/tag/v5.0.0)
+        - Source: [github.com/pestphp/pest](https://github.com/pestphp/pest)
+        - Docs: [pestphp.com/docs](https://pestphp.com/docs)
+        - Install: `composer require pestphp/pest`
+        - Licence: MIT
+        - Stack: plain PHP
         - Checked: 18/10/2026
         - Added: 19/10/2026
 

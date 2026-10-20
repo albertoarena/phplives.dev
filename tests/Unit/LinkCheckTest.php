@@ -39,6 +39,22 @@ it('lists every link in an entry, once each', function () {
     ]);
 });
 
+it('checks the docs link and the Packagist page when an entry gives them', function () {
+    $entry = Entry::fromArray('pest-5', validEntry([
+        'devnull' => 'Shipped with PHP: Pest 5.',
+        'docs' => 'https://pestphp.com/docs',
+        'package' => 'pestphp/pest',
+    ]));
+
+    expect(LinkCheck::links($entry))->toBe([
+        'https://github.com/pestphp/pest/releases/tag/v5.0.0',
+        'https://github.com/pestphp/pest',
+        'https://pestphp.com/docs',
+        'https://packagist.org/packages/pestphp/pest',
+        'https://github.com/nunomaduro',
+    ]);
+});
+
 it('accepts a link that answers with a success', function (int $status) {
     expect(fakeWeb(['HEAD https://example.com' => $status])->status('https://example.com'))->toBe($status);
 })->with([200, 204]);

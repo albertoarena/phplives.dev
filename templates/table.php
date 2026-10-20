@@ -8,6 +8,7 @@
  * @var list<\PhpLives\Bundle> $groups
  * @var string|null $newest The slug of the entry to tag as the newest parcel.
  * @var string $groupPrefix Added to each group's id, so the ids stay unique on the page.
+ * @var \PhpLives\Site $site
  */
 use PhpLives\Format;
 
@@ -32,7 +33,7 @@ foreach ($entries as $i => $entry) {
               <td class="desc"><?= $e($entry->sentence) ?></td>
               <td class="from"><?= $e(Format::credit($entry->makers)) ?></td>
               <td class="stk"><span class="code"><?= $e(Format::stackCode($entry->stack)) ?></span><span class="code-l"><?= $e(Format::stackLabel($entry->stack)) ?></span></td>
-              <td class="trk mono"><a href="<?= $e($entry->source) ?>"><?= $e(Format::linkText($entry->source)) ?></a></td>
+              <td class="trk"><a class="mono" href="<?= $e($entry->source) ?>"><?= $e(Format::linkText($entry->source)) ?></a><?php if ($site->hasEntryPages()): ?><a class="more" href="<?= $e($site::entryPath($entry)) ?>">Details<span class="sr-only"> for <?= $e($entry->name) ?></span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></a><?php endif ?></td>
             </tr>
 <?php endforeach ?>
           </tbody>
