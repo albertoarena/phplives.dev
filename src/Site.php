@@ -151,7 +151,7 @@ final readonly class Site
             $added === 0 => ['Added last', "Nothing was added {$since}. ".($shown === 1 ? 'This one was' : "These {$shown} were").' added last.'],
             $added < $shown => ['This week', "{$added} added {$since}. The rest were added before."],
             $added === $shown => ['This week', "Added {$since}."],
-            default => ['This week', "{$added} added {$since}. These are the newest {$shown}."],
+            default => ['This week', "{$added} added {$since}. Here are the newest {$shown}. The others are in the bundles below, by shipped date."],
         };
     }
 
