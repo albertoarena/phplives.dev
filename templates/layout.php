@@ -2,6 +2,7 @@
 /**
  * @var callable $e
  * @var string $title
+ * @var string|null $shareTitle The title on share cards, when it differs from the page title.
  * @var string|null $path Null on the page for missing addresses.
  * @var string $themeScript
  * @var string $analyticsToken
@@ -32,7 +33,7 @@ $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
 <?php endif ?>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="phplives.dev">
-<meta property="og:title" content="<?= $e($title) ?>">
+<meta property="og:title" content="<?= $e($shareTitle ?? $title) ?>">
 <meta property="og:description" content="<?= $e($description) ?>">
 <?php if ($path !== null): ?>
 <meta property="og:url" content="https://phplives.dev<?= $e($path) ?>">

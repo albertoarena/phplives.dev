@@ -55,7 +55,7 @@ it('gives each entry page its own title, description and address', function () {
     $meta = fn (string $selector) => $doc->querySelector($selector)?->getAttribute('content');
 
     expect($doc->querySelector('title')->textContent)->toBe('Pest 5: shipped with PHP | phplives.dev')
-        ->and($meta('meta[property="og:title"]'))->toBe('Pest 5: shipped with PHP | phplives.dev')
+        ->and($meta('meta[property="og:title"]'))->toBe('Pest 5: shipped with PHP')
         ->and($meta('meta[name="description"]'))->toBe('A testing framework for PHP, focused on simplicity.')
         ->and($meta('meta[property="og:description"]'))->toBe('A testing framework for PHP, focused on simplicity.')
         ->and($doc->querySelector('link[rel="canonical"]')->getAttribute('href'))->toBe('https://phplives.dev/entries/pest-5/')
@@ -199,7 +199,17 @@ it('lets the visitor copy the link to the page', function () {
         ->and($button->getAttribute('data-copy-fail'))->toBe('Could not copy. Select the link and copy it.')
         ->and($button->hasAttribute('hidden'))->toBeTrue()
         ->and(texts($doc, '.dk-share .dk-url'))->toBe(['phplives.dev/entries/pest-5/'])
-        ->and(texts($doc, 'body > .pl > script'))->toHaveCount(1);
+        ->and(texts($doc, 'body > .pl > script'))->toHaveCount(2);
+});
+
+it('offers the device share menu where the browser has one', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+    $button = entryPage($this, 'pest-5')->querySelector('.dk-share button[data-share]');
+
+    expect($button->getAttribute('data-share'))->toBe('https://phplives.dev/entries/pest-5/')
+        ->and($button->getAttribute('data-share-title'))->toBe('Pest 5: shipped with PHP')
+        ->and($button->textContent)->toBe('Share')
+        ->and($button->hasAttribute('hidden'))->toBeTrue();
 });
 
 it('escapes entry text on the entry page', function () {

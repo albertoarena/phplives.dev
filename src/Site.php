@@ -109,9 +109,11 @@ final readonly class Site
                     'before' => $all[$index + 1] ?? null,
                     'after' => $all[$index - 1] ?? null,
                     'url' => self::URL.self::entryPath($entry),
+                    'shareTitle' => self::shareTitle($entry),
                     'copyScript' => $this->script('copy.js'),
+                    'shareScript' => $this->script('share.js'),
                 ],
-                ['description' => $entry->sentence, 'markdown' => Markdown::entryPath($entry)],
+                ['description' => $entry->sentence, 'markdown' => Markdown::entryPath($entry), 'shareTitle' => self::shareTitle($entry)],
             );
         }
 
@@ -268,13 +270,15 @@ final readonly class Site
 
     /**
      * @param  string|null  $path  The page's own address. Null for the page that answers missing addresses.
-     * @param  array{description?: string, markdown?: string}  $head  A page's own description, and its Markdown copy.
+     * @param  array{description?: string, markdown?: string, shareTitle?: string}  $head  A page's own description, its Markdown copy
+     *                                                                                  and its title on share cards.
      */
     private function page(string $template, string $title, ?string $path, array $vars, array $head = []): string
     {
         return self::externalLinksInNewTab($this->render('layout', $head + [
             'description' => null,
             'markdown' => null,
+            'shareTitle' => null,
             'title' => $title,
             'path' => $path,
             'today' => Format::date($this->today),
@@ -282,6 +286,14 @@ final readonly class Site
             'analyticsToken' => self::ANALYTICS_TOKEN,
             'content' => $this->render($template, $vars + ['today' => Format::date($this->today)]),
         ]));
+    }
+
+    /**
+     * An entry's title on share cards. Cards already show the site's name, so it is left out.
+     */
+    private static function shareTitle(Entry $entry): string
+    {
+        return "{$entry->name}: shipped with PHP";
     }
 
     /**

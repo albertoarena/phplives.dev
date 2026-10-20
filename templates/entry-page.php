@@ -12,7 +12,9 @@
  * @var \PhpLives\Entry|null $before The parcel shipped just before this one.
  * @var \PhpLives\Entry|null $after The parcel shipped just after this one.
  * @var string $url The page's own address.
+ * @var string $shareTitle
  * @var string $copyScript
+ * @var string $shareScript
  */
 use PhpLives\Format;
 
@@ -74,7 +76,10 @@ $onEntryPage = true;
         </dl>
         <div class="dk-share">
           <p><span class="cap">Share this parcel</span><span class="dk-url mono"><?= $e(Format::linkText($url)) ?>/</span></p>
-          <button type="button" data-copy="<?= $e($url) ?>" data-copy-status="share-status" data-copy-fail="Could not copy. Select the link and copy it." hidden>Copy link</button>
+          <div class="dk-actions">
+            <button type="button" data-copy="<?= $e($url) ?>" data-copy-status="share-status" data-copy-fail="Could not copy. Select the link and copy it." hidden>Copy link</button>
+            <button type="button" data-share="<?= $e($url) ?>" data-share-title="<?= $e($shareTitle) ?>" hidden>Share</button>
+          </div>
           <span class="sr-only" id="share-status" role="status"></span>
         </div>
       </section>
@@ -100,3 +105,4 @@ $onEntryPage = true;
     </div>
   </div>
   <script><?= $copyScript ?></script>
+  <script><?= $shareScript ?></script>

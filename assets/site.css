@@ -331,8 +331,9 @@ body{margin:0;background:var(--field)}
 .dk-makers li{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 16px}
 .dk-makers .who{font-weight:700;font-size:16px}
 .dk-makers .mono{font-size:14px}
-.dk-share{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 20px;padding:14px 24px 16px;border-top:2px dashed var(--perf)}
-.dk-share p{margin:0;min-width:0}
+.dk-share{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:14px 24px 16px;border-top:2px dashed var(--perf)}
+.dk-share p{margin:0 auto 0 0;min-width:0}
+.dk-actions{display:flex;gap:10px}
 .dk-share .cap{margin-bottom:4px}
 .dk-url{display:block;font-size:14px;font-weight:600;overflow-wrap:anywhere}
 .dk-share button{flex:none;font:inherit;font-size:13px;font-weight:800;min-height:36px;padding:0 14px;border:2px solid var(--ink);border-radius:4px;background:transparent;color:var(--ink);cursor:pointer}

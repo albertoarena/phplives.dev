@@ -350,7 +350,7 @@ A white sheet under the entry label, with the paper shadow and a 6px radius. Its
 2. **Details text** (optional): two or three plain sentences, at 17px.
 3. **Install** (only when the entry has a package): the command strip with `composer require` and the Copy button. Here the strip is a Soft Rule tint with no shadow.
 4. **Facts:** a list of term and value, split by Soft Rule lines. The order is fixed: Made by, Source, Docs, Licence, Shipped, Date from, Added, Checked. Docs and Licence show only when the entry gives them. Terms sit in a 110px column (88px on narrow screens). Links carry a small out arrow. Made by lists each maker, with their GitHub and /dev/null links.
-5. **Share foot:** a 2px perforation above it. "Share this parcel", the page address in mono, and the "Copy link" button. The button is hidden when the browser has no clipboard.
+5. **Share foot:** a 2px perforation above it. "Share this parcel", the page address in mono, then the "Copy link" and "Share" buttons side by side, in the same outline style. "Copy link" is hidden when the browser has no clipboard. "Share" opens the device's own share menu, and it is hidden when the browser has none. The share card title is "Name: shipped with PHP", without the site name, because cards already show it.
 
 ### Neighbour stubs
 The tear-off stubs of the parcels shipped just before and just after this one. They show that the list goes on. Each stub is a link.
