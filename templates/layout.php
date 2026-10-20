@@ -60,13 +60,23 @@ $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
   </div>
 <?= $content ?>
   <footer class="wrap foot">
+    <div class="foot-open">
+      <div>
+        <h2>Open source. Anyone can help.</h2>
+        <p>Add a project, fix a bug or improve the code. Every change is a pull request on GitHub.</p>
+      </div>
+      <div class="foot-open-links">
+        <a class="tag" href="https://github.com/albertoarena/phplives.dev"><svg class="gh" width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6.766 11.328c-2.063-.25-3.516-1.734-3.516-3.656 0-.781.281-1.625.75-2.188-.203-.515-.172-1.609.063-2.062.625-.078 1.468.25 1.968.703.594-.187 1.219-.281 1.985-.281.765 0 1.39.094 1.953.265.484-.437 1.344-.765 1.969-.687.218.422.25 1.515.046 2.047.5.593.766 1.39.766 2.203 0 1.922-1.453 3.375-3.547 3.64.531.344.89 1.094.89 1.954v1.625c0 .468.391.734.86.547C13.781 14.359 16 11.53 16 8.03 16 3.61 12.406 0 7.984 0 3.563 0 0 3.61 0 8.031a7.88 7.88 0 0 0 5.172 7.422c.422.156.828-.125.828-.547v-1.25c-.219.094-.5.156-.75.156-1.031 0-1.64-.562-2.078-1.609-.172-.422-.36-.672-.719-.719-.187-.015-.25-.093-.25-.187 0-.188.313-.328.625-.328.453 0 .844.281 1.25.86.313.452.64.655 1.031.655s.641-.14 1-.5c.266-.265.47-.5.657-.656"/></svg>See the code on GitHub</a>
+        <a class="alt" href="https://github.com/albertoarena/phplives.dev/blob/main/CONTRIBUTING.md">Read how to contribute</a>
+      </div>
+    </div>
     <div class="foot-grid">
       <p>Made by <a href="https://albertoarena.it/?utm_source=phplives.dev&amp;utm_medium=footer">Alberto Arena</a>, author and main maintainer.</p>
       <p class="links"><a href="https://cogway.dev/?utm_source=phplives.dev&amp;utm_medium=footer">cogway.dev</a><a href="https://whyphp.dev">Why PHP? Read whyphp.dev</a></p>
     </div>
     <p class="fine">Every entry links to its own source. Dates are DD/MM/YYYY.</p>
     <p class="fine indie">phplives.dev is an independent site. /dev/null does not sponsor or endorse it.</p>
-    <p class="fine foot-pages"><a href="/privacy/"<?= $path === '/privacy/' ? ' aria-current="page"' : '' ?>>Privacy</a><span aria-hidden="true">·</span><a href="/credits/"<?= $path === '/credits/' ? ' aria-current="page"' : '' ?>>Credits</a><span aria-hidden="true">·</span><span class="soon">Source code: public in the next few days</span></p>
+    <p class="fine foot-pages"><a href="/privacy/"<?= $path === '/privacy/' ? ' aria-current="page"' : '' ?>>Privacy</a><span aria-hidden="true">·</span><a href="/credits/"<?= $path === '/credits/' ? ' aria-current="page"' : '' ?>>Credits</a></p>
   </footer>
 </div>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='<?= $e(json_encode(['token' => $analyticsToken])) ?>'></script>

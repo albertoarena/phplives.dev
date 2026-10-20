@@ -15,6 +15,9 @@ final readonly class Site
 
     private const string ASSETS = __DIR__.'/../assets';
 
+    /** The brand art: the icon and the share card. TRADEMARK.md covers it. */
+    private const string ART = __DIR__.'/../art';
+
     /** With more stacks than this, the filter is a dropdown instead of chips. */
     public const int MAX_CHIPS = 6;
 
@@ -82,11 +85,9 @@ final readonly class Site
             file_put_contents($file, $html);
         }
 
-        foreach (['site.css', 'favicon.svg'] as $asset) {
-            copy(self::ASSETS."/{$asset}", rtrim($outDir, '/')."/{$asset}");
-        }
-
-        copy(self::ASSETS.'/share/card.png', rtrim($outDir, '/').'/share.png');
+        copy(self::ASSETS.'/site.css', rtrim($outDir, '/').'/site.css');
+        copy(self::ART.'/favicon.svg', rtrim($outDir, '/').'/favicon.svg');
+        copy(self::ART.'/share-card.png', rtrim($outDir, '/').'/share.png');
 
         foreach (['fonts', 'img'] as $dir) {
             if (! is_dir(rtrim($outDir, '/')."/{$dir}")) {

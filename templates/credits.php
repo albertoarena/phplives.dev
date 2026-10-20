@@ -14,6 +14,12 @@ $groups = [
             ['name' => 'JetBrains Mono', 'url' => 'https://fonts.google.com/specimen/JetBrains+Mono', 'use' => 'The typeface for dates, numbers and code.', 'from' => 'JetBrains, Philipp Nurullin and Konstantin Bulenkov', 'licence' => 'SIL Open Font License 1.1'],
         ],
     ],
+    'icons' => [
+        'title' => 'Icons',
+        'items' => [
+            ['name' => 'Octicons', 'url' => 'https://primer.style/octicons/', 'use' => 'The GitHub mark on the links to the code of this site.', 'from' => 'GitHub', 'licence' => 'MIT'],
+        ],
+    ],
     'build' => [
         'title' => 'Build and hosting',
         'items' => [

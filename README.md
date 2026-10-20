@@ -32,6 +32,7 @@ entries/      one file per entry, named YYYY-MM-DD-slug.php
 src/          the build: entries, checks, the /dev/null API
 templates/    the pages
 assets/       styles, scripts, fonts and images
+art/          the icon and the share card (see TRADEMARK.md)
 tests/        Pest (PHP) and Vitest (browser scripts)
 bin/build     builds the site into dist/
 ```
