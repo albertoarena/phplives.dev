@@ -40,6 +40,7 @@ it('gives each stack a code and a label', function (string $stack, string $code,
     ['laravel', 'LRV', 'Laravel'],
     ['symfony', 'SYM', 'Symfony'],
     ['nativephp', 'NTV', 'NativePHP'],
+    ['wordpress', 'WRD', 'WordPress'],
     ['php', 'PHP', 'plain PHP'],
 ]);
 

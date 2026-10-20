@@ -78,10 +78,10 @@ it('fails when a file is not an entry', function () {
 });
 
 it('fails when an entry is not valid', function () {
-    writeEntry($this->tmp.'/entries', '2026-09-01-first.php', ['stack' => 'wordpress']);
+    writeEntry($this->tmp.'/entries', '2026-09-01-first.php', ['stack' => 'drupal']);
 
     [$status, $output] = checkLinks($this->tmp);
 
     expect($status)->toBe(1)
-        ->and($output)->toContain('2026-09-01-first.php: Unknown stack: wordpress.');
+        ->and($output)->toContain('2026-09-01-first.php: Unknown stack: drupal.');
 });

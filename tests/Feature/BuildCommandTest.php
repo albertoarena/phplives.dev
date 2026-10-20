@@ -51,12 +51,12 @@ it('writes the site into the output folder', function () {
 });
 
 it('fails and lists the problems when an entry is not valid', function () {
-    writeEntry($this->tmp.'/entries', '2026-09-01-pest-5.php', ['stack' => 'wordpress']);
+    writeEntry($this->tmp.'/entries', '2026-09-01-pest-5.php', ['stack' => 'drupal']);
 
     [$status, $output] = build($this->tmp);
 
     expect($status)->toBe(1)
-        ->and($output)->toContain('2026-09-01-pest-5.php: Unknown stack: wordpress.')
+        ->and($output)->toContain('2026-09-01-pest-5.php: Unknown stack: drupal.')
         ->and($this->tmp.'/dist')->not->toBeDirectory();
 });
 

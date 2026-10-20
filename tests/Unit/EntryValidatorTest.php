@@ -60,8 +60,12 @@ it('reports a check made before the ship date', function () {
 });
 
 it('reports an unknown stack', function () {
-    expect(errorsFor(validEntry(['stack' => 'wordpress'])))
-        ->toContain('Unknown stack: wordpress. Use one of: laravel, symfony, nativephp, php.');
+    expect(errorsFor(validEntry(['stack' => 'drupal'])))
+        ->toContain('Unknown stack: drupal. Use one of: laravel, symfony, nativephp, wordpress, php.');
+});
+
+it('accepts WordPress as a stack', function () {
+    expect(errorsFor(validEntry(['stack' => 'wordpress'])))->toBe([]);
 });
 
 it('reports a sentence that is too long', function () {
