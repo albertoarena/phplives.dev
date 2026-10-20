@@ -567,6 +567,11 @@
         "section": "colors"
       },
       {
+        "name": "The Permanent Card Rule",
+        "body": "A share card has no Signal Orange, not even the card of the newest parcel. Other sites keep a shared card for good. The newest parcel does not stay the newest.",
+        "section": "colors"
+      },
+      {
         "name": "The Wide Words Rule",
         "body": "Every condensed heading (display, headline, title, section, bundle) gets word spacing of .12em. Condensed Archivo runs words together without it.",
         "section": "typography"
@@ -616,7 +621,9 @@
       "**Don't** add a barcode, postmark, waves or tracking number to a home stub.",
       "**Don't** show the cancellation waves on a label narrower than 378px.",
       "**Don't** dim, fade, lift or rotate a neighbour stub. It is paper, only partly on screen.",
-      "**Don't** give the docket's command strip a shadow: it is printed on the docket."
+      "**Don't** give the docket's command strip a shadow: it is printed on the docket.",
+      "**Don't** use Signal Orange on a share card.",
+      "**Don't** put the name, the stack code, the date or `phplives.dev` of a share card outside the square in its middle."
     ]
   }
 }
