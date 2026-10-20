@@ -140,6 +140,7 @@ it('describes the site for language models in llms.txt', function () {
         ->and($llms)->toContain('real things people shipped with PHP in the last 6 months')
         ->and($llms)->toContain('PHP delivers. PHP lives!')
         ->and($llms)->toContain('PHP is the main language on its server side.')
+        ->and($llms)->toContain('A new major version (such as Pest 5) can be its own entry, dated by its release. A minor or patch release does not qualify.')
         ->and($llms)->toContain(<<<'MD'
             ## Entries
 
@@ -164,13 +165,14 @@ it('leaves the archive out of llms.txt when it is empty', function () {
 });
 
 it('never quotes the number of entries in llms.txt', function () {
-    foreach (['2026-10-01-a', '2026-09-01-b', '2026-08-01-c', '2026-07-01-d', '2026-06-01-e'] as $file) {
+    // Seven entries: the rules text names other numbers (6 months, Pest 5), but never this one.
+    foreach (['2026-10-01-a', '2026-09-01-b', '2026-08-01-c', '2026-07-01-d', '2026-06-01-e', '2026-05-01-f', '2026-04-25-g'] as $file) {
         writeEntry($this->dir, "{$file}.php", ['name' => 'Name', 'sentence' => 'A thing.']);
     }
 
     $text = preg_replace('#\(https://[^)]*\)#', '', files($this)['llms.txt']);
 
-    expect($text)->not->toMatch('/\b5\b|\bfive\b/i');
+    expect($text)->not->toMatch('/\b7\b|\bseven\b/i');
 });
 
 it('writes a Markdown copy of each entry', function () {
