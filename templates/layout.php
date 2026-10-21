@@ -29,6 +29,7 @@ $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
 <link rel="canonical" href="https://phplives.dev<?= $e($path) ?>">
 <?php endif ?>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="me" href="https://phpc.social/@albertoarena">
 <link rel="alternate" type="application/atom+xml" title="phplives.dev" href="/feed.xml">
 <?php if ($markdown !== null): ?>
 <link rel="alternate" type="text/markdown" href="<?= $e($markdown) ?>">
