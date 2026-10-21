@@ -29,11 +29,12 @@ body:
       placeholder: https://
     validations:
       required: true
-  - type: input
+  - type: textarea
     id: makers
     attributes:
       label: Who made it
-      description: Names and GitHub usernames, if you know them.
+      description: "One maker per line: the full name, then the GitHub username. Use the name the project credits. Fill in what you know."
+      placeholder: Jane Smith, janesmith
   - type: textarea
     id: what
     attributes:
