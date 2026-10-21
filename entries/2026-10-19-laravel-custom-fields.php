@@ -20,5 +20,5 @@ return [
     'devnull' => 'Shipped with PHP: Laravel Custom Fields v1.0. A headless Laravel package that lets users add typed fields to an Eloquent model at runtime, without a migration for each one. https://github.com/plin-code/laravel-custom-fields'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-20',
-    'added' => '2026-10-20',
+    'added' => '2026-10-21',
 ];
