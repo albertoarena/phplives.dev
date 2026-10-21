@@ -487,6 +487,10 @@ it('has a favicon', function (string $page) {
     expect(hrefs(pages($this)[$page], 'link[rel="icon"]'))->toBe(['/favicon.svg']);
 })->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
 
+it('links to the author on Mastodon with rel me', function (string $page) {
+    expect(hrefs(pages($this)[$page], 'link[rel="me"]'))->toBe(['https://phpc.social/@albertoarena']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
+
 it('shows how to commit on /dev/null from a terminal', function (array $posts) {
     $doc = pages($this, posts: $posts)['index.html'];
     $command = 'curl -fsSL https://dev-null.sh/commit | bash';
