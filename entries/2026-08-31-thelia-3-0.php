@@ -20,5 +20,5 @@ return [
     'devnull' => 'Shipped with PHP: Thelia 3.0. A new major version of Thelia, an open source framework for online stores, which runs on Symfony 7.4 and API Platform 4.3. https://github.com/thelia/thelia'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',
-    'added' => '2026-10-21',
+    'added' => '2026-10-22',
 ];

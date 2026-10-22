@@ -18,5 +18,5 @@ return [
     'devnull' => 'Shipped with PHP: Kanso. Fast, open-source kanban boards for Nextcloud, with reviews, projects and realtime sync. https://github.com/aktasfatih/kanso'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',
-    'added' => '2026-10-21',
+    'added' => '2026-10-22',
 ];

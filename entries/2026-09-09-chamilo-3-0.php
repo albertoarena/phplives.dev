@@ -19,5 +19,5 @@ return [
     'devnull' => 'Shipped with PHP: Chamilo 3.0. A new major version of Chamilo, an e-learning platform, with AI tools for teachers and an MCP server for AI clients. https://github.com/chamilo/chamilo-lms'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',
-    'added' => '2026-10-21',
+    'added' => '2026-10-22',
 ];

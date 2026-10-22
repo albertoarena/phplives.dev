@@ -21,5 +21,5 @@ return [
     'devnull' => 'Shipped with PHP: Neuron AI 4.0. A new major version of Neuron AI, the PHP framework for AI agents, with a rebuilt Workflow engine and faster streaming. https://github.com/neuron-core/neuron-ai'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',
-    'added' => '2026-10-21',
+    'added' => '2026-10-22',
 ];
