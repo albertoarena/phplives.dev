@@ -20,5 +20,5 @@ return [
     'devnull' => 'Shipped with PHP: tempest/markdown. A fast and extensible Markdown parser in pure PHP, which uses a simple lexer instead of regex. https://github.com/tempestphp/markdown'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',
-    'added' => '2026-10-21',
+    'added' => '2026-10-22',
 ];

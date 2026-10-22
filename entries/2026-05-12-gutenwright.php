@@ -18,5 +18,5 @@ return [
     'devnull' => 'Shipped with PHP: Gutenwright. An experimental WordPress plugin that turns natural language prompts into real Gutenberg blocks. https://github.com/f/gutenwright'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',
-    'added' => '2026-10-21',
+    'added' => '2026-10-22',
 ];

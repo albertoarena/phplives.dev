@@ -20,5 +20,5 @@ return [
     'devnull' => 'Shipped with PHP: Semantic MediaWiki 7.0. A new major version of Semantic MediaWiki, which lets you store and query data in wiki pages, with an easier install and faster queries. https://github.com/SemanticMediaWiki/SemanticMediaWiki'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',
-    'added' => '2026-10-21',
+    'added' => '2026-10-22',
 ];

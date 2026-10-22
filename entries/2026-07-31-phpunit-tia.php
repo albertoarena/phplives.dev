@@ -19,5 +19,5 @@ return [
     'devnull' => 'Shipped with PHP: PHPUnit TIA. A PHPUnit extension for Test Impact Analysis (TIA), which runs only the tests that relate to the files you changed. https://github.com/jasonmccreary/phpunit-tia'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',
-    'added' => '2026-10-21',
+    'added' => '2026-10-22',
 ];

@@ -19,5 +19,5 @@ return [
     'devnull' => 'Shipped with PHP: ActivityPub 9.0. A new major version of ActivityPub, the WordPress plugin that lets people on Mastodon and other fediverse apps follow your site. https://github.com/Automattic/wordpress-activitypub'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',
-    'added' => '2026-10-21',
+    'added' => '2026-10-22',
 ];
