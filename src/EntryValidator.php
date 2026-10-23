@@ -39,6 +39,12 @@ final class EntryValidator
     /** A short SPDX licence id, such as MIT or Apache-2.0. */
     private const string LICENCE = '/^[A-Za-z0-9][A-Za-z0-9.+-]{0,39}$/';
 
+    /** A version straight after a language or framework name, as in "Mollie API client for PHP 4.0". */
+    private const string STACK_VERSION = '/\b(?:PHP|Laravel|Symfony|WordPress|NativePHP)\s+v?\d/i';
+
+    /** The language or framework itself, as in "WordPress 7.0". */
+    private const string STACK_RELEASE = '/^(?:PHP|Laravel|Symfony|WordPress|NativePHP)\s+v?\d[\w.]*$/i';
+
     private const string FILE_NAME = '/^(\d{4}-\d{2}-\d{2})-[a-z0-9]+(?:-[a-z0-9]+)*\.php$/';
 
     public function __construct(private readonly DateTimeImmutable $today) {}
@@ -64,6 +70,12 @@ final class EntryValidator
             if (isset($entry[$field])) {
                 array_push($errors, ...$this->textErrors($field, $entry[$field]));
             }
+        }
+
+        if (isset($entry['name']) && is_string($entry['name'])
+            && preg_match(self::STACK_VERSION, $entry['name'])
+            && ! preg_match(self::STACK_RELEASE, trim($entry['name']))) {
+            $errors[] = 'Field name reads as a version of a language or framework. Put the version next to the product\'s own name, such as "Mollie API client 4.0 for PHP".';
         }
 
         if (isset($entry['sentence']) && is_string($entry['sentence'])
