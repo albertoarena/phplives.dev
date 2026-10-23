@@ -201,3 +201,24 @@ it('reports a docs link that is not HTTPS', function () {
     expect(errorsFor(validEntry(['docs' => 'http://pestphp.com/docs'])))
         ->toContain('Field docs is not an HTTPS link.');
 });
+
+it('reports a name with a version straight after a language or framework', function (string $name) {
+    expect(errorsFor(validEntry(['name' => $name])))
+        ->toContain('Field name reads as a version of a language or framework. Put the version next to the product\'s own name, such as "Mollie API client 4.0 for PHP".');
+})->with([
+    'Mollie API client for PHP 4.0',
+    'Sail for Laravel v2',
+    'Toolkit for Symfony 8',
+    'Blocks for WordPress 3.1',
+    'Shell for NativePHP 2.0',
+]);
+
+it('accepts a name with the version after the product', function (string $name) {
+    expect(errorsFor(validEntry(['name' => $name])))->toBe([]);
+})->with([
+    'Mollie API client 4.0 for PHP',
+    'PHP Depend 3.0',
+    'Laravel Permission 8.0',
+    'WordPress 7.0',
+    'Laravel 13',
+]);

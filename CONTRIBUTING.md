@@ -96,6 +96,11 @@ new code needs at least 2 entries. Until then, the entry goes under its parent s
   sentence.
 - **No em dashes.** Use commas, colons or parentheses. The build fails on an em
   dash.
+- **A version goes next to the product, never straight after PHP or a framework.**
+  "Mollie API client for PHP 4.0" reads as PHP 4.0. Write "Mollie API client 4.0
+  for PHP". Read each name with its version: if it could be read as a version of
+  PHP, Laravel, Symfony, WordPress or NativePHP, rewrite it. The build fails on a
+  name such as "for PHP 4.0".
 - **Every link is HTTPS.**
 - **Dates in prose are `DD/MM/YYYY`.** In the entry file, dates are `YYYY-MM-DD`.
 
@@ -108,7 +113,8 @@ php bin/build
 ```
 
 The build checks every entry file. It stops on a missing field, a bad date, an
-unknown stack, a text that is too long, an em dash or a link that is not HTTPS.
+unknown stack, a text that is too long, an em dash, a version straight after
+PHP or a framework, or a link that is not HTTPS.
 It also stops on a bad package name or licence id. On a pull
 request, CI also checks that each link in the entry works.
 
