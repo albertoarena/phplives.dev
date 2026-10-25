@@ -189,6 +189,24 @@ it('shows the optional facts only when the entry gives them', function () {
         ->and(texts($doc, '.docket .dk-licence'))->toBe(['MIT']);
 });
 
+it('tags the topics on the docket, each linked to the main page filtered by it', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php', ['topics' => ['testing', 'mcp'], 'licence' => 'MIT']);
+    writeEntry($this->dir, '2026-08-01-tia.php', ['topics' => ['testing']]);
+    $doc = entryPage($this, 'pest-5');
+
+    expect(texts($doc, '.docket dt'))->toBe(['Made by', 'Source', 'Licence', 'Topics', 'Shipped', 'Date from', 'Added', 'Checked'])
+        ->and(texts($doc, '.docket .dk-topics li'))->toBe(['Testing', 'MCP'])
+        ->and(hrefs($doc, '.docket .dk-topics a'))->toBe(['/#topic=testing'])
+        ->and(texts($doc, '.docket .dk-topics span.dk-topic'))->toBe(['MCP'])
+        ->and($doc->querySelector('.docket .dk-topics a')->getAttribute('aria-label'))->toBe('More parcels about Testing');
+});
+
+it('has no Topics row when the entry has no topics', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+
+    expect(entryPage($this, 'pest-5')->querySelector('.docket .dk-topics'))->toBeNull();
+});
+
 it('lets the visitor copy the link to the page', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php');
     $doc = entryPage($this, 'pest-5');

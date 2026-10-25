@@ -15,6 +15,7 @@
  * @var string $shareTitle
  * @var string $copyScript
  * @var string $shareScript
+ * @var list<string> $filterTopics The topics the main page can filter by.
  */
 use PhpLives\Format;
 
@@ -68,6 +69,22 @@ $onEntryPage = true;
 <?php endif ?>
 <?php if ($entry->licence !== null): ?>
           <div><dt>Licence</dt><dd class="dk-licence mono"><?= $e($entry->licence) ?></dd></div>
+<?php endif ?>
+<?php if ($entry->topics !== []): ?>
+          <div>
+            <dt>Topics</dt>
+            <dd>
+              <ul class="dk-topics">
+<?php foreach ($entry->topics as $topic): ?>
+<?php if (in_array($topic, $filterTopics, true)): ?>
+                <li><a class="dk-topic" href="/#topic=<?= $e($topic) ?>" aria-label="More parcels about <?= $e(Format::topicLabel($topic)) ?>"><?= $e(Format::topicLabel($topic)) ?></a></li>
+<?php else: ?>
+                <li><span class="dk-topic"><?= $e(Format::topicLabel($topic)) ?></span></li>
+<?php endif ?>
+<?php endforeach ?>
+              </ul>
+            </dd>
+          </div>
 <?php endif ?>
           <div><dt>Shipped</dt><dd class="mono"><time datetime="<?= $entry->shipped->format('Y-m-d') ?>"><?= $e(Format::date($entry->shipped)) ?></time></dd></div>
           <div><dt>Date from</dt><dd><a class="dk-link" href="<?= $e($entry->proofUrl) ?>"><?= $e(Format::proofLabel($entry->proofKind)) ?><?= $arrowOut ?></a></dd></div>

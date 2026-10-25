@@ -122,6 +122,8 @@ final readonly class Site
         $all = $this->entries->all();
         $newest = $this->entries->current()[0] ?? null;
         $archived = $this->entries->archived();
+        // A topic tag links to the main page filtered by it, when that filter has it.
+        $filterTopics = array_keys($this->topicCounts($this->entries->current()));
 
         foreach ($all as $index => $entry) {
             $pages[ltrim(self::entryPath($entry), '/').'index.html'] = $this->page(
@@ -138,6 +140,7 @@ final readonly class Site
                     'shareTitle' => self::shareTitle($entry),
                     'copyScript' => $this->script('copy.js'),
                     'shareScript' => $this->script('share.js'),
+                    'filterTopics' => $filterTopics,
                 ],
                 ['description' => $entry->sentence, 'markdown' => Markdown::entryPath($entry), 'shareTitle' => self::shareTitle($entry)]
                     + ($this->shareCards ? ['image' => ShareCard::url($entry), 'imageAlt' => ShareCard::alt($entry)] : []),
