@@ -188,6 +188,10 @@ final readonly class Site
             $files["feed/{$stack}.xml"] = $feed->xml("/feed/{$stack}.xml", $stack);
         }
 
+        foreach (array_keys($this->topicCounts($this->entries->all())) as $topic) {
+            $files["feed/topic/{$topic}.xml"] = $feed->xml("/feed/topic/{$topic}.xml", topic: $topic);
+        }
+
         foreach ($this->entries->all() as $entry) {
             $files[ltrim(Markdown::entryPath($entry), '/')] = Markdown::entry($entry);
         }
@@ -344,7 +348,8 @@ final readonly class Site
 
     /**
      * Cloudflare picks a file's type from its extension, and it reads .xml as plain
-     * XML. The feeds are Atom.
+     * XML. The feeds are Atom. The splat in /feed/* also matches the topic feeds in
+     * /feed/topic/.
      */
     private static function headers(): string
     {

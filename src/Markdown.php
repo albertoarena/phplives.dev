@@ -72,6 +72,7 @@ final class Markdown
             .($entry->package === null ? '' : '- Install: `composer require '.$entry->package."`\n")
             .($entry->licence === null ? '' : '- Licence: '.$entry->licence."\n")
             .'- Stack: '.Format::stackLabel($entry->stack)."\n"
+            .($entry->topics === [] ? '' : '- Topics: '.self::topics($entry)."\n")
             .'- Checked: '.Format::date($entry->checked)."\n"
             .'- Added: '.Format::date($entry->added)."\n\n"
             .'See more at '.self::link('phplives.dev', Site::URL)."\n";
@@ -91,9 +92,18 @@ final class Markdown
     private static function list(array $entries): string
     {
         return implode('', array_map(
-            fn (Entry $entry) => '- '.self::link($entry->name, Site::URL.self::entryPath($entry)).': '.self::escape($entry->sentence)."\n",
+            fn (Entry $entry) => '- '.self::link($entry->name, Site::URL.self::entryPath($entry)).': '.self::escape($entry->sentence)
+                .($entry->topics === [] ? '' : ' Topics: '.self::topics($entry).'.')."\n",
             $entries,
         ));
+    }
+
+    /**
+     * "Testing, MCP": the labels of an entry's topics.
+     */
+    private static function topics(Entry $entry): string
+    {
+        return implode(', ', array_map(Format::topicLabel(...), $entry->topics));
     }
 
     private static function link(string $text, string $url): string

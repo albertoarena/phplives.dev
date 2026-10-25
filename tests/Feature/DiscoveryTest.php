@@ -133,7 +133,7 @@ it('lists each entry page in the sitemap, dated by its check, once entry pages a
 
 it('describes the site for language models in llms.txt', function () {
     writeEntry($this->dir, '2026-09-01-older.php', ['name' => 'Older', 'sentence' => 'The older one.']);
-    writeEntry($this->dir, '2026-10-01-newer.php', ['name' => 'Newer', 'sentence' => 'The newer one.']);
+    writeEntry($this->dir, '2026-10-01-newer.php', ['name' => 'Newer', 'sentence' => 'The newer one.', 'topics' => ['ai', 'mcp']]);
     writeEntry($this->dir, '2026-03-01-old.php', ['name' => 'Old', 'sentence' => 'An old one.']);
 
     $llms = files($this)['llms.txt'];
@@ -146,7 +146,7 @@ it('describes the site for language models in llms.txt', function () {
         ->and($llms)->toContain(<<<'MD'
             ## Entries
 
-            - [Newer](https://phplives.dev/entries/newer.md): The newer one.
+            - [Newer](https://phplives.dev/entries/newer.md): The newer one. Topics: AI, MCP.
             - [Older](https://phplives.dev/entries/older.md): The older one.
 
             ## Archive
@@ -213,6 +213,7 @@ it('adds the optional facts to the Markdown copy when an entry gives them', func
         'package' => 'pestphp/pest',
         'licence' => 'MIT',
         'docs' => 'https://pestphp.com/docs',
+        'topics' => ['testing', 'devtools'],
         'checked' => '2026-10-18',
         'added' => '2026-10-19',
     ]);
@@ -232,6 +233,7 @@ it('adds the optional facts to the Markdown copy when an entry gives them', func
         - Install: `composer require pestphp/pest`
         - Licence: MIT
         - Stack: plain PHP
+        - Topics: Testing, Developer tools
         - Checked: 18/10/2026
         - Added: 19/10/2026
 
@@ -395,6 +397,35 @@ it('builds one feed per stack that has entries', function () {
         ->and(atom($laravel, '/a:feed/a:link[@rel="self"]/@href'))->toBe(['https://phplives.dev/feed/laravel.xml'])
         ->and(atom($laravel, '/a:feed/a:entry/a:id'))->toBe(['tag:phplives.dev,2026:a', 'tag:phplives.dev,2026:b'])
         ->and(atom($files['feed.xml'], '/a:feed/a:entry/a:id'))->toHaveCount(3);
+});
+
+it('builds one feed per topic that has at least 2 entries', function () {
+    writeEntry($this->dir, '2026-09-01-a.php', ['topics' => ['testing', 'mcp'], 'added' => '2026-10-18']);
+    writeEntry($this->dir, '2026-08-01-b.php', ['topics' => ['testing'], 'added' => '2026-10-17']);
+    writeEntry($this->dir, '2026-07-01-c.php', ['added' => '2026-10-19']);
+
+    $files = files($this);
+    $testing = $files['feed/topic/testing.xml'];
+
+    expect(array_keys(array_filter($files, fn ($path) => str_starts_with($path, 'feed/topic/'), ARRAY_FILTER_USE_KEY)))
+        ->toBe(['feed/topic/testing.xml'])
+        ->and(atom($testing, '/a:feed/a:title'))->toBe(['phplives.dev: Testing'])
+        ->and(atom($testing, '/a:feed/a:id'))->toBe(['tag:phplives.dev,2026:feed/topic/testing'])
+        ->and(atom($testing, '/a:feed/a:updated'))->toBe(['2026-10-18T00:00:00Z'])
+        ->and(atom($testing, '/a:feed/a:link[@rel="self"]/@href'))->toBe(['https://phplives.dev/feed/topic/testing.xml'])
+        ->and(atom($testing, '/a:feed/a:entry/a:id'))->toBe(['tag:phplives.dev,2026:a', 'tag:phplives.dev,2026:b']);
+});
+
+it('gives each feed entry a category per topic, apart from the stack', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php', ['stack' => 'laravel', 'topics' => ['testing', 'mcp']]);
+
+    $feed = files($this)['feed.xml'];
+
+    expect(atom($feed, '/a:feed/a:entry/a:category/@term'))->toBe(['laravel', 'testing', 'mcp'])
+        ->and(atom($feed, '/a:feed/a:entry/a:category/@label'))->toBe(['Laravel', 'Testing', 'MCP'])
+        ->and(atom($feed, '/a:feed/a:entry/a:category[@term="laravel"]/@scheme'))->toBe([])
+        ->and(atom($feed, '/a:feed/a:entry/a:category[@term="testing"]/@scheme'))->toBe(['https://phplives.dev/#topic'])
+        ->and(atom($feed, '/a:feed/a:entry/a:category[@term="mcp"]/@scheme'))->toBe(['https://phplives.dev/#topic']);
 });
 
 it('tells feed readers where the feed is, on every page', function (string $page) {
