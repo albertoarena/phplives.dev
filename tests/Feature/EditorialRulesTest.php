@@ -31,3 +31,11 @@ it('has no em dashes in any text file', function () {
 it('finds the text files it checks', function () {
     expect(trackedTextFiles())->toContain('AGENTS.md', 'CONTRIBUTING.md');
 });
+
+it('lists every topic in CONTRIBUTING.md', function () {
+    $contributing = (string) file_get_contents('CONTRIBUTING.md');
+
+    foreach (PhpLives\EntryValidator::TOPICS as $topic) {
+        expect($contributing)->toContain("`{$topic}` (".PhpLives\Format::topicLabel($topic).')');
+    }
+});

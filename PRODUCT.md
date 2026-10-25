@@ -51,9 +51,9 @@ never makes the case for PHP itself.
 - A Privacy page, a Credits page and a Feeds page.
 - One entry: name, one plain sentence, maker (with a dev/null link when found),
   shipped date as `DD/MM/YYYY`, the date it was added, source link, one stack tag.
-  It may also have a short details text, a Composer package, a licence and a docs
-  link.
-- For feed readers, search engines and AI tools: an Atom feed (and one per stack, listed on the Feeds page),
+  It may also have a short details text, a Composer package, a licence, a docs
+  link and up to 3 topics.
+- For feed readers, search engines and AI tools: an Atom feed (and one per stack and per topic, listed on the Feeds page),
   a sitemap, `robots.txt`, `llms.txt` and a Markdown copy of each entry.
 - A strip of Alberto's dev/null commits that link to phplives.dev. It is hidden
   when the dev/null API is down.

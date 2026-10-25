@@ -79,6 +79,7 @@ return [
 | `package` | Optional. The Packagist name, such as `pestphp/pest`. The entry page then shows the `composer require` command. |
 | `licence` | Optional. A short SPDX licence id, such as `MIT` or `Apache-2.0`, as the project's own source gives it. |
 | `docs` | Optional. An HTTPS link to the project's docs. |
+| `topics` | Optional. 1 to 3 topics that say what the project is for, such as `['testing']`. Use only topics from the list below. Leave the field out when no topic fits. |
 
 The entry page shows each optional field only when the entry gives it.
 
@@ -87,6 +88,13 @@ PHP). A stack code names a framework or a platform, not a package. A project bui
 on a package goes under its framework: a Filament project goes under `laravel`. A
 new code needs at least 2 entries. Until then, the entry goes under its parent stack or under
 `php`.
+
+**Topics:** `ai` (AI), `mcp` (MCP), `testing` (Testing), `security` (Security),
+`devtools` (Developer tools), `self-hosted` (Self-hosted), `database` (Databases),
+`api` (APIs), `cms` (CMS), `e-commerce` (E-commerce), `business` (Business apps)
+or `social` (Social and community). A topic must be clear from the project's own
+source: its README, its description or its keywords. The site shows a topic in the
+filter only when at least 2 entries have it.
 
 ### Rules for the text
 
@@ -113,7 +121,7 @@ php bin/build
 ```
 
 The build checks every entry file. It stops on a missing field, a bad date, an
-unknown stack, a text that is too long, an em dash, a version straight after
+unknown stack or topic, a text that is too long, an em dash, a version straight after
 PHP or a framework, or a link that is not HTTPS.
 It also stops on a bad package name or licence id. On a pull
 request, CI also checks that each link in the entry works.

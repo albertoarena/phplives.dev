@@ -207,6 +207,11 @@ components:
   details-link:
     textColor: "{colors.print-black}"
     height: "24px"
+  topic-tag:
+    textColor: "{colors.print-black}"
+    typography: "{typography.label}"
+    rounded: "{rounded.tag}"
+    padding: "5px 8px 4px"
 ---
 
 # Design System: phplives.dev
@@ -303,7 +308,7 @@ The theme follows the device by default. A Light / Dark / System toggle in the t
 The page is one column of sections inside a 1320px wrap with a 40px side gutter. The root is a size container, so the layout responds to its own width (container queries), not to the viewport.
 
 - **Hero:** two columns (1.4fr and 1fr, 64px gap), aligned to the bottom. It is short: 32px of padding on top and 36px below (28px and 32px on narrow screens). The line is on the left, with the lede, the contribute row and its note under it. The white manifest slip is on the right. Below 1100px it becomes one column and the slip caps at 560px.
-- **Section head:** the title on the left, with the note "Newest first." on the same line. The tools (stack filter, then Labels / List) are on the right. Below 700px they stack.
+- **Section head:** the title on the left, with the note "Newest first." on the same line. The tools (stack filter, topic filter, then Labels / List) are on the right. Below 700px they stack.
 - **This week:** up to three full labels in one row, with a 32px gap. The first row of labels starts inside the first screen. At 960px and below, the row scrolls sideways with scroll snap. Each column is min(380px, 42%), so the next label shows at the edge. At 700px and below a column is 86% wide. The row runs into the side gutter, so labels scroll to the edge of the page.
 - **Bundles:** the stubs sit in a grid of 4 columns, with gaps of 24px (rows) and 20px (columns). The grid has 3 columns at 1100px and below. It has 2 columns at 700px and below, with gaps of 18px and 14px. It has 1 column at 440px and below. All these widths are container widths.
 - **Weeks share rows:** the week bundles that follow each other sit in one grid with the same columns. Each week spans one column per stub, up to the number of columns. Its stubs use a column subgrid, so they line up with the stubs of the other weeks. The stubs in one row have the same height.
@@ -360,12 +365,14 @@ Tactile and plain, like a sticker on a box.
 - **Focus:** a 2px outline in the colour of the text around it, with a 2px to 3px offset.
 
 ### Toggles and chips
-Segmented groups on the field: the theme toggle (Light, Dark, System), the view toggle (Labels, List) and the stack filter.
+Segmented groups on the field: the theme toggle (Light, Dark, System), the view toggle (Labels, List), the stack filter and the topic filter.
 - **Style:** a 1px Field Line border, 6px radius, 3px inner padding. Options are transparent, with weight 600 to 700. They are 32px tall in the theme toggle and 36px in the others.
 - **State:** the pressed option fills with the field's text colour and takes the field colour as text. Hover fills with Field Line.
 - **Stack chips:** "All" plus one chip per stack, up to 6, most common first. Each shows its route code in condensed weight 900 and a mono count. With more than 6 stacks a native select replaces the chips.
-- **Behaviour:** the state lives in the URL hash (`#stack=laravel&view=list`). The view is also kept in `localStorage`. Without JavaScript the tools stay hidden. The page then shows the full labels and every bundle of stubs.
-- **Filter and bundles:** the stack filter hides a bundle when none of its entries is left. It also rewrites the parcel count of each bundle.
+- **Topic filter:** the caption "Topic", then "All" plus one choice per topic, most common first, with a count. A topic shows only when at least 2 entries on the page have it. A topic chip shows its label in Archivo 700, never a route code. With more than 6 topics a native select replaces the chips. When no topic has 2 entries, the topic filter is left out.
+- **Stack and topic together:** an entry shows when it has the picked stack and the picked topic. The status line names both: "Showing 3 of 74 parcels: Laravel, Testing."
+- **Behaviour:** the state lives in the URL hash (`#stack=laravel&topic=testing&view=list`). An unknown stack or topic in the hash is ignored. The view is also kept in `localStorage`. Without JavaScript the tools stay hidden. The page then shows the full labels and every bundle of stubs.
+- **Filter and bundles:** the filters hide a bundle when none of its entries is left. They also rewrite the parcel count of each bundle.
 
 ### Shipping label (signature)
 A 4x6 thermal label, one per entry. White paper, 6px radius, paper shadow. The label is its own size container. Its blocks, top to bottom:
@@ -395,8 +402,15 @@ A white sheet under the entry label, with the paper shadow and a 6px radius. Its
 1. **Sheet head:** "Parcel details" and the tracking number in mono, closed by a print rule.
 2. **Details text** (optional): two or three plain sentences, at 17px.
 3. **Install** (only when the entry has a package): the command strip with `composer require` and the Copy button. Here the strip is a Soft Rule tint with no shadow.
-4. **Facts:** a list of term and value, split by Soft Rule lines. The order is fixed: Made by, Source, Docs, Licence, Shipped, Date from, Added, Checked. Docs and Licence show only when the entry gives them. Terms sit in a 110px column (88px on narrow screens). Links carry a small out arrow. Made by lists each maker, with their GitHub and /dev/null links.
+4. **Facts:** a list of term and value, split by Soft Rule lines. The order is fixed: Made by, Source, Docs, Licence, Topics, Shipped, Date from, Added, Checked. Docs, Licence and Topics show only when the entry gives them. Topics holds the entry's topic tags. Terms sit in a 110px column (88px on narrow screens). Links carry a small out arrow. Made by lists each maker, with their GitHub and /dev/null links.
 5. **Share foot:** a 2px perforation above it. "Share this parcel", the page address in mono, then the "Copy link" and "Share" buttons side by side, in the same outline style. "Copy link" is hidden when the browser has no clipboard. "Share" opens the device's own share menu, and it is hidden when the browser has none. The share card title is "Name: shipped with PHP", without the site name, because cards already show it.
+
+### Topic tag
+A small handling mark in the docket's Topics row, one per topic. It says what the project is for, as a mark printed on the box.
+- **Shape:** a 1.5px Print Black outline on paper, 2px radius, 5px by 8px of padding. No fill. Tags wrap in a row with a 6px gap.
+- **Type:** the label shape (Archivo 700, 11px, uppercase, .09em letter spacing) in Print Black.
+- **Link:** the tag links to the main page filtered by that topic (`/#topic={slug}`). It is a link only when the main page filter has the topic. Otherwise it is plain text. Hover fills it with Soft Rule. Screen readers hear "More parcels about {label}".
+- **Not a route code:** it is never filled black and never condensed, so it does not read as the stack. It is never orange.
 
 ### Neighbour stubs
 The tear-off stubs of the parcels shipped just before and just after this one. They show that the list goes on. Each stub is a link.
@@ -472,6 +486,7 @@ Labels print in once on load: each one reveals from top to bottom with a clip-pa
 ### Don't:
 - **Don't** build a showcase grid of logo cards or an awesome-list link dump.
 - **Don't** use Signal Orange for buttons, links, hover, focus or any second highlight.
+- **Don't** print a topic tag inverse or condensed: the inverse block is the stack's route code.
 - **Don't** add a second accent colour or colour-code the stacks.
 - **Don't** add shadows to anything that is not paper, or use hard offset shadows.
 - **Don't** round corners past 6px or use pill shapes.
