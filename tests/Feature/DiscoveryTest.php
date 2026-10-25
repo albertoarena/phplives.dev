@@ -334,6 +334,42 @@ it('escapes entry text in the feed', function () {
         ->and(atom($feed, '/a:feed/a:entry/a:author/a:name'))->toBe(['A & B']);
 });
 
+it('gives each feed entry the facts as HTML content, so a reader can show the entry in full', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php', [
+        'sentence' => 'A testing framework.',
+        'makers' => [['name' => 'Nuno Maduro', 'github' => 'nunomaduro'], ['name' => 'coolLabs']],
+        'stack' => 'laravel',
+        'source' => 'https://github.com/pestphp/pest',
+        'details' => 'It runs <fast> & in parallel.',
+        'package' => 'pestphp/pest',
+    ]);
+
+    $feed = files($this, entryPages: true)['feed.xml'];
+
+    expect(atom($feed, '/a:feed/a:entry/a:content/@type'))->toBe(['html'])
+        ->and(atom($feed, '/a:feed/a:entry/a:content'))->toBe([
+            '<p>A testing framework.</p>'
+            .'<p>It runs &lt;fast&gt; &amp; in parallel.</p>'
+            .'<p>Made by <a href="https://github.com/nunomaduro">Nuno Maduro</a>, with coolLabs. Shipped 01/09/2026. Stack: Laravel.</p>'
+            .'<p>Install: <code>composer require pestphp/pest</code></p>'
+            .'<p><a href="https://github.com/pestphp/pest">Source</a> · <a href="https://phplives.dev/entries/pest-5/">On phplives.dev</a></p>',
+        ]);
+});
+
+it('leaves the optional facts out of the feed content when an entry has none', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php', [
+        'sentence' => 'A testing framework.',
+        'makers' => [['name' => 'Nuno Maduro', 'github' => 'nunomaduro']],
+        'source' => 'https://github.com/pestphp/pest',
+    ]);
+
+    expect(atom(files($this)['feed.xml'], '/a:feed/a:entry/a:content'))->toBe([
+        '<p>A testing framework.</p>'
+        .'<p>Made by <a href="https://github.com/nunomaduro">Nuno Maduro</a>. Shipped 01/09/2026. Stack: plain PHP.</p>'
+        .'<p><a href="https://github.com/pestphp/pest">Source</a></p>',
+    ]);
+});
+
 it('dates an empty feed by the build day', function () {
     $feed = files($this)['feed.xml'];
 

@@ -84,6 +84,10 @@ final readonly class Feed
         $xml->writeElement('updated', self::time($entry->added));
         self::link($xml, 'alternate', $this->entryPages ? Site::URL.Site::entryPath($entry) : $entry->source);
         $xml->writeElement('summary', "{$entry->sentence} Shipped ".Format::date($entry->shipped).'. Stack: '.Format::stackLabel($entry->stack).'.');
+        $xml->startElement('content');
+        $xml->writeAttribute('type', 'html');
+        $xml->text($this->content($entry));
+        $xml->endElement();
 
         foreach ($entry->makers as $maker) {
             $xml->startElement('author');
@@ -101,6 +105,26 @@ final readonly class Feed
         $xml->writeAttribute('label', Format::stackLabel($entry->stack));
         $xml->endElement();
         $xml->endElement();
+    }
+
+    /**
+     * The facts of the entry as HTML, so a feed reader can show the entry without the site.
+     * Only what the entry file says.
+     */
+    private function content(Entry $entry): string
+    {
+        $e = static fn (string $text): string => htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+        $credit = Format::credit($entry->makers, fn (Maker $maker) => $maker->github === null
+            ? $e($maker->name)
+            : '<a href="https://github.com/'.$e($maker->github).'">'.$e($maker->name).'</a>');
+        $links = '<a href="'.$e($entry->source).'">Source</a>'
+            .($this->entryPages ? ' · <a href="'.$e(Site::URL.Site::entryPath($entry)).'">On phplives.dev</a>' : '');
+
+        return '<p>'.$e($entry->sentence).'</p>'
+            .($entry->details === null ? '' : '<p>'.$e($entry->details).'</p>')
+            .'<p>Made by '.$credit.'. Shipped '.Format::date($entry->shipped).'. Stack: '.$e(Format::stackLabel($entry->stack)).'.</p>'
+            .($entry->package === null ? '' : '<p>Install: <code>composer require '.$e($entry->package).'</code></p>')
+            .'<p>'.$links.'</p>';
     }
 
     private static function link(XMLWriter $xml, string $rel, string $href, ?string $type = null): void
