@@ -20,6 +20,22 @@ final class Format
         'php' => ['PHP', 'plain PHP'],
     ];
 
+    /** The label of each topic in EntryValidator::TOPICS. */
+    private const array TOPICS = [
+        'ai' => 'AI',
+        'mcp' => 'MCP',
+        'testing' => 'Testing',
+        'security' => 'Security',
+        'devtools' => 'Developer tools',
+        'self-hosted' => 'Self-hosted',
+        'database' => 'Databases',
+        'api' => 'APIs',
+        'cms' => 'CMS',
+        'e-commerce' => 'E-commerce',
+        'business' => 'Business apps',
+        'social' => 'Social and community',
+    ];
+
     private const array PROOFS = [
         'release' => 'release',
         'tag' => 'version tag',
@@ -82,6 +98,11 @@ final class Format
     public static function stackLabel(string $stack): string
     {
         return self::STACKS[$stack][1];
+    }
+
+    public static function topicLabel(string $topic): string
+    {
+        return self::TOPICS[$topic];
     }
 
     public static function proofLabel(string $kind): string

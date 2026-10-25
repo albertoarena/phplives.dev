@@ -59,7 +59,14 @@ it('turns an entry file into an Entry', function () {
         ->and($entry->proofKind)->toBe('release')
         ->and($entry->makers[0]->name)->toBe('Nuno Maduro')
         ->and($entry->makers[0]->github)->toBe('nunomaduro')
-        ->and($entry->makers[1]->github)->toBeNull();
+        ->and($entry->makers[1]->github)->toBeNull()
+        ->and($entry->topics)->toBe([]);
+});
+
+it('reads the topics of an entry', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php', ['topics' => ['testing', 'devtools']]);
+
+    expect(Entries::load($this->dir, $this->today)->all()[0]->topics)->toBe(['testing', 'devtools']);
 });
 
 it('fails with every problem in every file', function () {

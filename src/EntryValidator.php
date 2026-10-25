@@ -21,9 +21,17 @@ final class EntryValidator
     ];
 
     /** Fields an entry may leave out. The entry page shows each one only when it is given. */
-    public const array OPTIONAL_FIELDS = ['details', 'package', 'licence', 'docs'];
+    public const array OPTIONAL_FIELDS = ['details', 'package', 'licence', 'docs', 'topics'];
 
     public const array STACKS = ['laravel', 'symfony', 'nativephp', 'wordpress', 'php'];
+
+    /** What a project is for. Format::TOPICS gives each one its label. */
+    public const array TOPICS = [
+        'ai', 'mcp', 'testing', 'security', 'devtools', 'self-hosted',
+        'database', 'api', 'cms', 'e-commerce', 'business', 'social',
+    ];
+
+    public const int MAX_TOPICS = 3;
 
     public const array PROOF_KINDS = ['release', 'tag', 'post'];
 
@@ -131,6 +139,10 @@ final class EntryValidator
                 .'. Use one of: '.implode(', ', self::STACKS).'.';
         }
 
+        if (array_key_exists('topics', $entry)) {
+            array_push($errors, ...$this->topicErrors($entry['topics']));
+        }
+
         if (! preg_match(self::FILE_NAME, $fileName, $match)) {
             $errors[] = 'The file name must be YYYY-MM-DD-slug.php, with a lower-case slug.';
         } elseif ($shipped && $match[1] !== $shipped->format('Y-m-d')) {
@@ -194,6 +206,39 @@ final class EntryValidator
             if (is_array($maker) && array_key_exists('github', $maker)
                 && ! (is_string($maker['github']) && preg_match(self::GITHUB_USERNAME, $maker['github']))) {
                 $errors[] = "Maker {$number} has a bad GitHub username: ".(is_string($maker['github']) ? $maker['github'] : '').'.';
+            }
+        }
+
+        return $errors;
+    }
+
+    /** @return list<string> */
+    private function topicErrors(mixed $topics): array
+    {
+        if (! is_array($topics) || ! array_is_list($topics)) {
+            return ["Field topics must be a list, such as ['testing']."];
+        }
+
+        if ($topics === []) {
+            return ['Field topics is empty. Leave it out when no topic fits.'];
+        }
+
+        $errors = [];
+
+        if (count($topics) > self::MAX_TOPICS) {
+            $errors[] = 'Field topics has more than '.self::MAX_TOPICS.' topics.';
+        }
+
+        foreach ($topics as $topic) {
+            if (! in_array($topic, self::TOPICS, true)) {
+                $errors[] = 'Unknown topic: '.(is_string($topic) ? $topic : gettype($topic))
+                    .'. Use one of: '.implode(', ', self::TOPICS).'.';
+            }
+        }
+
+        foreach (array_count_values(array_filter($topics, is_string(...))) as $topic => $times) {
+            if ($times > 1) {
+                $errors[] = "Field topics has a topic twice: {$topic}.";
             }
         }
 

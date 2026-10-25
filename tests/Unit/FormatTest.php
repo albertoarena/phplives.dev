@@ -51,6 +51,15 @@ it('gives each stack a code and a label', function (string $stack, string $code,
     ['php', 'PHP', 'plain PHP'],
 ]);
 
+it('gives each topic a label', function () {
+    foreach (PhpLives\EntryValidator::TOPICS as $topic) {
+        expect(Format::topicLabel($topic))->not->toBe('');
+    }
+
+    expect(Format::topicLabel('mcp'))->toBe('MCP')
+        ->and(Format::topicLabel('testing'))->toBe('Testing');
+});
+
 it('names the kind of date proof', function (string $kind, string $label) {
     expect(Format::proofLabel($kind))->toBe($label);
 })->with([

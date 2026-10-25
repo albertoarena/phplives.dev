@@ -222,3 +222,35 @@ it('accepts a name with the version after the product', function (string $name) 
     'WordPress 7.0',
     'Laravel 13',
 ]);
+
+it('accepts one to three topics', function (array $topics) {
+    expect(errorsFor(validEntry(['topics' => $topics])))->toBe([]);
+})->with([
+    [['testing']],
+    [['ai', 'mcp']],
+    [['ai', 'mcp', 'devtools']],
+]);
+
+it('reports an unknown topic', function () {
+    expect(errorsFor(validEntry(['topics' => ['testing', 'robots']])))
+        ->toContain('Unknown topic: robots. Use one of: '.implode(', ', EntryValidator::TOPICS).'.');
+});
+
+it('reports topics that are not a short list of known topics', function (mixed $topics, string $error) {
+    expect(errorsFor(validEntry(['topics' => $topics])))->toContain($error);
+})->with([
+    ['testing', "Field topics must be a list, such as ['testing']."],
+    [['a' => 'testing'], "Field topics must be a list, such as ['testing']."],
+    [[], 'Field topics is empty. Leave it out when no topic fits.'],
+    [['ai', 'mcp', 'devtools', 'testing'], 'Field topics has more than 3 topics.'],
+    [['ai', 'mcp', 'ai'], 'Field topics has a topic twice: ai.'],
+    [['testing', 3], 'Unknown topic: integer. Use one of: '.implode(', ', EntryValidator::TOPICS).'.'],
+]);
+
+it('names every topic with a lower-case slug', function () {
+    expect(count(EntryValidator::TOPICS))->toBeGreaterThanOrEqual(8);
+
+    foreach (EntryValidator::TOPICS as $topic) {
+        expect($topic)->toMatch('/^[a-z0-9]+(?:-[a-z0-9]+)*$/');
+    }
+});

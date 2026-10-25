@@ -18,6 +18,7 @@ final readonly class Entry
      * @param  string|null  $package  The Packagist name, such as vendor/name.
      * @param  string|null  $licence  A short SPDX licence id, such as MIT.
      * @param  string|null  $docs  The link to the project's docs.
+     * @param  list<string>  $topics  What the project is for, from EntryValidator::TOPICS.
      */
     public function __construct(
         public string $slug,
@@ -36,6 +37,7 @@ final readonly class Entry
         public ?string $package = null,
         public ?string $licence = null,
         public ?string $docs = null,
+        public array $topics = [],
     ) {}
 
     /**
@@ -63,6 +65,7 @@ final readonly class Entry
             package: $data['package'] ?? null,
             licence: $data['licence'] ?? null,
             docs: $data['docs'] ?? null,
+            topics: $data['topics'] ?? [],
         );
     }
 }
