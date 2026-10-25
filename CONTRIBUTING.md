@@ -138,7 +138,7 @@ first, so we can agree on it before you build it.
   Laravel Vet entry", not "Added entry").
 - **Keep to the design.** [`DESIGN.md`](DESIGN.md) describes it.
 
-## Your project is listed
+## Add the badge to your README
 
 Each entry page has the Markdown for a "Featured on phplives.dev" badge. You may
 add it to your project's README. See [`TRADEMARK.md`](TRADEMARK.md).
