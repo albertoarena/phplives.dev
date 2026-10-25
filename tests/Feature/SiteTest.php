@@ -734,6 +734,68 @@ it('shows chips up to six stacks', function () {
     expect(Site::MAX_CHIPS)->toBe(6);
 });
 
+function topicEntries(object $test): void
+{
+    writeEntry($test->dir, '2026-10-01-a.php', ['name' => 'A', 'stack' => 'php', 'topics' => ['testing', 'devtools']]);
+    writeEntry($test->dir, '2026-09-01-b.php', ['name' => 'B', 'stack' => 'laravel', 'topics' => ['mcp', 'testing']]);
+    writeEntry($test->dir, '2026-08-01-c.php', ['name' => 'C', 'stack' => 'laravel', 'topics' => ['mcp', 'ai']]);
+    writeEntry($test->dir, '2026-07-01-d.php', ['name' => 'D', 'stack' => 'laravel', 'topics' => ['mcp']]);
+    writeEntry($test->dir, '2026-06-01-e.php', ['name' => 'E', 'stack' => 'php']);
+    writeEntry($test->dir, '2026-02-01-old.php', ['name' => 'Old', 'stack' => 'symfony', 'topics' => ['ai']]);
+    writeEntry($test->dir, '2026-01-01-older.php', ['name' => 'Older', 'stack' => 'symfony', 'topics' => ['ai', 'testing']]);
+}
+
+it('tags each entry with its topics, in both views', function () {
+    topicEntries($this);
+    $main = pages($this)['index.html'];
+    $topics = fn (string $selector) => array_map(fn ($n) => $n->getAttribute('data-topics'), iterator_to_array($main->querySelectorAll($selector)));
+
+    expect($topics('#manifest [data-view="labels"] [data-stack]'))->toBe(['testing devtools', 'mcp testing', 'mcp ai', 'mcp', ''])
+        ->and($topics('#manifest [data-view="list"] tbody tr[data-stack]'))->toBe(['testing devtools', 'mcp testing', 'mcp ai', 'mcp', '']);
+});
+
+it('filters by topic, most common first, with counts, and only topics with 2 entries or more', function () {
+    topicEntries($this);
+    $main = pages($this)['index.html'];
+    $chips = iterator_to_array($main->querySelectorAll('#manifest [data-topic-choice]'));
+
+    expect(texts($main, '#manifest [data-topic-choice]'))->toBe(['All 5', 'MCP 3', 'Testing 2'])
+        ->and(array_map(fn ($b) => $b->getAttribute('data-topic-choice'), $chips))->toBe(['', 'mcp', 'testing'])
+        ->and(array_map(fn ($b) => $b->getAttribute('data-topic-label'), $chips))->toBe(['', 'MCP', 'Testing'])
+        ->and(array_map(fn ($b) => $b->getAttribute('aria-pressed'), $chips))->toBe(['true', 'false', 'false'])
+        ->and($main->querySelector('#manifest [aria-label="Filter by topic"] .filter-cap')->textContent)->toBe('Topic')
+        ->and($main->querySelectorAll('#manifest [data-tools] [data-stack-choice]'))->not->toHaveCount(0);
+});
+
+it('counts the topics of the archive on their own', function () {
+    topicEntries($this);
+    $archive = pages($this)['archive/index.html'];
+
+    expect(texts($archive, '[data-topic-choice]'))->toBe(['All 2', 'AI 2']);
+});
+
+it('has no topic filter when no topic has 2 entries', function () {
+    stackEntries($this);
+    $pages = pages($this);
+
+    expect($pages['index.html']->querySelectorAll('[data-topic-choice], [data-topic-select]'))->toHaveCount(0)
+        ->and($pages['archive/index.html']->querySelectorAll('[data-topic-choice], [data-topic-select]'))->toHaveCount(0);
+});
+
+it('turns the topic filter into a dropdown when there are too many topics', function () {
+    $site = new Site(Entries::load($this->dir, $this->today), $this->today);
+    $html = $site->filterControl(['mcp' => 3, 'testing' => 2, 'ai' => 2], maxChips: 2, kind: 'topic');
+    $doc = HTMLDocument::createFromString('<!doctype html><body>'.$html.'</body>', LIBXML_NOERROR);
+    $select = $doc->querySelector('select[data-topic-select]');
+
+    expect($doc->querySelectorAll('[data-topic-choice]'))->toHaveCount(0)
+        ->and(texts($doc, 'select option'))->toBe(['All (7)', 'MCP (3)', 'Testing (2)', 'AI (2)'])
+        ->and(array_map(fn ($o) => $o->getAttribute('value'), iterator_to_array($doc->querySelectorAll('select option'))))->toBe(['', 'mcp', 'testing', 'ai'])
+        ->and(array_map(fn ($o) => $o->getAttribute('data-topic-label'), iterator_to_array($doc->querySelectorAll('select option'))))->toBe(['', 'MCP', 'Testing', 'AI'])
+        ->and($doc->querySelector('label[for="'.$select->getAttribute('id').'"]')?->textContent)->toBe('Topic')
+        ->and($select->getAttribute('id'))->not->toBe('stack-filter');
+});
+
 it('invites everyone to contribute in every footer', function (string $page) {
     $doc = pages($this)[$page];
     $open = $doc->querySelector('footer .foot-open');

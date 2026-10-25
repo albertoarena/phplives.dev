@@ -19,8 +19,11 @@ final readonly class Site
     /** The brand art: the icon and the share card. TRADEMARK.md covers it. */
     private const string ART = __DIR__.'/../art';
 
-    /** With more stacks than this, the filter is a dropdown instead of chips. */
+    /** With more stacks or topics than this, the filter is a dropdown instead of chips. */
     public const int MAX_CHIPS = 6;
+
+    /** A topic shows in a filter, and gets its own feed, only with this many entries. */
+    public const int MIN_TOPIC_ENTRIES = 2;
 
     /** The Cloudflare Web Analytics site token. It is public: every page carries it. */
     public const string ANALYTICS_TOKEN = '7f3f9ca2fbab49c49f067f46832153d9';
@@ -83,6 +86,7 @@ final readonly class Site
                 'posts' => $this->posts,
                 'copyScript' => trim(file_get_contents(self::ASSETS.'/copy.js')),
                 'counts' => $this->stackCounts($current),
+                'topics' => $this->topicCounts($current),
                 'manifestScript' => $this->script('manifest.js'),
             ]),
             'archive/index.html' => $this->page('archive', 'phplives.dev: archive', '/archive/', [
@@ -90,6 +94,7 @@ final readonly class Site
                 'bundles' => Bundles::months($this->entries->archived()),
                 'cutoff' => $cutoff,
                 'counts' => $this->stackCounts($this->entries->archived()),
+                'topics' => $this->topicCounts($this->entries->archived()),
                 'manifestScript' => $this->script('manifest.js'),
             ]),
             'privacy/index.html' => $this->page('privacy', 'phplives.dev: privacy', '/privacy/', []),
@@ -399,13 +404,46 @@ final readonly class Site
     }
 
     /**
-     * The stack filter for some entries: chips for a few stacks, a dropdown for many.
+     * The stack or topic filter for some entries: chips for a few choices, a dropdown for many.
      *
-     * @param  array<string, int>  $counts  Entries per stack, most common first.
+     * @param  array<string, int>  $counts  Entries per stack or topic, most common first.
+     * @param  string  $kind  'stack' or 'topic'.
+     * @param  int|null  $total  The entries on the page, for "All". Null for the sum of the counts.
      */
-    public function filterControl(array $counts, int $maxChips = self::MAX_CHIPS): string
+    public function filterControl(array $counts, int $maxChips = self::MAX_CHIPS, string $kind = 'stack', ?int $total = null): string
     {
-        return $this->render('filter', ['counts' => $counts, 'maxChips' => $maxChips]);
+        return $this->render('filter', [
+            'counts' => $counts,
+            'maxChips' => $maxChips,
+            'kind' => $kind,
+            'total' => $total ?? array_sum($counts),
+        ]);
+    }
+
+    /**
+     * Entries per topic, most common first, for the topics with at least
+     * MIN_TOPIC_ENTRIES entries. Topics with the same count keep the order of
+     * EntryValidator::TOPICS.
+     *
+     * @param  list<Entry>  $entries
+     * @return array<string, int>
+     */
+    private function topicCounts(array $entries): array
+    {
+        $counts = [];
+
+        foreach (EntryValidator::TOPICS as $topic) {
+            $count = count(array_filter($entries, fn (Entry $e) => in_array($topic, $e->topics, true)));
+
+            if ($count >= self::MIN_TOPIC_ENTRIES) {
+                $counts[$topic] = $count;
+            }
+        }
+
+        $order = array_flip(EntryValidator::TOPICS);
+        uksort($counts, fn (string $a, string $b) => [$counts[$b], $order[$a]] <=> [$counts[$a], $order[$b]]);
+
+        return $counts;
     }
 
     /**
