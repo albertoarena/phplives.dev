@@ -16,7 +16,7 @@ final readonly class Site
 
     private const string ASSETS = __DIR__.'/../assets';
 
-    /** The brand art: the icon and the share card. TRADEMARK.md covers it. */
+    /** The brand art: the icon, the share card and the README badge. TRADEMARK.md covers it. */
     private const string ART = __DIR__.'/../art';
 
     /** With more stacks or topics than this, the filter is a dropdown instead of chips. */
@@ -139,6 +139,7 @@ final readonly class Site
                     'after' => $all[$index - 1] ?? null,
                     'url' => self::URL.self::entryPath($entry),
                     'shareTitle' => self::shareTitle($entry),
+                    'badge' => Markdown::badge($entry),
                     'copyScript' => $this->script('copy.js'),
                     'shareScript' => $this->script('share.js'),
                     'filterTopics' => $filterTopics,
@@ -255,6 +256,7 @@ final readonly class Site
         copy(self::ASSETS.'/site.css', rtrim($outDir, '/').'/site.css');
         copy(self::ART.'/favicon.svg', rtrim($outDir, '/').'/favicon.svg');
         copy(self::ART.'/share-card.png', rtrim($outDir, '/').'/share.png');
+        copy(self::ART.'/badge.svg', rtrim($outDir, '/').'/badge.svg');
 
         foreach (['fonts', 'img'] as $dir) {
             if (! is_dir(rtrim($outDir, '/')."/{$dir}")) {

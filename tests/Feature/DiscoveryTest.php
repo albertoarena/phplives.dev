@@ -202,6 +202,14 @@ it('writes a Markdown copy of each entry', function () {
         - Checked: 18/10/2026
         - Added: 19/10/2026
 
+        ## Badge
+
+        Listed here? Add this badge to your README:
+
+        ```markdown
+        [![Featured on phplives.dev](https://phplives.dev/badge.svg)](https://phplives.dev/entries/laravel-vet/)
+        ```
+
         See more at [phplives.dev](https://phplives.dev)
 
         MD);
@@ -236,6 +244,14 @@ it('adds the optional facts to the Markdown copy when an entry gives them', func
         - Topics: Testing, Developer tools
         - Checked: 18/10/2026
         - Added: 19/10/2026
+
+        ## Badge
+
+        Listed here? Add this badge to your README:
+
+        ```markdown
+        [![Featured on phplives.dev](https://phplives.dev/badge.svg)](https://phplives.dev/entries/pest-5/)
+        ```
 
         See more at [phplives.dev](https://phplives.dev)
 
