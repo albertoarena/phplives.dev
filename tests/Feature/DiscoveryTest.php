@@ -51,7 +51,7 @@ it('writes the HTML pages and the files that help people and tools find them', f
     writeEntry($this->dir, '2026-09-01-pest-5.php', ['stack' => 'laravel']);
 
     expect(array_keys(files($this)))->toBe([
-        'index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', '404.html',
+        'index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html', '404.html',
         'robots.txt', 'sitemap.xml', 'llms.txt', 'feed.xml', 'feed/laravel.xml', 'entries/pest-5.md', '_headers',
     ]);
 });
@@ -79,6 +79,7 @@ it('lists every real page in the sitemap, and not the 404 page', function () {
             'https://phplives.dev/archive/',
             'https://phplives.dev/privacy/',
             'https://phplives.dev/credits/',
+            'https://phplives.dev/feeds/',
         ]);
 });
 
@@ -97,6 +98,7 @@ it('dates the list pages by the newest change to any entry', function () {
         'https://phplives.dev/archive/' => '2026-10-19',
         'https://phplives.dev/privacy/' => null,
         'https://phplives.dev/credits/' => null,
+        'https://phplives.dev/feeds/' => null,
     ]);
 });
 
@@ -121,7 +123,7 @@ it('lists each entry page in the sitemap, dated by its check, once entry pages a
     writeEntry($this->dir, '2026-09-01-pest-5.php', ['checked' => '2026-10-18']);
     writeEntry($this->dir, '2026-03-01-old.php', ['checked' => '2026-10-17']);
 
-    $urls = array_slice(iterator_to_array(xml(files($this, entryPages: true)['sitemap.xml'])->url, false), 4);
+    $urls = array_slice(iterator_to_array(xml(files($this, entryPages: true)['sitemap.xml'])->url, false), 5);
 
     expect(array_map(fn ($url) => [(string) $url->loc, (string) $url->lastmod], $urls))->toBe([
         ['https://phplives.dev/entries/pest-5/', '2026-10-18'],
@@ -401,7 +403,7 @@ it('tells feed readers where the feed is, on every page', function (string $page
 
     expect($link?->getAttribute('href'))->toBe('/feed.xml')
         ->and($link->getAttribute('title'))->toBe('phplives.dev');
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', '404.html']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html', '404.html']);
 
 it('serves the feeds as Atom', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php');

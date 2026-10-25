@@ -94,6 +94,10 @@ final readonly class Site
             ]),
             'privacy/index.html' => $this->page('privacy', 'phplives.dev: privacy', '/privacy/', []),
             'credits/index.html' => $this->page('credits', 'phplives.dev: credits', '/credits/', []),
+            'feeds/index.html' => $this->page('feeds', 'phplives.dev: feeds', '/feeds/', [
+                'counts' => $this->stackCounts($this->entries->all()),
+                'copyScript' => $this->script('copy.js'),
+            ]),
             '404.html' => $this->page('not-found', 'phplives.dev: page not found', null, []),
         ] + $this->entryPages();
     }
@@ -280,7 +284,7 @@ final readonly class Site
     /**
      * Every page that search engines should index. The list pages change when an entry
      * is added or checked again, so their date is the newest of those dates. The
-     * privacy page and the credits change by hand, so they have no date.
+     * privacy page, the credits and the feeds page change by hand, so they have no date.
      */
     private function sitemap(): string
     {
@@ -297,6 +301,7 @@ final readonly class Site
             ['/archive/', $newest],
             ['/privacy/', null],
             ['/credits/', null],
+            ['/feeds/', null],
         ];
 
         if ($this->entryPages) {

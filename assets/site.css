@@ -341,6 +341,21 @@ body{margin:0;background:var(--field)}
   .credits .sheet-foot{padding:14px 16px}
 }
 
+/* The feeds page: one row per feed, with its link on a command strip to copy. */
+.fd-list{list-style:none;margin:0;padding:0 22px}
+.fd-list li{display:grid;grid-template-columns:minmax(0,13rem) minmax(0,1fr) minmax(0,22rem);align-items:center;gap:8px 24px;padding:16px 0;border-top:1px solid var(--rule-soft)}
+.fd-list li:first-child{border-top:0}
+.fd-list p{margin:0}
+.fd-name{display:flex;align-items:center;gap:10px;font-weight:800;font-stretch:80%;font-size:18px;line-height:1.25}
+.fd-name .code{font-size:16px}
+.fd-use{font-size:15px;line-height:1.45}
+.feeds .cli-line{background:var(--rule-soft);box-shadow:none}
+@container (max-width:860px){
+  .fd-list{padding:0 16px}
+  .fd-list li{grid-template-columns:minmax(0,1fr)}
+  .feeds .sheet-foot{padding:14px 16px}
+}
+
 /* The three full labels stay in one row while each is at least about 300px wide. */
 @container (max-width:960px){
   .grid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:min(380px,42%);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;
