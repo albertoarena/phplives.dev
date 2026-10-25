@@ -13,6 +13,7 @@ return [
     ],
     'source' => 'https://pestphp.com/docs/pest5-now-available',
     'stack' => 'php',
+    'topics' => ['testing'],
     'devnull' => 'Shipped with PHP: Pest 5. A new major version of the Pest testing framework, built on PHP 8.4 and PHPUnit 13. https://pestphp.com/docs/pest5-now-available'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-16',

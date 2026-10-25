@@ -16,6 +16,7 @@ return [
     'package' => 'stolt/lean-package-validator',
     'licence' => 'MIT',
     'stack' => 'php',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: Lean package validator 6.0. A new major version of the lean package validator, a CLI that makes sure a package keeps its repo files out of release archives. https://github.com/raphaelstolt/lean-package-validator'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

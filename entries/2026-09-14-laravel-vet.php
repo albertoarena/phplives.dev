@@ -13,6 +13,7 @@ return [
     ],
     'source' => 'https://github.com/laravel/vet',
     'stack' => 'laravel',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: Laravel Vet. A dependency audit for PHP that shows you each package change before composer update writes it into vendor. https://github.com/laravel/vet'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',

@@ -13,6 +13,7 @@ return [
     ],
     'source' => 'https://github.com/getgrav/grav',
     'stack' => 'php',
+    'topics' => ['cms', 'mcp'],
     'devnull' => 'Shipped with PHP: Grav 2.0. A new major version of Grav, the flat-file CMS, with a rebuilt admin, a REST API that can manage every part of a site and an MCP server for AI agents. https://github.com/getgrav/grav'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-20',

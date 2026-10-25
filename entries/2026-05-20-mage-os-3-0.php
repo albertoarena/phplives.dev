@@ -14,6 +14,7 @@ return [
     ],
     'source' => 'https://github.com/mage-os/mageos-magento2',
     'stack' => 'php',
+    'topics' => ['e-commerce'],
     'devnull' => 'Shipped with PHP: Mage-OS 3.0. A new major version of Mage-OS, an independent nonprofit distribution of Magento Open Source, now built on Magento Open Source 2.4.9. https://github.com/mage-os/mageos-magento2'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-23',

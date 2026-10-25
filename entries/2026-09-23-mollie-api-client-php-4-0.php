@@ -16,6 +16,7 @@ return [
     'package' => 'mollie/mollie-api-php',
     'licence' => 'BSD-2-Clause',
     'stack' => 'php',
+    'topics' => ['e-commerce', 'api'],
     'devnull' => 'Shipped with PHP: Mollie API client 4.0 for PHP. A new major version of the Mollie API client for PHP, which lets PHP apps accept payments through Mollie. https://github.com/mollie/mollie-api-php'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-23',

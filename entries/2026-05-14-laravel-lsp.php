@@ -15,6 +15,7 @@ return [
     'source' => 'https://github.com/laravel/lsp',
     'package' => 'laravel/lsp',
     'stack' => 'laravel',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: Laravel LSP. A language server that gives editors completions, hover info, diagnostics and Go to Definition for Laravel and Blade code. https://github.com/laravel/lsp'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-23',

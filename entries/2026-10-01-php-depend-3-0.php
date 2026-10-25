@@ -17,6 +17,7 @@ return [
     'licence' => 'BSD-3-Clause',
     'docs' => 'https://pdepend.org/',
     'stack' => 'php',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: PHP Depend 3.0. A new major version of PHP Depend, a tool that shows how easy a PHP design is to extend, reuse and maintain. https://github.com/pdepend/pdepend'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-23',

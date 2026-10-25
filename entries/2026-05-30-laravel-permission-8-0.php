@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://spatie.be/docs/laravel-permission/v8/introduction',
     'stack' => 'laravel',
+    'topics' => ['security'],
     'devnull' => 'Shipped with PHP: Laravel Permission 8.0. A new major version of Laravel Permission by Spatie, which links users to roles and permissions in Laravel apps. https://github.com/spatie/laravel-permission'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-23',

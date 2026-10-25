@@ -15,6 +15,7 @@ return [
     'source' => 'https://github.com/SolidInvoice/SolidInvoice',
     'licence' => 'MIT',
     'stack' => 'symfony',
+    'topics' => ['business', 'self-hosted'],
     'devnull' => 'Shipped with PHP: SolidInvoice 3.0. A new major version of SolidInvoice, the open source invoicing app built on Symfony, with two-factor login and search. https://github.com/SolidInvoice/SolidInvoice'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

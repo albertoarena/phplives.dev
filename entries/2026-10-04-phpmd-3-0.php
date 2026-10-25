@@ -17,6 +17,7 @@ return [
     'licence' => 'BSD-3-Clause',
     'docs' => 'https://phpmd.org/documentation/index.html',
     'stack' => 'php',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: PHPMD 3.0. A new major version of PHPMD, which finds possible problems in PHP code, with a setup wizard and YAML configuration. https://github.com/phpmd/phpmd'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

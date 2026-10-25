@@ -13,6 +13,7 @@ return [
     ],
     'source' => 'https://github.com/nextcloud/server',
     'stack' => 'php',
+    'topics' => ['self-hosted'],
     'devnull' => 'Shipped with PHP: Nextcloud 35. A new major version of Nextcloud, the self-hosted cloud for files and teamwork, with team workspaces, a new Photos app and Nextcloud Office on the desktop. https://github.com/nextcloud/server'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-20',

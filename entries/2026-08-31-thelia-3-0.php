@@ -17,6 +17,7 @@ return [
     'licence' => 'GPL-3.0-or-later',
     'docs' => 'https://doc.thelia.net/',
     'stack' => 'symfony',
+    'topics' => ['e-commerce', 'cms'],
     'devnull' => 'Shipped with PHP: Thelia 3.0. A new major version of Thelia, an open source framework for online stores, which runs on Symfony 7.4 and API Platform 4.3. https://github.com/thelia/thelia'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

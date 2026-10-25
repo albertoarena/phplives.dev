@@ -18,6 +18,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://phpseclib.com/',
     'stack' => 'php',
+    'topics' => ['security'],
     'devnull' => 'Shipped with PHP: phpseclib 4.0. A new major version of phpseclib, a pure-PHP library for SSH-2, SFTP, X.509, RSA, AES and more, with new PFX and CMS support. https://github.com/phpseclib/phpseclib'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',
