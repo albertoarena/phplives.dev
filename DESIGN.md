@@ -397,6 +397,13 @@ The image that shows when someone shares an entry page: the entry's shipping lab
 - **Colour:** no Signal Orange (see The Permanent Card Rule).
 - **Fallback:** without GD and FreeType, the site still builds and entry pages use the site card.
 
+### README badge
+The image a listed project can put in its README, at `/badge.svg`. There is one badge for every entry. The source is `art/badge.svg`.
+- **Shape:** a white paper label, 184x20, with a 3px radius and a 1px Print Black edge. On a white page, the black edge outlines the label. On a dark page, the white paper stands out.
+- **Content:** a small ring postmark and "FEATURED ON" in the label style, in Prussian Ink. Then "PHPLIVES.DEV" in white, in a Prussian Ink inverse block, in the route code shape.
+- **Text as paths:** GitHub shows README images through a proxy that loads no fonts. The text is drawn as outlines from the card fonts, so the badge needs no font.
+- **Colour:** no Signal Orange. A badge stays in a README for good, like a share card (see The Permanent Card Rule).
+
 ### Docket
 A white sheet under the entry label, with the paper shadow and a 6px radius. Its parts, top to bottom:
 1. **Sheet head:** "Parcel details" and the tracking number in mono, closed by a print rule.
@@ -404,6 +411,7 @@ A white sheet under the entry label, with the paper shadow and a 6px radius. Its
 3. **Install** (only when the entry has a package): the command strip with `composer require` and the Copy button. Here the strip is a Soft Rule tint with no shadow.
 4. **Facts:** a list of term and value, split by Soft Rule lines. The order is fixed: Made by, Source, Docs, Licence, Topics, Shipped, Date from, Added, Checked. Docs, Licence and Topics show only when the entry gives them. Topics holds the entry's topic tags. Terms sit in a 110px column (88px on narrow screens). Links carry a small out arrow. Made by lists each maker, with their GitHub and /dev/null links.
 5. **Share foot:** a 2px perforation above it. "Share this parcel", the page address in mono, then the "Copy link" and "Share" buttons side by side, in the same outline style. "Copy link" is hidden when the browser has no clipboard. "Share" opens the device's own share menu, and it is hidden when the browser has none. The share card title is "Name: shipped with PHP", without the site name, because cards already show it.
+6. **Badge for your README:** under the share foot, split from it by a Soft Rule line. The caption "Badge for your README", the line "Listed here? Add this badge to your README." with the badge image at its right, then the command strip with the badge Markdown and the Copy button. The strip is the same Soft Rule tint as Install, with no shadow. The Markdown wraps, so the whole snippet stays in view. The link goes to the entry page, with no tracking tags.
 
 ### Topic tag
 A small handling mark in the docket's Topics row, one per topic. It says what the project is for, as a mark printed on the box.
@@ -495,5 +503,5 @@ Labels print in once on load: each one reveals from top to bottom with a clip-pa
 - **Don't** show the cancellation waves on a label narrower than 378px.
 - **Don't** dim, fade, lift or rotate a neighbour stub. It is paper, only partly on screen.
 - **Don't** give the docket's command strip a shadow: it is printed on the docket.
-- **Don't** use Signal Orange on a share card.
+- **Don't** use Signal Orange on a share card or on the README badge.
 - **Don't** put the name, the stack code, the date or `phplives.dev` of a share card outside the square in its middle.

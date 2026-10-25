@@ -24,8 +24,9 @@ brand. Those are separate. This policy covers these things:
   a postmark that reads "PHPLIVES.DEV" and "SHIPPED", wave lines, a barcode and a
   tracking number. Each label shows its stack as a short route code. The line at the top of the page sits on a label that looks stuck on. The
   summary looks like a packing slip, and the archive looks like a manifest sheet.
-- The files in the [`art/`](art/) folder: the site's icon, and the share card that
-  shows when someone shares a link to the site, with the page it is drawn from.
+- The files in the [`art/`](art/) folder: the site's icon, the share card that
+  shows when someone shares a link to the site, with the page it is drawn from,
+  and the README badge.
 - The design and layout of the site, as a whole: the look above, with its colours,
   in the light and the dark theme.
 - The written copy of the site, including the sentence that describes each entry.
@@ -59,6 +60,9 @@ You do not need permission for any of this, and you are welcome to it:
 - Write about the site, including in paid articles, courses or talks, and use its
   name to say what they are about.
 - Say that your project is listed on phplives.dev, when it is.
+- Put the "Featured on phplives.dev" badge in your project's README, docs or site,
+  when your project is listed. Link it to your project's entry page. Each entry
+  page gives the Markdown to copy.
 - **Fork the repository on GitHub to contribute.** Nothing on this page applies to
   that. See "Contributing" below.
 - Use the code for your own site, as the licence allows. See "Running your own site"
