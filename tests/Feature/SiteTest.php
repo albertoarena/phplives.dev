@@ -914,3 +914,11 @@ it('marks every shipped date in a form that tools can read', function () {
         ->and($times($pages['index.html'], '.slip dd time'))->toBe([['2026-08-01', '01/08/2026']])
         ->and($times($pages['archive/index.html'], 'table .date time'))->toBe([['2026-03-01', '01/03/2026']]);
 });
+
+it('puts the manifest tools on their own row, with the view toggle at the end', function () {
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($css)->toContain('.sec-head{display:flex;flex-wrap:wrap;')
+        ->and($css)->toMatch('/\.sec-tools\{[^}]*flex-basis:100%/')
+        ->and($css)->toMatch('/\.sec-tools \.view\{[^}]*margin-left:auto/');
+});

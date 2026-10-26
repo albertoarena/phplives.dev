@@ -53,14 +53,15 @@ body{margin:0;background:var(--field)}
 .slip dd{margin:0;font-size:15px;font-weight:600}
 .slip-foot{padding:12px 22px 16px;border-top:2px dashed var(--perf);font-size:13px;color:var(--ink-2)}
 
-.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:0 0 12px}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:16px;padding:0 0 12px}
 .sec-head h2{margin:0;font-size:30px;font-weight:800;font-stretch:75%;letter-spacing:-.01em;word-spacing:.12em}
 .sec-head p{margin:0;font-size:15px;color:var(--on-field-2)}
 .sec-head>div:first-child{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px}
 
 /* Stack filter and Labels / List toggle. The script shows them; without it, the page lists every entry as labels. */
 .pl [hidden]{display:none !important}
-.sec-tools{display:flex;align-items:center;gap:12px 20px;flex-wrap:wrap;justify-content:flex-end}
+.sec-tools{display:flex;flex-basis:100%;align-items:center;gap:12px 20px;flex-wrap:wrap;justify-content:flex-start;margin:8px 0 24px}
+.sec-tools .view{margin-left:auto}
 .filter,.view{display:inline-flex;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:6px;padding:3px;gap:2px}
 .filter-cap{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--on-field-2);padding:0 8px 0 6px}
 .filter button,.view button{font:inherit;font-size:14px;font-weight:700;color:var(--on-field);background:transparent;border:0;border-radius:4px;padding:0 11px;min-height:36px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
@@ -229,7 +230,7 @@ body{margin:0;background:var(--field)}
   .span-3,.span-4{--s:2}
   .weeks .bundle{row-gap:18px}
   .sec-head{flex-direction:column;gap:4px}
-  .sec-tools{justify-content:flex-start;margin-top:12px}
+  .sec-tools{margin:12px 0 16px}
   .sec-head h2{font-size:26px}
   .dn{padding:56px 0 0}
   .dn-grid{grid-template-columns:minmax(0,1fr);gap:40px}
