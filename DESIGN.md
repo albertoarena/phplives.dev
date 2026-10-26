@@ -309,7 +309,7 @@ The page is one column of sections inside a 1320px wrap with a 40px side gutter.
 
 - **Hero:** two columns (1.4fr and 1fr, 64px gap), aligned to the bottom. It is short: 32px of padding on top and 36px below (28px and 32px on narrow screens). The line is on the left, with the lede, the contribute row and its note under it. The white manifest slip is on the right. Below 1100px it becomes one column and the slip caps at 560px.
 - **Section head:** the title on the left, with the note "Newest first." on the same line. The tools sit on their own row below it, with 24px of space under them (16px on narrow screens): the stack filter and the topic filter on the left, Labels / List at the right end. When the row is too narrow, the filters wrap and Labels / List stays at the end.
-- **This week:** up to three full labels in one row, with a 32px gap. The first row of labels starts inside the first screen. At 960px and below, the row scrolls sideways with scroll snap. Each column is min(380px, 42%), so the next label shows at the edge. At 700px and below a column is 86% wide. The row runs into the side gutter, so labels scroll to the edge of the page.
+- **This week:** up to three full labels in one row, with a 32px gap. The first row of labels starts inside the first screen. At 960px and below, the row scrolls sideways with scroll snap. Each column is min(380px, 42%), so the next label shows at the edge. At 700px and below a column is 86% wide. The row runs into the side gutter, so labels scroll to the edge of the page. The labels share their row tracks (a subgrid), so FROM, CONTENTS, SHIPPED and TRACK start at the same height on every label in the row. Each block takes the height of the tallest one, and its text stays at the top. The tracking number and the Details link sit at the bottom of the TRACK block.
 - **Bundles:** the stubs sit in a grid of 4 columns, with gaps of 24px (rows) and 20px (columns). The grid has 3 columns at 1100px and below. It has 2 columns at 700px and below, with gaps of 18px and 14px. It has 1 column at 440px and below. All these widths are container widths.
 - **Weeks share rows:** the week bundles that follow each other sit in one grid with the same columns. Each week spans one column per stub, up to the number of columns. Its stubs use a column subgrid, so they line up with the stubs of the other weeks. The stubs in one row have the same height.
 - **Bundle rhythm:** "This week" ends with 64px of space (48px on narrow screens). Bundles are 52px apart (40px on narrow screens). After the last week, the first month bundle starts 72px below (52px on narrow screens).
@@ -376,11 +376,11 @@ Segmented groups on the field: the theme toggle (Light, Dark, System), the view 
 
 ### Shipping label (signature)
 A 4x6 thermal label, one per entry. White paper, 6px radius, paper shadow. The label is its own size container. Its blocks, top to bottom:
-1. **Newest parcel strip** (newest only): Signal Orange, uppercase weight 800.
+1. **Newest parcel strip** (newest only): Signal Orange, uppercase weight 800. It is printed at the top of the FROM block and runs to the paper edge, so it never pushes the other labels in a row down.
 2. **FROM:** one line per maker. The name links to their GitHub. A small mono "/dev/null ↗" link follows when they have a profile there. The route code block sits on the right.
 3. **CONTENTS:** the project name (title) and one plain sentence.
 4. **SHIPPED:** the mono date, the date proof link, the waves and the ring postmark. The postmark is 118px, turned -9deg, at 90% opacity, with a multiply blend. Its ring reads PHPLIVES.DEV over SHIPPED around the date. The waves fill only the gap between the date and the ring. They hide when the label is narrower than 378px.
-5. **Barcode, TRACK and tracking number:** a full-width barcode, then TRACK with the source link and an arrow, then the tracking number in letter-spaced mono. On the home page a Details link sits on the same line as the tracking number, at the right.
+5. **Barcode, TRACK and tracking number:** a full-width barcode, then TRACK with the source link and an arrow, then the tracking number in letter-spaced mono. The link always starts on the line below TRACK. A long link breaks only after a `/`, and its last part and the arrow stay on one line. On the home page a Details link sits on the same line as the tracking number, at the right.
 
 The same label partial is used on the home page and on the entry page.
 

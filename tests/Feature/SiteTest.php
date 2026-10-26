@@ -956,3 +956,57 @@ it('rings the whole filter group when its dropdown has focus, not the dropdown i
         ->and($css)->toContain('.filter select:focus-visible{outline:0}')
         ->and($css)->toContain('.filter select:hover{background:var(--line)}');
 });
+
+it('lines up the blocks of the labels in a row', function () {
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($css)->toContain('.bundle-new .grid{grid-template-rows:repeat(4,auto);row-gap:0}')
+        ->and($css)->toContain('.bundle-new .grid>.lab{display:grid;grid-template-rows:subgrid;grid-row:span 4;container-type:normal}')
+        ->and($css)->toContain('.bundle-new .lab>.ship{container:ship / inline-size}')
+        ->and($css)->toContain('@container ship (max-width:341px){.waves{display:none}}');
+});
+
+it('prints the newest parcel strip inside the From block, so it does not push the other labels down', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+
+    $strip = pages($this)['index.html']->querySelector('.lab.newest .blk.from > .lab-new');
+
+    expect($strip)->not->toBeNull()
+        ->and(trim($strip->textContent))->toBe('Newest parcel');
+});
+
+it('lets a long track link break only after a slash', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+
+    $link = pages($this)['index.html']->querySelector('.lab .track a .mono');
+
+    expect($link->querySelectorAll('wbr'))->toHaveCount(2)
+        ->and($link->textContent)->toBe('github.com/pestphp/pest');
+});
+
+it('puts the track link under its caption on every label', function () {
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($css)->toContain('.lab .track{display:grid;justify-items:start;gap:2px}')
+        ->and($css)->not->toContain('word-break:break-all');
+});
+
+it('keeps the track arrow next to the link text, and the label foot at the bottom of its block', function () {
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($css)->toContain('.lab .track a{display:inline;line-height:1.6}')
+        ->and($css)->toContain('.lab .track a svg{display:inline;vertical-align:-2px;margin-left:6px}')
+        ->and($css)->toContain('.bundle-new .lab>.blk:last-child{display:flex;flex-direction:column}')
+        ->and($css)->toContain('.bundle-new .lab-foot{margin-top:auto;padding-top:6px}');
+});
+
+it('keeps the last part of a track link and its arrow on one line', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+
+    $tail = pages($this)['index.html']->querySelector('.lab .track a .tail');
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($tail->textContent)->toBe('pest')
+        ->and($tail->querySelector('svg'))->not->toBeNull()
+        ->and($css)->toContain('.lab .track .tail{white-space:nowrap}');
+});
