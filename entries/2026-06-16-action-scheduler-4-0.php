@@ -5,7 +5,7 @@ return [
     'sentence' => 'A new major version of Action Scheduler, a job queue for background tasks in WordPress, made to ship inside plugins with no server access needed.',
     'details' => 'Every month it processes millions of payments for WooCommerce Subscriptions. Version 4.0 takes the action args into account when it schedules unique actions. It also purges failed actions after 3 months by default.',
     'makers' => [
-        ['name' => 'WooCommerce', 'github' => 'woocommerce'],
+        ['name' => 'Automattic', 'github' => 'Automattic'],
     ],
     'shipped' => '2026-06-16',
     'proof' => [

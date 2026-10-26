@@ -6,6 +6,7 @@ return [
     'details' => 'It replaced trikoder/oauth2-bundle, in coordination with trikoder and members of the Symfony core team. Version 2.0 removes the backward compatibility layer for 1.x.',
     'makers' => [
         ['name' => 'The PHP League', 'github' => 'thephpleague'],
+        ['name' => 'Antonio J. García Lagar', 'github' => 'ajgarlag'],
         ['name' => 'Robin Chalas', 'github' => 'chalasr'],
     ],
     'shipped' => '2026-10-14',

@@ -3,7 +3,7 @@
 return [
     'name' => 'Laradocs',
     'sentence' => 'Docs that live inside your Laravel codebase: you write Markdown next to the code it describes, and Laradocs serves a docs site at /docs.',
-    'details' => 'Nested folders become nested navigation. It caches the rendered HTML. It also adds SEO tags to every page, and it builds a sitemap.',
+    'details' => 'Nested folders become nested navigation. It caches the rendered HTML.',
     'makers' => [
         ['name' => 'Peter Bishop', 'github' => 'PeteBishwhip'],
     ],
