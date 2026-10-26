@@ -456,7 +456,7 @@ A full-width Prussian band (Night Band in the dark theme). It holds the heading 
 ### Read-mode sheets
 Privacy and Credits use a page head on the field and one white sheet. Privacy is sections of body text at a 65ch measure. Credits is groups of items in three columns: the name, what the site uses it for, and its maker and licence. Inline code sits on a Soft Rule tint.
 
-Feeds uses the same head and sheet. Each feed is one row in three columns: its name (a stack feed has its route code before the name), what it holds, and its link on a command strip with a Copy button. The command strip has a Soft Rule fill, as on the entry page. Below 860px the columns stack.
+Feeds uses the same head and sheet. Each feed is one row in three columns: its name (a stack feed has its route code before the name), what it holds, and its link on a command strip with a Copy button. The main feed comes first, then the stack feeds, then the topic feeds. A topic feed has no code before its name, as a topic is never a route code. The command strip has a Soft Rule fill, as on the entry page. Below 860px the columns stack.
 
 ### Footer
 On every page. It opens with the **contribute row**: a section-style heading ("Open source. Anyone can help."), one line of text, and the contribute CTA with its text link on the right. A Field Line hairline splits it from the rest: the maker line, the links, the fine print, and Privacy · Credits · Feeds. Feeds links to `/feeds/`. The note under the main section head also links to it: "Follow new entries by RSS".

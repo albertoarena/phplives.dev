@@ -245,6 +245,24 @@ it('lists the main feed and one feed per stack on the feeds page, most common st
         ]);
 });
 
+it('lists one feed per topic on the feeds page, after the stacks, most common topic first', function () {
+    writeEntry($this->dir, '2026-09-01-a.php', ['stack' => 'laravel', 'topics' => ['testing']]);
+    writeEntry($this->dir, '2026-09-02-b.php', ['stack' => 'laravel', 'topics' => ['testing', 'ai']]);
+    writeEntry($this->dir, '2026-09-03-c.php', ['stack' => 'laravel', 'topics' => ['ai', 'testing']]);
+    writeEntry($this->dir, '2026-09-04-d.php', ['stack' => 'laravel', 'topics' => ['security']]);
+
+    $doc = pages($this)['feeds/index.html'];
+
+    expect(texts($doc, '.feeds .fd-name'))->toBe(['Every entry', 'LRV Laravel', 'Testing', 'AI'])
+        ->and(hrefs($doc, '.feeds .fd-name a'))->toBe([
+            'https://phplives.dev/feed.xml',
+            'https://phplives.dev/feed/laravel.xml',
+            'https://phplives.dev/feed/topic/testing.xml',
+            'https://phplives.dev/feed/topic/ai.xml',
+        ])
+        ->and(texts($doc, '.feeds .fd-use')[2])->toBe('Only the entries with the topic Testing.');
+});
+
 it('says how to use a feed on the feeds page', function () {
     $doc = pages($this)['feeds/index.html'];
 

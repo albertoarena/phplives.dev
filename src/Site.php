@@ -101,6 +101,7 @@ final readonly class Site
             'credits/index.html' => $this->page('credits', 'phplives.dev: credits', '/credits/', []),
             'feeds/index.html' => $this->page('feeds', 'phplives.dev: feeds', '/feeds/', [
                 'counts' => $this->stackCounts($this->entries->all()),
+                'topics' => $this->topicCounts($this->entries->all()),
                 'copyScript' => $this->script('copy.js'),
             ]),
             '404.html' => $this->page('not-found', 'phplives.dev: page not found', null, []),

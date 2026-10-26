@@ -1,9 +1,11 @@
 <?php
 /**
- * The feeds page: the main feed, and one feed for each stack that has entries.
+ * The feeds page: the main feed, one feed for each stack that has entries, and one
+ * for each topic that has a feed.
  *
  * @var callable $e
  * @var array<string, int> $counts Entries per stack, most common first.
+ * @var array<string, int> $topics Entries per topic with a feed, most common first.
  * @var string $copyScript
  */
 use PhpLives\Feed;
@@ -14,6 +16,10 @@ $feeds = [['name' => 'Every entry', 'code' => null, 'path' => '/feed.xml', 'use'
 
 foreach (array_keys($counts) as $stack) {
     $feeds[] = ['name' => Format::stackLabel($stack), 'code' => Format::stackCode($stack), 'path' => "/feed/{$stack}.xml", 'use' => 'Only the '.Format::stackLabel($stack).' entries.'];
+}
+
+foreach (array_keys($topics) as $topic) {
+    $feeds[] = ['name' => Format::topicLabel($topic), 'code' => null, 'path' => "/feed/topic/{$topic}.xml", 'use' => 'Only the entries with the topic '.Format::topicLabel($topic).'.'];
 }
 ?>
   <div class="wrap">
