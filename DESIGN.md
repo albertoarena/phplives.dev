@@ -367,7 +367,7 @@ Tactile and plain, like a sticker on a box.
 ### Toggles and chips
 Segmented groups on the field: the theme toggle (Light, Dark, System), the view toggle (Labels, List), the stack filter and the topic filter.
 - **Style:** a 1px Field Line border, 6px radius, 3px inner padding. Options are transparent, with weight 600 to 700. They are 32px tall in the theme toggle and 36px in the others.
-- **State:** the pressed option fills with the field's text colour and takes the field colour as text. Hover fills with Field Line.
+- **State:** the pressed option fills with the field's text colour and takes the field colour as text. Hover fills with Field Line, on the dropdown too. Keyboard focus is a 2px ring in the field's text colour, 2px out. When a filter is a dropdown, the ring goes around the whole group, never inside it.
 - **Stack chips:** "All" plus one chip per stack, up to 6, most common first. Each shows its route code in condensed weight 900 and a mono count. With more than 6 stacks a native select replaces the chips.
 - **Topic filter:** the caption "Topic", then "All" plus one choice per topic, most common first, with a count. A topic shows only when at least 2 entries on the page have it. A topic chip shows its label in Archivo 700, never a route code. With more than 6 topics a native select replaces the chips. When no topic has 2 entries, the topic filter is left out.
 - **Stack and topic together:** an entry shows when it has the picked stack and the picked topic. The status line names both: "Showing 3 of 74 parcels: Laravel, Testing."

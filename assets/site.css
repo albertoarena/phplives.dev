@@ -70,8 +70,11 @@ body{margin:0;background:var(--field)}
 .filter button .n{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;font-weight:600;opacity:.75}
 .filter button:hover,.view button:hover{background:var(--line)}
 .filter button[aria-pressed="true"],.view button[aria-pressed="true"]{background:var(--on-field);color:var(--field)}
-.filter button:focus-visible,.view button:focus-visible,.filter select:focus-visible{outline:2px solid var(--on-field);outline-offset:2px}
+.filter button:focus-visible,.view button:focus-visible{outline:2px solid var(--on-field);outline-offset:2px}
+.filter:has(select:focus-visible){outline:2px solid var(--on-field);outline-offset:2px}
+.filter select:focus-visible{outline:0}
 .filter select{font:inherit;font-size:14px;font-weight:700;color:var(--on-field);background:var(--field);border:0;border-radius:4px;min-height:36px;padding:0 8px}
+.filter select:hover{background:var(--line)}
 .new-tag{display:inline-block;margin-left:8px;vertical-align:2px;background:var(--signal);color:var(--ink);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:2px;font-stretch:100%}
 .list-sheet{margin-bottom:96px}
 

@@ -948,3 +948,11 @@ it('puts the manifest tools on their own row, with the view toggle at the end', 
         ->and($css)->toMatch('/\.sec-tools\{[^}]*flex-basis:100%/')
         ->and($css)->toMatch('/\.sec-tools \.view\{[^}]*margin-left:auto/');
 });
+
+it('rings the whole filter group when its dropdown has focus, not the dropdown inside it', function () {
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($css)->toContain('.filter:has(select:focus-visible){outline:2px solid var(--on-field);outline-offset:2px}')
+        ->and($css)->toContain('.filter select:focus-visible{outline:0}')
+        ->and($css)->toContain('.filter select:hover{background:var(--line)}');
+});
