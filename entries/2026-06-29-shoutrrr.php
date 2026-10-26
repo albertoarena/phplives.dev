@@ -13,6 +13,7 @@ return [
     ],
     'source' => 'https://github.com/coollabsio/shoutrrr',
     'stack' => 'laravel',
+    'topics' => ['social', 'self-hosted'],
     'devnull' => 'Shipped with PHP: Shoutrrr. A tool you host yourself to write a social media post once and publish it on many networks. https://github.com/coollabsio/shoutrrr'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-16',

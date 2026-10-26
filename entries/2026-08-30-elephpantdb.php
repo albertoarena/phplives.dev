@@ -15,6 +15,7 @@ return [
     'source' => 'https://github.com/antonmedv/elephpantdb',
     'licence' => 'MIT',
     'stack' => 'php',
+    'topics' => ['database'],
     'devnull' => 'Shipped with PHP: ElephpantDB. A small SQL database in a single PHP file, which keeps its tables on local disk and takes SQL through a JSON-over-HTTP endpoint. https://github.com/antonmedv/elephpantdb'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

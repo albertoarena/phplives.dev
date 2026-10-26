@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://docs.behat.org/en/latest/',
     'stack' => 'php',
+    'topics' => ['testing'],
     'devnull' => 'Shipped with PHP: Behat 4.0. A new major version of Behat, the behaviour-driven development framework for PHP, with support for Gherkin rules and tag expressions. https://github.com/Behat/Behat'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

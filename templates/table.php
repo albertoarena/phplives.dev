@@ -26,7 +26,7 @@ foreach ($entries as $i => $entry) {
           <tbody id="<?= $e($groupPrefix.$group->id) ?>" data-group>
             <tr class="grp"><th colspan="7" scope="colgroup"><?= $e($group->title) ?> <span class="mono" data-group-count><?= $n ?> <?= $n === 1 ? 'parcel' : 'parcels' ?></span></th></tr>
 <?php foreach ($group->entries as $entry): ?>
-            <tr data-stack="<?= $e($entry->stack) ?>">
+            <tr data-stack="<?= $e($entry->stack) ?>" data-topics="<?= $e(implode(' ', $entry->topics)) ?>">
               <td class="no mono"><?= str_pad((string) $numbers[$entry->slug], 3, '0', STR_PAD_LEFT) ?></td>
               <td class="date mono"><time datetime="<?= $entry->shipped->format('Y-m-d') ?>"><?= $e(Format::date($entry->shipped)) ?></time></td>
               <td class="name"><?= $e($entry->name) ?><?php if ($entry->slug === $newest): ?> <span class="new-tag">Newest</span><?php endif ?></td>

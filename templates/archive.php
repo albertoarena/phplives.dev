@@ -7,6 +7,7 @@
  * @var string $today
  * @var \PhpLives\Site $site
  * @var array<string, int> $counts
+ * @var array<string, int> $topics Entries per topic, for the topics with 2 entries or more.
  * @var string $manifestScript
  */
 ?>
@@ -19,6 +20,9 @@
 <?php if ($entries): ?>
       <div class="sec-tools" data-tools hidden>
 <?= $site->filterControl($counts) ?>
+<?php if ($topics): ?>
+<?= $site->filterControl($topics, kind: 'topic', total: count($entries)) ?>
+<?php endif ?>
       </div>
 <?php endif ?>
     </section>

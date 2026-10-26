@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://laradocs.dev',
     'stack' => 'laravel',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: Laradocs. Docs that live inside your Laravel codebase: you write Markdown next to the code it describes, and Laradocs serves a docs site at /docs. https://github.com/PeteBishwhip/laradocs'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-25',

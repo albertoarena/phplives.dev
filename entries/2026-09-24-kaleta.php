@@ -13,6 +13,7 @@ return [
     ],
     'source' => 'https://github.com/phprs-cms/kaletacms',
     'stack' => 'php',
+    'topics' => ['cms', 'mcp'],
     'devnull' => 'Shipped with PHP: Kaleta. An open source CMS for business websites, with a visual page builder, a design system and a WordPress importer. https://github.com/phprs-cms/kaletacms'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',

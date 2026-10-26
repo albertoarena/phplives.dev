@@ -15,6 +15,7 @@ return [
     'source' => 'https://github.com/contao/contao',
     'licence' => 'LGPL-3.0-or-later',
     'stack' => 'symfony',
+    'topics' => ['cms'],
     'devnull' => 'Shipped with PHP: Contao 6.0. A new major version of Contao, the open source CMS built on Symfony, which now stores input as it is and uses Twig for all its templates. https://github.com/contao/contao'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

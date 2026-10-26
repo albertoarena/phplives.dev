@@ -15,6 +15,9 @@ final readonly class Feed
     /** A feed reader only needs the newest entries. */
     public const int MAX_ENTRIES = 50;
 
+    /** The category scheme of a topic, so a reader can tell topics from the stack. */
+    public const string TOPIC_SCHEME = Site::URL.'/#topic';
+
     /**
      * @param  list<Entry>  $entries  Every entry the feed can show, in any order.
      * @param  bool  $entryPages  True when the site has a page for each entry. Feed entries then link to it.
@@ -36,10 +39,21 @@ final readonly class Feed
     /**
      * @param  string  $path  The feed's own address on the site.
      * @param  string|null  $stack  Only the entries of this stack. Null for every entry.
+     * @param  string|null  $topic  Only the entries with this topic. Null for every entry.
      */
-    public function xml(string $path, ?string $stack = null): string
+    public function xml(string $path, ?string $stack = null, ?string $topic = null): string
     {
-        $entries = $this->newest($stack);
+        $entries = $this->newest($stack, $topic);
+        $title = match (true) {
+            $stack !== null => Format::stackLabel($stack),
+            $topic !== null => Format::topicLabel($topic),
+            default => null,
+        };
+        $id = match (true) {
+            $stack !== null => "/{$stack}",
+            $topic !== null => "/topic/{$topic}",
+            default => '',
+        };
 
         $xml = new XMLWriter();
         $xml->openMemory();
@@ -47,9 +61,9 @@ final readonly class Feed
         $xml->setIndentString('  ');
         $xml->startDocument('1.0', 'UTF-8');
         $xml->startElementNs(null, 'feed', 'http://www.w3.org/2005/Atom');
-        $xml->writeElement('title', $stack === null ? 'phplives.dev' : 'phplives.dev: '.Format::stackLabel($stack));
+        $xml->writeElement('title', $title === null ? 'phplives.dev' : "phplives.dev: {$title}");
         $xml->writeElement('subtitle', 'PHP delivers. PHP lives!');
-        $xml->writeElement('id', 'tag:phplives.dev,2026:feed'.($stack === null ? '' : "/{$stack}"));
+        $xml->writeElement('id', 'tag:phplives.dev,2026:feed'.$id);
         $xml->writeElement('updated', self::time($entries === [] ? $this->today : $entries[0]->added));
         self::link($xml, 'self', Site::URL.$path, 'application/atom+xml');
         self::link($xml, 'alternate', Site::URL.'/', 'text/html');
@@ -67,9 +81,10 @@ final readonly class Feed
     /**
      * @return list<Entry> Newest added first, then newest shipped first.
      */
-    private function newest(?string $stack): array
+    private function newest(?string $stack, ?string $topic): array
     {
-        $entries = array_filter($this->entries, fn (Entry $e) => $stack === null || $e->stack === $stack);
+        $entries = array_filter($this->entries, fn (Entry $e) => ($stack === null || $e->stack === $stack)
+            && ($topic === null || in_array($topic, $e->topics, true)));
         usort($entries, fn (Entry $a, Entry $b) => [$b->added, $b->shipped, $a->slug] <=> [$a->added, $a->shipped, $b->slug]);
 
         return array_slice($entries, 0, self::MAX_ENTRIES);
@@ -104,6 +119,15 @@ final readonly class Feed
         $xml->writeAttribute('term', $entry->stack);
         $xml->writeAttribute('label', Format::stackLabel($entry->stack));
         $xml->endElement();
+
+        foreach ($entry->topics as $topic) {
+            $xml->startElement('category');
+            $xml->writeAttribute('term', $topic);
+            $xml->writeAttribute('scheme', self::TOPIC_SCHEME);
+            $xml->writeAttribute('label', Format::topicLabel($topic));
+            $xml->endElement();
+        }
+
         $xml->endElement();
     }
 

@@ -16,6 +16,7 @@ return [
     'licence' => 'GPL-3.0-or-later',
     'docs' => 'https://wiki.dolibarr.org',
     'stack' => 'php',
+    'topics' => ['business', 'mcp', 'ai'],
     'devnull' => 'Shipped with PHP: Dolibarr 24.0. A new major version of Dolibarr, the open source ERP and CRM, with an experimental MCP server and AI assistant. https://github.com/Dolibarr/dolibarr'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

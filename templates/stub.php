@@ -15,7 +15,7 @@ $id = 's-'.$e($entry->slug);
 $link = $site->entryLink($entry);
 $isNewest = $entry->slug === ($newestSlug ?? null);
 ?>
-            <article class="stub<?= $isNewest ? ' newest' : '' ?>" style="--j: <?= min($j, 11) ?>" data-stack="<?= $e($entry->stack) ?>" aria-labelledby="<?= $id ?>">
+            <article class="stub<?= $isNewest ? ' newest' : '' ?>" style="--j: <?= min($j, 11) ?>" data-stack="<?= $e($entry->stack) ?>" data-topics="<?= $e(implode(' ', $entry->topics)) ?>" aria-labelledby="<?= $id ?>">
               <div class="stub-paper">
                 <div class="stub-top">
                   <h4 id="<?= $id ?>"><?= $e($entry->name) ?></h4>

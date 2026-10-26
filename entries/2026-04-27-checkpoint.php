@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://checkpoint.web.ap.it',
     'stack' => 'laravel',
+    'topics' => ['security'],
     'devnull' => 'Shipped with PHP: Checkpoint. A Laravel security scanner that checks an app for known CVEs, risky settings and hardcoded secrets with one Artisan command. https://github.com/andreapollastri/checkpoint'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-23',

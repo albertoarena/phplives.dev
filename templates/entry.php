@@ -21,11 +21,11 @@ $own = $onEntryPage ?? false;
 $isNewest = $own ? ($newest ?? false) : (isset($newestSlug) ? $entry->slug === $newestSlug : $i === 0);
 $heading = $own ? 'h1' : (in_array($heading ?? null, ['h2', 'h3', 'h4'], true) ? $heading : 'h3');
 ?>
-        <article class="lab<?= $isNewest ? ' newest' : '' ?>" style="--i: <?= $i ?>" data-stack="<?= $e($entry->stack) ?>" aria-labelledby="t-<?= $id ?>">
-<?php if ($isNewest): ?>
-          <div class="lab-new">Newest parcel</div>
-<?php endif ?>
+        <article class="lab<?= $isNewest ? ' newest' : '' ?>" style="--i: <?= $i ?>" data-stack="<?= $e($entry->stack) ?>" data-topics="<?= $e(implode(' ', $entry->topics)) ?>" aria-labelledby="t-<?= $id ?>">
           <div class="blk from">
+<?php if ($isNewest): ?>
+            <div class="lab-new">Newest parcel</div>
+<?php endif ?>
             <div>
               <span class="cap">From</span>
               <ul class="makers">
@@ -85,9 +85,8 @@ $heading = $own ? 'h1' : (in_array($heading ?? null, ['h2', 'h3', 'h4'], true) ?
             </svg>
             <div class="track">
               <span class="cap">Track</span>
-              <a href="<?= $e($entry->source) ?>"><span class="mono"><?= $e(Format::linkText($entry->source)) ?></span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
-              </a>
+<?php $parts = array_map($e, explode('/', Format::linkText($entry->source))); $last = array_pop($parts); ?>
+              <a href="<?= $e($entry->source) ?>"><span class="mono"><?= $parts ? implode('/<wbr>', $parts).'/<wbr>' : '' ?><span class="tail"><?= $last ?><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg></span></span></a>
             </div>
 <?php if ($site->hasEntryPages() && ! $own): ?>
             <div class="lab-foot">

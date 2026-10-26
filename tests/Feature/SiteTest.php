@@ -245,6 +245,32 @@ it('lists the main feed and one feed per stack on the feeds page, most common st
         ]);
 });
 
+it('lists one feed per topic on the feeds page, after the stacks, most common topic first', function () {
+    writeEntry($this->dir, '2026-09-01-a.php', ['stack' => 'laravel', 'topics' => ['testing']]);
+    writeEntry($this->dir, '2026-09-02-b.php', ['stack' => 'laravel', 'topics' => ['testing', 'ai']]);
+    writeEntry($this->dir, '2026-09-03-c.php', ['stack' => 'laravel', 'topics' => ['ai', 'testing']]);
+    writeEntry($this->dir, '2026-09-04-d.php', ['stack' => 'laravel', 'topics' => ['security']]);
+
+    $doc = pages($this)['feeds/index.html'];
+
+    expect(texts($doc, '.feeds .fd-name'))->toBe(['Every entry', 'LRV Laravel', 'Testing', 'AI'])
+        ->and(hrefs($doc, '.feeds .fd-name a'))->toBe([
+            'https://phplives.dev/feed.xml',
+            'https://phplives.dev/feed/laravel.xml',
+            'https://phplives.dev/feed/topic/testing.xml',
+            'https://phplives.dev/feed/topic/ai.xml',
+        ])
+        ->and(texts($doc, '.feeds .fd-use')[2])->toBe('Only the entries with the topic Testing.')
+        ->and(texts($doc, '.feeds h3'))->toBe(['By stack', 'By topic'])
+        ->and(texts($doc, '.feeds .sheet-head .mono'))->toBe(['4 feeds']);
+});
+
+it('gives the feed links room for the longest topic feed', function () {
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($css)->toContain('.fd-list li{display:grid;grid-template-columns:minmax(0,13rem) minmax(0,1fr) minmax(0,27rem);');
+});
+
 it('says how to use a feed on the feeds page', function () {
     $doc = pages($this)['feeds/index.html'];
 
@@ -734,6 +760,68 @@ it('shows chips up to six stacks', function () {
     expect(Site::MAX_CHIPS)->toBe(6);
 });
 
+function topicEntries(object $test): void
+{
+    writeEntry($test->dir, '2026-10-01-a.php', ['name' => 'A', 'stack' => 'php', 'topics' => ['testing', 'devtools']]);
+    writeEntry($test->dir, '2026-09-01-b.php', ['name' => 'B', 'stack' => 'laravel', 'topics' => ['mcp', 'testing']]);
+    writeEntry($test->dir, '2026-08-01-c.php', ['name' => 'C', 'stack' => 'laravel', 'topics' => ['mcp', 'ai']]);
+    writeEntry($test->dir, '2026-07-01-d.php', ['name' => 'D', 'stack' => 'laravel', 'topics' => ['mcp']]);
+    writeEntry($test->dir, '2026-06-01-e.php', ['name' => 'E', 'stack' => 'php']);
+    writeEntry($test->dir, '2026-02-01-old.php', ['name' => 'Old', 'stack' => 'symfony', 'topics' => ['ai']]);
+    writeEntry($test->dir, '2026-01-01-older.php', ['name' => 'Older', 'stack' => 'symfony', 'topics' => ['ai', 'testing']]);
+}
+
+it('tags each entry with its topics, in both views', function () {
+    topicEntries($this);
+    $main = pages($this)['index.html'];
+    $topics = fn (string $selector) => array_map(fn ($n) => $n->getAttribute('data-topics'), iterator_to_array($main->querySelectorAll($selector)));
+
+    expect($topics('#manifest [data-view="labels"] [data-stack]'))->toBe(['testing devtools', 'mcp testing', 'mcp ai', 'mcp', ''])
+        ->and($topics('#manifest [data-view="list"] tbody tr[data-stack]'))->toBe(['testing devtools', 'mcp testing', 'mcp ai', 'mcp', '']);
+});
+
+it('filters by topic, most common first, with counts, and only topics with 2 entries or more', function () {
+    topicEntries($this);
+    $main = pages($this)['index.html'];
+    $chips = iterator_to_array($main->querySelectorAll('#manifest [data-topic-choice]'));
+
+    expect(texts($main, '#manifest [data-topic-choice]'))->toBe(['All 5', 'MCP 3', 'Testing 2'])
+        ->and(array_map(fn ($b) => $b->getAttribute('data-topic-choice'), $chips))->toBe(['', 'mcp', 'testing'])
+        ->and(array_map(fn ($b) => $b->getAttribute('data-topic-label'), $chips))->toBe(['', 'MCP', 'Testing'])
+        ->and(array_map(fn ($b) => $b->getAttribute('aria-pressed'), $chips))->toBe(['true', 'false', 'false'])
+        ->and($main->querySelector('#manifest [aria-label="Filter by topic"] .filter-cap')->textContent)->toBe('Topic')
+        ->and($main->querySelectorAll('#manifest [data-tools] [data-stack-choice]'))->not->toHaveCount(0);
+});
+
+it('counts the topics of the archive on their own', function () {
+    topicEntries($this);
+    $archive = pages($this)['archive/index.html'];
+
+    expect(texts($archive, '[data-topic-choice]'))->toBe(['All 2', 'AI 2']);
+});
+
+it('has no topic filter when no topic has 2 entries', function () {
+    stackEntries($this);
+    $pages = pages($this);
+
+    expect($pages['index.html']->querySelectorAll('[data-topic-choice], [data-topic-select]'))->toHaveCount(0)
+        ->and($pages['archive/index.html']->querySelectorAll('[data-topic-choice], [data-topic-select]'))->toHaveCount(0);
+});
+
+it('turns the topic filter into a dropdown when there are too many topics', function () {
+    $site = new Site(Entries::load($this->dir, $this->today), $this->today);
+    $html = $site->filterControl(['mcp' => 3, 'testing' => 2, 'ai' => 2], maxChips: 2, kind: 'topic');
+    $doc = HTMLDocument::createFromString('<!doctype html><body>'.$html.'</body>', LIBXML_NOERROR);
+    $select = $doc->querySelector('select[data-topic-select]');
+
+    expect($doc->querySelectorAll('[data-topic-choice]'))->toHaveCount(0)
+        ->and(texts($doc, 'select option'))->toBe(['All (7)', 'MCP (3)', 'Testing (2)', 'AI (2)'])
+        ->and(array_map(fn ($o) => $o->getAttribute('value'), iterator_to_array($doc->querySelectorAll('select option'))))->toBe(['', 'mcp', 'testing', 'ai'])
+        ->and(array_map(fn ($o) => $o->getAttribute('data-topic-label'), iterator_to_array($doc->querySelectorAll('select option'))))->toBe(['', 'MCP', 'Testing', 'AI'])
+        ->and($doc->querySelector('label[for="'.$select->getAttribute('id').'"]')?->textContent)->toBe('Topic')
+        ->and($select->getAttribute('id'))->not->toBe('stack-filter');
+});
+
 it('invites everyone to contribute in every footer', function (string $page) {
     $doc = pages($this)[$page];
     $open = $doc->querySelector('footer .foot-open');
@@ -851,4 +939,74 @@ it('marks every shipped date in a form that tools can read', function () {
         ->and($times($pages['index.html'], '#manifest table .date time'))->toBe([['2026-08-01', '01/08/2026']])
         ->and($times($pages['index.html'], '.slip dd time'))->toBe([['2026-08-01', '01/08/2026']])
         ->and($times($pages['archive/index.html'], 'table .date time'))->toBe([['2026-03-01', '01/03/2026']]);
+});
+
+it('puts the manifest tools on their own row, with the view toggle at the end', function () {
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($css)->toContain('.sec-head{display:flex;flex-wrap:wrap;')
+        ->and($css)->toMatch('/\.sec-tools\{[^}]*flex-basis:100%/')
+        ->and($css)->toMatch('/\.sec-tools \.view\{[^}]*margin-left:auto/');
+});
+
+it('rings the whole filter group when its dropdown has focus, not the dropdown inside it', function () {
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($css)->toContain('.filter:has(select:focus-visible){outline:2px solid var(--on-field);outline-offset:2px}')
+        ->and($css)->toContain('.filter select:focus-visible{outline:0}')
+        ->and($css)->toContain('.filter select:hover{background:var(--line)}');
+});
+
+it('lines up the blocks of the labels in a row', function () {
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($css)->toContain('.bundle-new .grid{grid-template-rows:repeat(4,auto);row-gap:0}')
+        ->and($css)->toContain('.bundle-new .grid>.lab{display:grid;grid-template-rows:subgrid;grid-row:span 4;container-type:normal}')
+        ->and($css)->toContain('.bundle-new .lab>.ship{container:ship / inline-size}')
+        ->and($css)->toContain('@container ship (max-width:341px){.waves{display:none}}');
+});
+
+it('prints the newest parcel strip inside the From block, so it does not push the other labels down', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+
+    $strip = pages($this)['index.html']->querySelector('.lab.newest .blk.from > .lab-new');
+
+    expect($strip)->not->toBeNull()
+        ->and(trim($strip->textContent))->toBe('Newest parcel');
+});
+
+it('lets a long track link break only after a slash', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+
+    $link = pages($this)['index.html']->querySelector('.lab .track a .mono');
+
+    expect($link->querySelectorAll('wbr'))->toHaveCount(2)
+        ->and($link->textContent)->toBe('github.com/pestphp/pest');
+});
+
+it('puts the track link under its caption on every label', function () {
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($css)->toContain('.lab .track{display:grid;justify-items:start;gap:2px}')
+        ->and($css)->not->toContain('word-break:break-all');
+});
+
+it('keeps the track arrow next to the link text, and the label foot at the bottom of its block', function () {
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($css)->toContain('.lab .track a{display:inline;line-height:1.6}')
+        ->and($css)->toContain('.lab .track a svg{display:inline;vertical-align:-2px;margin-left:6px}')
+        ->and($css)->toContain('.bundle-new .lab>.blk:last-child{display:flex;flex-direction:column}')
+        ->and($css)->toContain('.bundle-new .lab-foot{margin-top:auto;padding-top:6px}');
+});
+
+it('keeps the last part of a track link and its arrow on one line', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+
+    $tail = pages($this)['index.html']->querySelector('.lab .track a .tail');
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($tail->textContent)->toBe('pest')
+        ->and($tail->querySelector('svg'))->not->toBeNull()
+        ->and($css)->toContain('.lab .track .tail{white-space:nowrap}');
 });

@@ -13,6 +13,7 @@
  * @var list<\PhpLives\Post> $posts
  * @var string $copyScript
  * @var array<string, int> $counts
+ * @var array<string, int> $topics Entries per topic, for the topics with 2 entries or more.
  * @var string $manifestScript
  * @var string $today
  */
@@ -56,6 +57,9 @@ use PhpLives\Format;
 <?php if ($entries): ?>
         <div class="sec-tools" data-tools hidden>
 <?= $site->filterControl($counts) ?>
+<?php if ($topics): ?>
+<?= $site->filterControl($topics, kind: 'topic', total: count($entries)) ?>
+<?php endif ?>
           <div class="view" role="group" aria-label="View">
             <button type="button" data-view-choice="labels" aria-pressed="true">Labels</button>
             <button type="button" data-view-choice="list" aria-pressed="false">List</button>

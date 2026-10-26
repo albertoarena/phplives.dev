@@ -15,6 +15,7 @@ return [
     'source' => 'https://github.com/f/gutenwright',
     'licence' => 'GPL-2.0-or-later',
     'stack' => 'wordpress',
+    'topics' => ['ai'],
     'devnull' => 'Shipped with PHP: Gutenwright. An experimental WordPress plugin that turns natural language prompts into real Gutenberg blocks. https://github.com/f/gutenwright'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

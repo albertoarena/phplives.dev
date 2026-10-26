@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://docs.guzzlephp.org/en/latest/',
     'stack' => 'php',
+    'topics' => ['api'],
     'devnull' => 'Shipped with PHP: Guzzle 8.0. A new major version of Guzzle, the PHP HTTP client, with HTTP/3 support in its cURL handlers on PHP 8.4 and later. https://github.com/guzzle/guzzle'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

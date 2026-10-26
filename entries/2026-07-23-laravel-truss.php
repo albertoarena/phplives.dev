@@ -13,6 +13,7 @@ return [
     ],
     'source' => 'https://trussphp.com/?utm_source=phplives.dev&utm_medium=entry',
     'stack' => 'laravel',
+    'topics' => ['database', 'devtools'],
     'devnull' => 'Shipped with PHP: Laravel Truss. A database structure viewer for Laravel that shows your schema as an ER diagram (ERD), never the data. https://trussphp.com'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-17',

@@ -16,6 +16,7 @@ return [
     'package' => 'ahmednour/laravel-stream-backup',
     'licence' => 'MIT',
     'stack' => 'laravel',
+    'topics' => ['database'],
     'devnull' => 'Shipped with PHP: laravel-stream-backup. A Laravel package that streams database backups to S3, SFTP or local disk, with the same small memory use whatever the size of the database. https://github.com/ahmed-nour-dev/laravel-stream-backup'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

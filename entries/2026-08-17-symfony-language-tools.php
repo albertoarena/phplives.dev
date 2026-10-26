@@ -13,6 +13,7 @@ return [
     ],
     'source' => 'https://github.com/symfony/language-tools',
     'stack' => 'symfony',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: Symfony Language Tools. A language server that helps your editor understand Symfony routes, services, templates and translation keys. https://github.com/symfony/language-tools'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-16',

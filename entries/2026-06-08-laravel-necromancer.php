@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://robertogallea.github.io/laravel-necromancer/',
     'stack' => 'laravel',
+    'topics' => ['ai', 'devtools'],
     'devnull' => 'Shipped with PHP: Laravel Necromancer. A Laravel package that scans your app and writes a Markdown context file, so AI coding agents can cite your real routes, models and jobs. https://github.com/robertogallea/laravel-necromancer'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

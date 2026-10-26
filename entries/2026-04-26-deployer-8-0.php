@@ -13,6 +13,7 @@ return [
     ],
     'source' => 'https://deployer.org/blog/deployer-v8',
     'stack' => 'php',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: Deployer 8.0. A new major version of Deployer, the deployment tool for PHP, with a new recipe format and better error messages. https://deployer.org/blog/deployer-v8'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',

@@ -16,6 +16,7 @@ return [
     'licence' => 'GPL-2.0-or-later',
     'docs' => 'https://wordpress.github.io/sqlite-database-integration/',
     'stack' => 'wordpress',
+    'topics' => ['database'],
     'devnull' => 'Shipped with PHP: SQLite Database Integration 3.0. A new major version of the WordPress plugin that lets WordPress run on SQLite instead of MySQL, with a new database driver built from the ground up. https://github.com/WordPress/sqlite-database-integration'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-25',

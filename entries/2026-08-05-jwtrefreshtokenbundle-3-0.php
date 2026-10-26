@@ -17,6 +17,7 @@ return [
     'package' => 'gesdinet/jwt-refresh-token-bundle',
     'licence' => 'MIT',
     'stack' => 'symfony',
+    'topics' => ['security'],
     'devnull' => 'Shipped with PHP: JWTRefreshTokenBundle 3.0. A new major version of JWTRefreshTokenBundle, which adds refresh tokens to logins with JSON Web Tokens in Symfony. https://github.com/markitosgv/JWTRefreshTokenBundle'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-25',

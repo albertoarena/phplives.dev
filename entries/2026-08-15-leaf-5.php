@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://leafphp.dev/docs/',
     'stack' => 'php',
+    'topics' => ['api'],
     'devnull' => 'Shipped with PHP: Leaf 5. A new major version of Leaf, a PHP framework for makers, with a new compiled routing engine. https://github.com/leafsphp/leaf'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

@@ -53,14 +53,15 @@ body{margin:0;background:var(--field)}
 .slip dd{margin:0;font-size:15px;font-weight:600}
 .slip-foot{padding:12px 22px 16px;border-top:2px dashed var(--perf);font-size:13px;color:var(--ink-2)}
 
-.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:0 0 12px}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:16px;padding:0 0 12px}
 .sec-head h2{margin:0;font-size:30px;font-weight:800;font-stretch:75%;letter-spacing:-.01em;word-spacing:.12em}
 .sec-head p{margin:0;font-size:15px;color:var(--on-field-2)}
 .sec-head>div:first-child{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px}
 
 /* Stack filter and Labels / List toggle. The script shows them; without it, the page lists every entry as labels. */
 .pl [hidden]{display:none !important}
-.sec-tools{display:flex;align-items:center;gap:12px 20px;flex-wrap:wrap;justify-content:flex-end}
+.sec-tools{display:flex;flex-basis:100%;align-items:center;gap:12px 20px;flex-wrap:wrap;justify-content:flex-start;margin:8px 0 24px}
+.sec-tools .view{margin-left:auto}
 .filter,.view{display:inline-flex;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:6px;padding:3px;gap:2px}
 .filter-cap{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--on-field-2);padding:0 8px 0 6px}
 .filter button,.view button{font:inherit;font-size:14px;font-weight:700;color:var(--on-field);background:transparent;border:0;border-radius:4px;padding:0 11px;min-height:36px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
@@ -69,12 +70,20 @@ body{margin:0;background:var(--field)}
 .filter button .n{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;font-weight:600;opacity:.75}
 .filter button:hover,.view button:hover{background:var(--line)}
 .filter button[aria-pressed="true"],.view button[aria-pressed="true"]{background:var(--on-field);color:var(--field)}
-.filter button:focus-visible,.view button:focus-visible,.filter select:focus-visible{outline:2px solid var(--on-field);outline-offset:2px}
+.filter button:focus-visible,.view button:focus-visible{outline:2px solid var(--on-field);outline-offset:2px}
+.filter:has(select:focus-visible){outline:2px solid var(--on-field);outline-offset:2px}
+.filter select:focus-visible{outline:0}
 .filter select{font:inherit;font-size:14px;font-weight:700;color:var(--on-field);background:var(--field);border:0;border-radius:4px;min-height:36px;padding:0 8px}
+.filter select:hover{background:var(--line)}
 .new-tag{display:inline-block;margin-left:8px;vertical-align:2px;background:var(--signal);color:var(--ink);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:2px;font-stretch:100%}
 .list-sheet{margin-bottom:96px}
 
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
+/* The labels of This week share the row tracks, so their blocks line up. A size container
+   cannot be a subgrid, so here the Shipped block is the container for the waves instead. */
+.bundle-new .grid{grid-template-rows:repeat(4,auto);row-gap:0}
+.bundle-new .grid>.lab{display:grid;grid-template-rows:subgrid;grid-row:span 4;container-type:normal}
+.bundle-new .lab>.ship{container:ship / inline-size}
 
 /* Bundles: this week's full labels, then the stubs of each week and each month. */
 .bundles{padding-bottom:96px}
@@ -116,6 +125,9 @@ body{margin:0;background:var(--field)}
   box-shadow:var(--shadow);transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s cubic-bezier(.16,1,.3,1)}
 .lab:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi)}
 .lab-new{background:var(--signal);color:var(--ink);font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:9px 18px}
+/* The strip sits inside the From block and runs to the paper edge. */
+.from>.lab-new{grid-column:1 / -1;margin:-16px -18px 2px}
+.depot .from>.lab-new{margin:-20px -24px 6px}
 .blk{padding:16px 18px;border-bottom:3px solid var(--ink)}
 .blk:last-child{border-bottom:0}
 .blk.from{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:start}
@@ -140,8 +152,19 @@ body{margin:0;background:var(--field)}
 .waves{position:absolute;right:128px;top:50%;width:min(120px,calc(100% - 330px));height:46px;margin-top:-23px;opacity:.75;pointer-events:none;color:var(--stamp)}
 /* Below about 48px the waves read as a stray mark, not a cancellation. */
 @container label (max-width:377px){.waves{display:none}}
+/* The same width inside This week, measured on the Shipped block, less its 18px padding on each side. */
+@container ship (max-width:341px){.waves{display:none}}
 .track{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.track a{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;min-height:28px;word-break:break-all}
+.track a{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;min-height:28px;overflow-wrap:anywhere}
+.track a .mono{min-width:0}
+.lab .track{display:grid;justify-items:start;gap:2px}
+/* On a label the arrow follows the last word, also when the link takes two lines. */
+.lab .track a{display:inline;line-height:1.6}
+.lab .track a svg{display:inline;vertical-align:-2px;margin-left:6px}
+.lab .track .tail{white-space:nowrap}
+/* In This week the Track blocks share a height, so the foot sits at the bottom of each. */
+.bundle-new .lab>.blk:last-child{display:flex;flex-direction:column}
+.bundle-new .lab-foot{margin-top:auto;padding-top:6px}
 .track svg{flex:none}
 .tid{margin:6px 0 0;font-size:11px;color:var(--ink-2);letter-spacing:.12em}
 
@@ -229,7 +252,7 @@ body{margin:0;background:var(--field)}
   .span-3,.span-4{--s:2}
   .weeks .bundle{row-gap:18px}
   .sec-head{flex-direction:column;gap:4px}
-  .sec-tools{justify-content:flex-start;margin-top:12px}
+  .sec-tools{margin:12px 0 16px}
   .sec-head h2{font-size:26px}
   .dn{padding:56px 0 0}
   .dn-grid{grid-template-columns:minmax(0,1fr);gap:40px}
@@ -343,8 +366,9 @@ body{margin:0;background:var(--field)}
 
 /* The feeds page: one row per feed, with its link on a command strip to copy. */
 .fd-list{list-style:none;margin:0;padding:0 22px}
-.fd-list li{display:grid;grid-template-columns:minmax(0,13rem) minmax(0,1fr) minmax(0,22rem);align-items:center;gap:8px 24px;padding:16px 0;border-top:1px solid var(--rule-soft)}
+.fd-list li{display:grid;grid-template-columns:minmax(0,13rem) minmax(0,1fr) minmax(0,27rem);align-items:center;gap:8px 24px;padding:16px 0;border-top:1px solid var(--rule-soft)}
 .fd-list li:first-child{border-top:0}
+.fd-group{margin:0;padding:22px 22px 10px;border-top:2px solid var(--ink);font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)}
 .fd-list p{margin:0}
 .fd-name{display:flex;align-items:center;gap:10px;font-weight:800;font-stretch:80%;font-size:18px;line-height:1.25}
 .fd-name .code{font-size:16px}
@@ -352,6 +376,7 @@ body{margin:0;background:var(--field)}
 .feeds .cli-line{background:var(--rule-soft);box-shadow:none}
 @container (max-width:860px){
   .fd-list{padding:0 16px}
+  .fd-group{padding:18px 16px 8px}
   .fd-list li{grid-template-columns:minmax(0,1fr)}
   .feeds .sheet-foot{padding:14px 16px}
 }
@@ -415,6 +440,10 @@ body{margin:0;background:var(--field)}
 .dk-facts .mono{font-size:14px}
 .dk-facts a{display:inline-flex;align-items:center;gap:5px;overflow-wrap:anywhere}
 .dk-facts a svg{flex:none}
+/* Topic tags: an outlined handling mark, so they never read as the inverse route code */
+.dk-topics{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.dk-facts .dk-topic{display:inline-block;border:1.5px solid var(--ink);border-radius:2px;padding:5px 8px 4px;font-size:11px;line-height:1.2;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink);text-decoration:none}
+.dk-facts a.dk-topic:hover{background:var(--rule-soft)}
 .dk-makers{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 .dk-makers li{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 16px}
 .dk-makers .who{font-weight:700;font-size:16px}
@@ -471,6 +500,7 @@ body{margin:0;background:var(--field)}
   .depot{padding:8px 0 64px}
   .shelf{width:calc(100% - 32px)}
   .depot .blk{padding:16px 18px}
+  .depot .from>.lab-new{margin:-16px -18px 2px}
   .depot .contents p{font-size:17px}
   .depot .ship .date{font-size:28px}
   .depot .pm{width:124px;height:124px;margin-top:-62px;right:10px}

@@ -16,6 +16,7 @@ return [
     'package' => 'juststeveking/signal',
     'licence' => 'MIT',
     'stack' => 'php',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: Signal. A PHP library that turns PHP attributes into documentation: you annotate your classes and methods, then one command writes Markdown and JSON docs. https://github.com/JustSteveKing/signal'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-25',

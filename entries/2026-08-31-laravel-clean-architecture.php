@@ -16,6 +16,7 @@ return [
     'package' => 'plin-code/laravel-clean-architecture',
     'licence' => 'MIT',
     'stack' => 'laravel',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: Laravel Clean Architecture v3.0. A Laravel package that sets up Clean Architecture layers and generates complete domains with one command. https://github.com/plin-code/laravel-clean-architecture'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-20',

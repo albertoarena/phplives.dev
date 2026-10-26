@@ -13,6 +13,7 @@ return [
     ],
     'source' => 'https://github.com/woocommerce/woocommerce',
     'stack' => 'wordpress',
+    'topics' => ['e-commerce'],
     'devnull' => 'Shipped with PHP: WooCommerce 11.0. A new major version of WooCommerce, with faster stores for large catalogs, a way for customers to claim past guest orders and more accurate analytics. https://github.com/woocommerce/woocommerce'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-20',

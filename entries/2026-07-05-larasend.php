@@ -13,6 +13,7 @@ return [
     ],
     'source' => 'https://github.com/savvyagents/larasend',
     'stack' => 'laravel',
+    'topics' => ['self-hosted'],
     'devnull' => 'Shipped with PHP: Larasend. A transactional email platform you host yourself, which sends through your own Amazon SES or Cloudflare account and keeps the logs on your servers. https://github.com/savvyagents/larasend'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',

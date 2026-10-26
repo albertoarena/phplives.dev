@@ -13,6 +13,7 @@ return [
     ],
     'source' => 'https://github.com/api-platform/core',
     'stack' => 'symfony',
+    'topics' => ['api'],
     'devnull' => 'Shipped with PHP: API Platform 5.0. A new major version of API Platform, the framework for building hypermedia and GraphQL APIs, with its deprecated code removed. https://github.com/api-platform/core'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-18',
