@@ -454,6 +454,13 @@ body{margin:0;background:var(--field)}
 .dk-share .cap{margin-bottom:4px}
 .dk-url{display:block;font-size:14px;font-weight:600;overflow-wrap:anywhere}
 .dk-share button{flex:none;font:inherit;font-size:13px;font-weight:800;min-height:36px;padding:0 14px;border:2px solid var(--ink);border-radius:4px;background:transparent;color:var(--ink);cursor:pointer}
+.dk-badge{padding:14px 24px 18px;border-top:1px solid var(--rule-soft)}
+.dk-badge-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;margin-bottom:10px}
+.dk-badge p{margin:0;font-size:15px}
+.dk-badge img{display:block;flex:none}
+.dk-badge .cli-line{background:var(--rule-soft);box-shadow:none}
+/* The whole snippet stays in view, so it can be selected by hand */
+.dk-badge .cli-line code{white-space:normal;overflow-wrap:anywhere}
 
 .nbr{margin-top:28px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .pl .nstub{display:grid;grid-template-columns:28px minmax(0,1fr);background:var(--label);color:var(--ink);border-radius:6px;box-shadow:var(--shadow);text-decoration:none;position:relative;min-width:0}
@@ -509,7 +516,7 @@ body{margin:0;background:var(--field)}
   .dk-details,.dk-install{padding-inline:18px}
   .dk-facts{padding:2px 18px}
   .dk-facts>div{grid-template-columns:88px minmax(0,1fr);gap:10px}
-  .dk-share{padding-inline:18px}
+  .dk-share,.dk-badge{padding-inline:18px}
   .nbr{gap:12px}
   .nstub-name{font-size:20px}
   .nstub-body{padding:14px 22px 12px 12px}

@@ -230,6 +230,26 @@ it('offers the device share menu where the browser has one', function () {
         ->and($button->hasAttribute('hidden'))->toBeTrue();
 });
 
+it('offers the maker the Markdown for a README badge, under the share foot', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+    $doc = entryPage($this, 'pest-5');
+    $snippet = '[![Featured on phplives.dev](https://phplives.dev/badge.svg)](https://phplives.dev/entries/pest-5/)';
+    $button = $doc->querySelector('.docket .dk-badge button[data-copy]');
+
+    expect($doc->querySelector('.docket .dk-share + .dk-badge'))->not->toBeNull()
+        ->and(texts($doc, '.dk-badge .cap'))->toBe(['Badge for your README'])
+        ->and(texts($doc, '.dk-badge p'))->toBe(['Listed here? Add this badge to your README.'])
+        ->and(texts($doc, '.dk-badge .cli-line code'))->toBe([$snippet])
+        ->and($button->getAttribute('data-copy'))->toBe($snippet)
+        ->and($button->getAttribute('data-copy-status'))->toBe('badge-status')
+        ->and($button->getAttribute('data-copy-fail'))->toBe('Could not copy. Select the Markdown and copy it.')
+        ->and($button->textContent)->toBe('Copy')
+        ->and($button->hasAttribute('hidden'))->toBeTrue()
+        ->and($doc->getElementById('badge-status')?->getAttribute('role'))->toBe('status')
+        ->and($doc->querySelector('.dk-badge img')->getAttribute('src'))->toBe('/badge.svg')
+        ->and($doc->querySelector('.dk-badge img')->getAttribute('alt'))->toBe('Featured on phplives.dev badge');
+});
+
 it('escapes entry text on the entry page', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php', ['name' => '<b>Pest</b>', 'details' => 'A <script> tag.']);
     $html = (new Site(Entries::load($this->dir, $this->today), $this->today))->pages()['entries/pest-5/index.html'];

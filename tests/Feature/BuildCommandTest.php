@@ -27,7 +27,7 @@ function build(string $tmp, ?string $devnull = null, array $options = []): array
     return [$status, implode("\n", $output)];
 }
 
-it('takes the icon and the share card from the art folder', function () {
+it('takes the icon, the share card and the badge from the art folder', function () {
     $art = dirname(__DIR__, 2).'/art';
     writeEntry($this->tmp.'/entries', '2026-09-01-pest-5.php');
 
@@ -35,6 +35,8 @@ it('takes the icon and the share card from the art folder', function () {
 
     expect(file_get_contents($this->tmp.'/dist/favicon.svg'))->toBe(file_get_contents($art.'/favicon.svg'))
         ->and(file_get_contents($this->tmp.'/dist/share.png'))->toBe(file_get_contents($art.'/share-card.png'))
+        ->and($this->tmp.'/dist/badge.svg')->toBeFile()
+        ->and(file_get_contents($this->tmp.'/dist/badge.svg'))->toBe(file_get_contents($art.'/badge.svg'))
         ->and($art.'/share-card.html')->toBeFile()
         ->and(dirname(__DIR__, 2).'/assets/favicon.svg')->not->toBeFile()
         ->and(dirname(__DIR__, 2).'/assets/share')->not->toBeDirectory();

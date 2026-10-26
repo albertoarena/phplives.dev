@@ -50,7 +50,8 @@ final class Markdown
     }
 
     /**
-     * The facts of one entry, and nothing that is not in its entry file.
+     * The facts of one entry, and nothing that is not in its entry file. A short section
+     * at the end gives the maker the Markdown for the README badge.
      */
     public static function entry(Entry $entry): string
     {
@@ -75,7 +76,19 @@ final class Markdown
             .($entry->topics === [] ? '' : '- Topics: '.self::topics($entry)."\n")
             .'- Checked: '.Format::date($entry->checked)."\n"
             .'- Added: '.Format::date($entry->added)."\n\n"
+            ."## Badge\n\n"
+            ."Listed here? Add this badge to your README:\n\n"
+            ."```markdown\n".self::badge($entry)."\n```\n\n"
             .'See more at '.self::link('phplives.dev', Site::URL)."\n";
+    }
+
+    /**
+     * The Markdown for the README badge of an entry: the one badge image, linked to the
+     * entry's own page.
+     */
+    public static function badge(Entry $entry): string
+    {
+        return '[![Featured on phplives.dev]('.Site::URL.'/badge.svg)]('.Site::URL.Site::entryPath($entry).')';
     }
 
     /**

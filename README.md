@@ -21,6 +21,8 @@ Shipped something with PHP, or seen something that belongs here?
 [`CONTRIBUTING.md`](CONTRIBUTING.md) says what qualifies and how an entry file
 looks.
 
+Is your project listed? Its entry page has a badge for your README.
+
 ## How it works
 
 A small PHP build script, with no framework, turns one PHP file per entry into
@@ -34,7 +36,7 @@ entries/      one file per entry, named YYYY-MM-DD-slug.php
 src/          the build: entries, checks, the /dev/null API
 templates/    the pages
 assets/       styles, scripts, fonts and images
-art/          the icon and the share card (see TRADEMARK.md)
+art/          the icon, the share card and the badge (see TRADEMARK.md)
 tests/        Pest (PHP) and Vitest (browser scripts)
 bin/build     builds the site into dist/
 bin/card-fonts makes the fonts of the share cards, in assets/fonts/card/

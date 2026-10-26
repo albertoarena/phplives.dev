@@ -13,6 +13,7 @@
  * @var \PhpLives\Entry|null $after The parcel shipped just after this one.
  * @var string $url The page's own address.
  * @var string $shareTitle
+ * @var string $badge The Markdown for the entry's README badge.
  * @var string $copyScript
  * @var string $shareScript
  * @var list<string> $filterTopics The topics the main page can filter by.
@@ -98,6 +99,15 @@ $onEntryPage = true;
             <button type="button" data-share="<?= $e($url) ?>" data-share-title="<?= $e($shareTitle) ?>" hidden>Share</button>
           </div>
           <span class="sr-only" id="share-status" role="status"></span>
+        </div>
+        <div class="dk-badge">
+          <span class="cap">Badge for your README</span>
+          <div class="dk-badge-head">
+            <p>Listed here? Add this badge to your README.</p>
+            <img src="/badge.svg" width="184" height="20" alt="Featured on phplives.dev badge">
+          </div>
+          <div class="cli-line"><code><?= $e($badge) ?></code><button type="button" data-copy="<?= $e($badge) ?>" data-copy-status="badge-status" data-copy-fail="Could not copy. Select the Markdown and copy it." hidden>Copy</button></div>
+          <span class="sr-only" id="badge-status" role="status"></span>
         </div>
       </section>
 <?php if ($before !== null || $after !== null): ?>
