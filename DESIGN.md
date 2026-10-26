@@ -409,7 +409,7 @@ A white sheet under the entry label, with the paper shadow and a 6px radius. Its
 A small handling mark in the docket's Topics row, one per topic. It says what the project is for, as a mark printed on the box.
 - **Shape:** a 1.5px Print Black outline on paper, 2px radius, 5px by 8px of padding. No fill. Tags wrap in a row with a 6px gap.
 - **Type:** the label shape (Archivo 700, 11px, uppercase, .09em letter spacing) in Print Black.
-- **Link:** the tag links to the main page filtered by that topic (`/#topic={slug}`). It is a link only when the main page filter has the topic. Otherwise it is plain text. Hover fills it with Soft Rule. Screen readers hear "More parcels about {label}".
+- **Link:** the tag links to the main page filtered by that topic (`/#topic={slug}`). It is a link only when the main page filter has the topic. Otherwise it is plain text. Hover fills it with Soft Rule. Screen readers hear "More entries about {label}".
 - **Not a route code:** it is never filled black and never condensed, so it does not read as the stack. It is never orange.
 
 ### Neighbour stubs

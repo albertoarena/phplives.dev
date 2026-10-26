@@ -77,7 +77,7 @@ $onEntryPage = true;
               <ul class="dk-topics">
 <?php foreach ($entry->topics as $topic): ?>
 <?php if (in_array($topic, $filterTopics, true)): ?>
-                <li><a class="dk-topic" href="/#topic=<?= $e($topic) ?>" aria-label="More parcels about <?= $e(Format::topicLabel($topic)) ?>"><?= $e(Format::topicLabel($topic)) ?></a></li>
+                <li><a class="dk-topic" href="/#topic=<?= $e($topic) ?>" aria-label="More entries about <?= $e(Format::topicLabel($topic)) ?>"><?= $e(Format::topicLabel($topic)) ?></a></li>
 <?php else: ?>
                 <li><span class="dk-topic"><?= $e(Format::topicLabel($topic)) ?></span></li>
 <?php endif ?>

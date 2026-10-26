@@ -198,7 +198,7 @@ it('tags the topics on the docket, each linked to the main page filtered by it',
         ->and(texts($doc, '.docket .dk-topics li'))->toBe(['Testing', 'MCP'])
         ->and(hrefs($doc, '.docket .dk-topics a'))->toBe(['/#topic=testing'])
         ->and(texts($doc, '.docket .dk-topics span.dk-topic'))->toBe(['MCP'])
-        ->and($doc->querySelector('.docket .dk-topics a')->getAttribute('aria-label'))->toBe('More parcels about Testing');
+        ->and($doc->querySelector('.docket .dk-topics a')->getAttribute('aria-label'))->toBe('More entries about Testing');
 });
 
 it('has no Topics row when the entry has no topics', function () {
