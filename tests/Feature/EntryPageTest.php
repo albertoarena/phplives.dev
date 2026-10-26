@@ -246,7 +246,8 @@ it('offers the maker the Markdown for a README badge, under the share foot', fun
         ->and($button->textContent)->toBe('Copy')
         ->and($button->hasAttribute('hidden'))->toBeTrue()
         ->and($doc->getElementById('badge-status')?->getAttribute('role'))->toBe('status')
-        ->and($doc->querySelector('.dk-badge img')->getAttribute('src'))->toBe('/badge.svg');
+        ->and($doc->querySelector('.dk-badge img')->getAttribute('src'))->toBe('/badge.svg')
+        ->and($doc->querySelector('.dk-badge img')->getAttribute('alt'))->toBe('Featured on phplives.dev badge');
 });
 
 it('escapes entry text on the entry page', function () {

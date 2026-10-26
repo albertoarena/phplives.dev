@@ -62,7 +62,8 @@ You do not need permission for any of this, and you are welcome to it:
 - Say that your project is listed on phplives.dev, when it is.
 - Put the "Featured on phplives.dev" badge in your project's README, docs or site,
   when your project is listed. Link it to your project's entry page. Each entry
-  page gives the Markdown to copy.
+  page gives the Markdown to copy. Use the badge as it is, without changing its
+  text or colours.
 - **Fork the repository on GitHub to contribute.** Nothing on this page applies to
   that. See "Contributing" below.
 - Use the code for your own site, as the licence allows. See "Running your own site"
