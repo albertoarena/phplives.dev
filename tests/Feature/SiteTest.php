@@ -260,7 +260,15 @@ it('lists one feed per topic on the feeds page, after the stacks, most common to
             'https://phplives.dev/feed/topic/testing.xml',
             'https://phplives.dev/feed/topic/ai.xml',
         ])
-        ->and(texts($doc, '.feeds .fd-use')[2])->toBe('Only the entries with the topic Testing.');
+        ->and(texts($doc, '.feeds .fd-use')[2])->toBe('Only the entries with the topic Testing.')
+        ->and(texts($doc, '.feeds h3'))->toBe(['By stack', 'By topic'])
+        ->and(texts($doc, '.feeds .sheet-head .mono'))->toBe(['4 feeds']);
+});
+
+it('gives the feed links room for the longest topic feed', function () {
+    $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
+
+    expect($css)->toContain('.fd-list li{display:grid;grid-template-columns:minmax(0,13rem) minmax(0,1fr) minmax(0,27rem);');
 });
 
 it('says how to use a feed on the feeds page', function () {
