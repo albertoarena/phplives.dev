@@ -48,12 +48,12 @@ never makes the case for PHP itself.
 - An archive lists the older entries, grouped by month.
 - Each entry has its own page, with its full label, its details and its own share
   image.
-- A Privacy page and a Credits page.
+- A Privacy page, a Credits page and a Feeds page.
 - One entry: name, one plain sentence, maker (with a dev/null link when found),
   shipped date as `DD/MM/YYYY`, the date it was added, source link, one stack tag.
   It may also have a short details text, a Composer package, a licence and a docs
   link.
-- For feed readers, search engines and AI tools: an Atom feed (and one per stack),
+- For feed readers, search engines and AI tools: an Atom feed (and one per stack, listed on the Feeds page),
   a sitemap, `robots.txt`, `llms.txt` and a Markdown copy of each entry.
 - A strip of Alberto's dev/null commits that link to phplives.dev. It is hidden
   when the dev/null API is down.

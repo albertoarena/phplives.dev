@@ -42,10 +42,11 @@ final class Format
      * "Lead", or "Lead, with B and C".
      *
      * @param  list<Maker>  $makers
+     * @param  (callable(Maker): string)|null  $name  How to write each maker. Null for the plain name.
      */
-    public static function credit(array $makers): string
+    public static function credit(array $makers, ?callable $name = null): string
     {
-        $names = array_map(fn (Maker $maker) => $maker->name, $makers);
+        $names = array_map($name ?? fn (Maker $maker) => $maker->name, $makers);
         $lead = array_shift($names);
 
         if ($names === []) {

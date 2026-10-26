@@ -297,7 +297,7 @@ it('shares each entry page with its own card', function () {
 it('shares the other pages with the site card', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php');
 
-    foreach (['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html'] as $path) {
+    foreach (['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html'] as $path) {
         expect(imageMeta(sitePages($this)[$path]))->toBe([
             'image' => 'https://phplives.dev/share.png?v=3',
             'width' => '1200',

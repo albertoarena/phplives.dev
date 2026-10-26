@@ -23,6 +23,13 @@ it('credits more makers after the lead', function (array $names, string $credit)
     [['A', 'B', 'C', 'D'], 'A, with B, C and D'],
 ]);
 
+it('writes each maker in the credit the way it is told', function () {
+    $makers = [new Maker('Nuno Maduro', 'nunomaduro'), new Maker('Brent Roose', 'brendt'), new Maker('C')];
+
+    expect(Format::credit($makers, fn (Maker $maker) => $maker->github ?? $maker->name))
+        ->toBe('nunomaduro, with brendt and C');
+});
+
 it('shows a link without its scheme or trailing slash', function (string $url, string $text) {
     expect(Format::linkText($url))->toBe($text);
 })->with([

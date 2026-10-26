@@ -42,7 +42,7 @@ function hrefs(HTMLDocument $doc, string $selector): array
 }
 
 it('builds the main page, the archive, the privacy page and the credits', function () {
-    expect(array_keys(pages($this)))->toBe(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', '404.html']);
+    expect(array_keys(pages($this)))->toBe(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html', '404.html']);
 });
 
 it('quotes the line exactly at the top of the main page', function () {
@@ -213,12 +213,60 @@ it('groups the archive by month', function () {
         ->and(texts($archive, 'tbody .name'))->toBe(['A', 'B', 'C']);
 });
 
-it('links to the feed from the footer of every page', function (string $page) {
+it('links to the feeds page from the footer of every page', function (string $page) {
     $doc = pages($this)[$page];
 
-    expect(hrefs($doc, 'footer .foot-pages a'))->toBe(['/privacy/', '/credits/', '/feed.xml'])
-        ->and(texts($doc, 'footer .foot-pages a'))->toBe(['Privacy', 'Credits', 'Feed']);
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', '404.html']);
+    expect(hrefs($doc, 'footer .foot-pages a'))->toBe(['/privacy/', '/credits/', '/feeds/'])
+        ->and(texts($doc, 'footer .foot-pages a'))->toBe(['Privacy', 'Credits', 'Feeds']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html', '404.html']);
+
+it('lists the main feed and one feed per stack on the feeds page, most common stack first', function () {
+    writeEntry($this->dir, '2026-09-01-a.php', ['stack' => 'symfony']);
+    writeEntry($this->dir, '2026-09-02-b.php', ['stack' => 'laravel']);
+    writeEntry($this->dir, '2026-09-03-c.php', ['stack' => 'laravel']);
+    writeEntry($this->dir, '2026-01-03-old.php', ['stack' => 'wordpress']);
+
+    $doc = pages($this)['feeds/index.html'];
+
+    expect($doc->querySelector('title')->textContent)->toBe('phplives.dev: feeds')
+        ->and(texts($doc, 'h1'))->toBe(['Feeds'])
+        ->and(texts($doc, '.feeds .fd-name'))->toBe(['Every entry', 'LRV Laravel', 'SYM Symfony', 'WRD WordPress'])
+        ->and(hrefs($doc, '.feeds .fd-name a'))->toBe([
+            'https://phplives.dev/feed.xml',
+            'https://phplives.dev/feed/laravel.xml',
+            'https://phplives.dev/feed/symfony.xml',
+            'https://phplives.dev/feed/wordpress.xml',
+        ])
+        ->and(array_map(fn ($b) => $b->getAttribute('data-copy'), iterator_to_array($doc->querySelectorAll('.feeds button[data-copy]'))))->toBe([
+            'https://phplives.dev/feed.xml',
+            'https://phplives.dev/feed/laravel.xml',
+            'https://phplives.dev/feed/symfony.xml',
+            'https://phplives.dev/feed/wordpress.xml',
+        ]);
+});
+
+it('says how to use a feed on the feeds page', function () {
+    $doc = pages($this)['feeds/index.html'];
+
+    expect(texts($doc, '.head p'))->toBe(['Follow new entries in your feed reader. Copy a link below and paste it into your reader.'])
+        ->and(texts($doc, '.feeds .fd-use')[0])->toBe('The 50 newest entries, in the order they were added to the site.')
+        ->and(texts($doc, '.feeds .sheet-foot'))->toBe(['A new entry shows in the feeds on the day it is added. The feeds use the Atom format. Every feed reader can read it.']);
+});
+
+it('runs the copy script on the feeds page', function () {
+    $scripts = array_map(fn ($s) => $s->textContent, iterator_to_array(pages($this)['feeds/index.html']->body->querySelectorAll('script:not([src])')));
+
+    expect($scripts)->toHaveCount(1)
+        ->and($scripts[0])->toContain('data-copy');
+});
+
+it('points to the feeds from the head of the main list', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+    $doc = pages($this)['index.html'];
+
+    expect(hrefs($doc, '#manifest .sec-head a'))->toBe(['/feeds/'])
+        ->and(texts($doc, '#manifest .sec-head a'))->toBe(['Follow new entries by RSS']);
+});
 
 it('shows every part of an entry', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php', [
@@ -350,7 +398,7 @@ it('has the same frame on every page', function (string $page) {
         )
         ->and(texts($doc, '.theme button'))->toBe(['Light', 'Dark', 'System'])
         ->and(hrefs($doc, '.nav a'))->toContain('/', '/archive/');
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html']);
 
 it('loads Cloudflare Web Analytics, and nothing else that tracks', function (string $page) {
     $doc = pages($this)[$page];
@@ -361,7 +409,7 @@ it('loads Cloudflare Web Analytics, and nothing else that tracks', function (str
         ->and(json_decode($beacons[0]->getAttribute('data-cf-beacon'), true))->toBe(['token' => Site::ANALYTICS_TOKEN])
         ->and(Site::ANALYTICS_TOKEN)->toMatch('/^[0-9a-f]{32}$/')
         ->and($doc->querySelectorAll('script[src]'))->toHaveCount(1);
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html']);
 
 it('sets the theme before the page paints', function (string $page) {
     $head = pages($this)[$page]->head;
@@ -371,7 +419,7 @@ it('sets the theme before the page paints', function (string $page) {
         ->and($script->hasAttribute('src'))->toBeFalse()
         ->and($script->textContent)->toContain('localStorage')
         ->and($head->querySelector('script ~ link[rel="stylesheet"][href="/site.css"]'))->not->toBeNull();
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html']);
 
 it('marks the current page in the nav', function () {
     $pages = pages($this);
@@ -389,7 +437,7 @@ it('only links out over HTTPS', function (string $page) {
     );
 
     expect($external)->not->toBeEmpty()->each->toStartWith('https://');
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html']);
 
 it('has no em dashes on any page', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php');
@@ -458,7 +506,7 @@ it('ends the /dev/null band with the wallpaper, linked to the profile', function
 it('says in every footer that /dev/null does not sponsor the site', function (string $page) {
     expect(texts(pages($this)[$page], 'footer .indie'))
         ->toBe(['phplives.dev is an independent site. /dev/null does not sponsor or endorse it.']);
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', '404.html']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html', '404.html']);
 
 it('describes itself for link previews', function (string $page, string $url) {
     $doc = pages($this)[$page];
@@ -481,15 +529,16 @@ it('describes itself for link previews', function (string $page, string $url) {
     ['archive/index.html', 'https://phplives.dev/archive/'],
     ['privacy/index.html', 'https://phplives.dev/privacy/'],
     ['credits/index.html', 'https://phplives.dev/credits/'],
+    ['feeds/index.html', 'https://phplives.dev/feeds/'],
 ]);
 
 it('has a favicon', function (string $page) {
     expect(hrefs(pages($this)[$page], 'link[rel="icon"]'))->toBe(['/favicon.svg']);
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html']);
 
 it('links to the author on Mastodon with rel me', function (string $page) {
     expect(hrefs(pages($this)[$page], 'link[rel="me"]'))->toBe(['https://phpc.social/@albertoarena']);
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html']);
 
 it('shows how to commit on /dev/null from a terminal', function (array $posts) {
     $doc = pages($this, posts: $posts)['index.html'];
@@ -563,7 +612,7 @@ it('covers the GDPR on the privacy page', function () {
 it('links to the credits from the footer of every page', function (string $page) {
     expect(hrefs(pages($this)[$page], 'footer a[href="/credits/"]'))->toHaveCount(1)
         ->and(texts(pages($this)[$page], 'footer a[href="/credits/"]'))->toBe(['Credits']);
-})->with(['index.html', 'archive/index.html', 'credits/index.html']);
+})->with(['index.html', 'archive/index.html', 'credits/index.html', 'feeds/index.html']);
 
 it('credits the software, services and data the site uses', function () {
     $doc = pages($this)['credits/index.html'];
@@ -698,8 +747,8 @@ it('invites everyone to contribute in every footer', function (string $page) {
         ])
         ->and(texts($doc, 'footer .foot-open a'))->toBe(['See the code on GitHub', 'Read how to contribute'])
         ->and($open->querySelector('a.tag svg.gh')?->getAttribute('aria-hidden'))->toBe('true')
-        ->and(hrefs($doc, 'footer .foot-pages a'))->toBe(['/privacy/', '/credits/', '/feed.xml']);
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
+        ->and(hrefs($doc, 'footer .foot-pages a'))->toBe(['/privacy/', '/credits/', '/feeds/']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html']);
 
 it('asks visitors on the main page to add their own project', function () {
     $doc = pages($this)['index.html'];
@@ -722,7 +771,7 @@ it('serves its own fonts, so no page loads anything from Google', function (stri
 
     expect(array_filter($links, fn ($h) => str_contains($h, 'google')))->toBe([])
         ->and($doc->saveHtml())->not->toContain('fonts.gstatic.com')->not->toContain('fonts.googleapis.com');
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html']);
 
 it('declares the self-hosted fonts in the stylesheet', function () {
     $css = file_get_contents(dirname(__DIR__, 2).'/assets/site.css');
@@ -753,7 +802,7 @@ it('has a page for addresses that do not exist', function () {
 
 it('lets search engines index every real page', function (string $page) {
     expect(pages($this)[$page]->querySelector('meta[name="robots"]'))->toBeNull();
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html']);
 
 it('says "Newest first" once on the main page', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php');
@@ -786,7 +835,7 @@ it('opens every link that leaves the site in a new tab', function (string $page)
     foreach ($internal as $a) {
         expect($a->hasAttribute('target'))->toBeFalse($a->getAttribute('href'));
     }
-})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', '404.html']);
+})->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html', '404.html']);
 
 it('marks every shipped date in a form that tools can read', function () {
     writeEntry($this->dir, '2026-08-01-jellydash.php', ['name' => 'Jellydash']);

@@ -51,7 +51,7 @@ use PhpLives\Format;
       <div class="sec-head">
         <div>
           <h2 id="manifest-title">Shipped since <?= $e($cutoff) ?></h2>
-          <p>Newest first. <span data-filter-status data-total="<?= count($entries) ?>" role="status"></span></p>
+          <p>Newest first. <a href="/feeds/">Follow new entries by RSS</a>. <span data-filter-status data-total="<?= count($entries) ?>" role="status"></span></p>
         </div>
 <?php if ($entries): ?>
         <div class="sec-tools" data-tools hidden>

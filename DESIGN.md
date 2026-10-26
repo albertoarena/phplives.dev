@@ -280,7 +280,7 @@ The theme follows the device by default. A Light / Dark / System toggle in the t
 ### Hierarchy
 - **Display** (`display`): the line `PHP delivers. PHP lives!` only. "PHP lives!" sits on a white sticker, turned -1.2deg. The line drops to 54px on narrow screens.
 - **Entry name** (850, clamp(40px, 9cqi, 56px), line height .95, width 72%): the project name as the h1 on its own entry page, inside the CONTENTS block. It is the title shape, made bigger. It is not the display line.
-- **Headline** (`headline`): page heads on the archive, Privacy and Credits pages. The /dev/null band heading uses the same shape at clamp(40px, 4.6cqi, 64px).
+- **Headline** (`headline`): page heads on the archive, Privacy, Credits and Feeds pages. The /dev/null band heading uses the same shape at clamp(40px, 4.6cqi, 64px).
 - **Title** (`title`): the project name in the CONTENTS block of a label. Sheet and slip heads use the same width at 22px to 26px. The name on a home stub uses it at 22px. The name on a neighbour stub uses it at 24px (20px on narrow screens, clamp(22px, 2cqi, 28px) from 1100px).
 - **Section** (`section`): section heads on the field, such as "Shipped since DD/MM/YYYY". They drop to 26px on narrow screens.
 - **Bundle** (`bundle`): bundle heads on the field, such as "This week", "Week 43, 19/10 to 25/10" or "September 2026". A month head is 26px. Group head rows in the manifest sheet use the title width (72%) at 19px.
@@ -309,7 +309,7 @@ The page is one column of sections inside a 1320px wrap with a 40px side gutter.
 - **Weeks share rows:** the week bundles that follow each other sit in one grid with the same columns. Each week spans one column per stub, up to the number of columns. Its stubs use a column subgrid, so they line up with the stubs of the other weeks. The stubs in one row have the same height.
 - **Bundle rhythm:** "This week" ends with 64px of space (48px on narrow screens). Bundles are 52px apart (40px on narrow screens). After the last week, the first month bundle starts 72px below (52px on narrow screens).
 - **/dev/null band:** full width, 88px top and bottom. Two columns (72px gap) when there are posts. With no posts it is one row: the heading on the left, the CTA and command strip on the right, with less padding (64px).
-- **Sheets:** the archive, the List view, Privacy and Credits are white sheets inside the wrap. The Privacy sheet caps at 65ch plus padding.
+- **Sheets:** the archive, the List view, Privacy, Credits and Feeds are white sheets inside the wrap. The Privacy sheet caps at 65ch plus padding.
 - **Narrow screens:** below 700px the gutter drops to 16px and the "Commit it on /dev/null" nav link hides. Below 860px each table row becomes a small grid: date and stack code on top, then name, sentence, maker and link.
 - **Rhythm:** sections end with 96px of space (64px on narrow screens). Label blocks have 16px by 18px of padding. A stub has 14px of padding on top, 16px on the sides and 16px at the bottom.
 
@@ -442,8 +442,10 @@ A full-width Prussian band (Night Band in the dark theme). It holds the heading 
 ### Read-mode sheets
 Privacy and Credits use a page head on the field and one white sheet. Privacy is sections of body text at a 65ch measure. Credits is groups of items in three columns: the name, what the site uses it for, and its maker and licence. Inline code sits on a Soft Rule tint.
 
+Feeds uses the same head and sheet. Each feed is one row in three columns: its name (a stack feed has its route code before the name), what it holds, and its link on a command strip with a Copy button. The command strip has a Soft Rule fill, as on the entry page. Below 860px the columns stack.
+
 ### Footer
-On every page. It opens with the **contribute row**: a section-style heading ("Open source. Anyone can help."), one line of text, and the contribute CTA with its text link on the right. A Field Line hairline splits it from the rest: the maker line, the links, the fine print, and Privacy · Credits · Feed. Feed links to `/feed.xml`.
+On every page. It opens with the **contribute row**: a section-style heading ("Open source. Anyone can help."), one line of text, and the contribute CTA with its text link on the right. A Field Line hairline splits it from the rest: the maker line, the links, the fine print, and Privacy · Credits · Feeds. Feeds links to `/feeds/`. The note under the main section head also links to it: "Follow new entries by RSS".
 
 ### Navigation
 The top bar: the wordmark "phplives.dev" (condensed 75%, weight 800) on the left, then Manifest, Archive and "Commit it on /dev/null", then the theme toggle. The current page is underlined with a 2px line. Links on paper and on the field underline at 1px and thicken to 2px on hover.
