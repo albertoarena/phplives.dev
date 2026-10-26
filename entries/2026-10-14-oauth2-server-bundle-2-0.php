@@ -18,6 +18,7 @@ return [
     'package' => 'league/oauth2-server-bundle',
     'licence' => 'MIT',
     'stack' => 'symfony',
+    'topics' => ['security'],
     'devnull' => 'Shipped with PHP: OAuth2 Server Bundle 2.0. A new major version of the Symfony bundle that brings The PHP League\'s OAuth2 server library into Symfony apps. https://github.com/thephpleague/oauth2-server-bundle'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-25',

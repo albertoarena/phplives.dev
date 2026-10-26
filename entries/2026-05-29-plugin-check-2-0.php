@@ -15,6 +15,7 @@ return [
     'source' => 'https://github.com/WordPress/plugin-check',
     'licence' => 'GPL-2.0-or-later',
     'stack' => 'wordpress',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: Plugin Check 2.0. A new major version of Plugin Check, a WordPress.org tool that checks whether a plugin meets the plugin directory rules and follows best practices. https://github.com/WordPress/plugin-check'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-25',
