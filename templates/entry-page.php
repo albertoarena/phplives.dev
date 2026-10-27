@@ -9,6 +9,7 @@
  * @var \PhpLives\Entry $entry
  * @var bool $newest True when this is the newest parcel.
  * @var bool $archived True when the entry is in the archive.
+ * @var \DateTimeImmutable|null $archivedOn The day it moved to the archive, or null while it is current.
  * @var \PhpLives\Entry|null $before The parcel shipped just before this one.
  * @var \PhpLives\Entry|null $after The parcel shipped just after this one.
  * @var string $url The page's own address.
@@ -94,6 +95,9 @@ $onEntryPage = true;
           <div><dt>Date from</dt><dd><a class="dk-link" href="<?= $e($entry->proofUrl) ?>"><?= $e(Format::proofLabel($entry->proofKind)) ?><?= $arrowOut ?></a></dd></div>
           <div><dt>Added</dt><dd class="mono"><time datetime="<?= $entry->added->format('Y-m-d') ?>"><?= $e(Format::date($entry->added)) ?></time></dd></div>
           <div><dt>Checked</dt><dd class="mono"><time datetime="<?= $entry->checked->format('Y-m-d') ?>"><?= $e(Format::date($entry->checked)) ?></time></dd></div>
+<?php if ($archivedOn !== null): ?>
+          <div><dt>Archived</dt><dd class="mono"><time datetime="<?= $archivedOn->format('Y-m-d') ?>"><?= $e(Format::date($archivedOn)) ?></time></dd></div>
+<?php endif ?>
         </dl>
         <div class="dk-share">
           <p><span class="cap">Share this parcel</span><span class="dk-url mono"><?= $e(Format::linkText($url)) ?>/</span></p>

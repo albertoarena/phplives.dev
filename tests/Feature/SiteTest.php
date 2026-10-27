@@ -375,6 +375,35 @@ it('sums up the manifest', function () {
     ])->and(texts($slip, '#manifest-title'))->toBe(['Shipped since 16/04/2026']);
 });
 
+it('points the manifest to the archive when it has parcels, with the parcels still counted apart', function () {
+    writeEntry($this->dir, '2026-10-01-a.php');
+    writeEntry($this->dir, '2026-03-01-old.php');
+    writeEntry($this->dir, '2026-02-01-older.php');
+
+    $slip = pages($this)['index.html'];
+
+    expect(array_map(fn ($dt, $dd) => "{$dt} {$dd}", texts($slip, '.slip dt'), texts($slip, '.slip dd')))->toBe([
+        'Parcels 1',
+        'Shipped since 16/04/2026',
+        'Last shipped 01/10/2026',
+        'Stacks 1 plain PHP',
+        'Archive 2 older parcels',
+    ])->and(hrefs($slip, '.slip-archive a'))->toBe(['/archive/']);
+});
+
+it('says one older parcel in the singular', function () {
+    writeEntry($this->dir, '2026-10-01-a.php');
+    writeEntry($this->dir, '2026-03-01-old.php');
+
+    expect(texts(pages($this)['index.html'], '.slip-archive dd'))->toBe(['1 older parcel']);
+});
+
+it('leaves the archive out of the manifest while it is empty', function () {
+    writeEntry($this->dir, '2026-10-01-a.php');
+
+    expect(pages($this)['index.html']->querySelector('.slip-archive'))->toBeNull();
+});
+
 it('says so when there are no current entries', function () {
     $main = pages($this)['index.html'];
 

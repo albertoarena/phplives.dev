@@ -90,6 +90,7 @@ final readonly class Site
                 'bundles' => Bundles::group($rest, $this->today),
                 'cutoff' => $cutoff,
                 'stacks' => $this->stackSummary($current),
+                'archivedCount' => count($this->entries->archived()),
                 'posts' => $this->posts,
                 'copyScript' => trim(file_get_contents(self::ASSETS.'/copy.js')),
                 'counts' => $this->stackCounts($current),
@@ -142,6 +143,7 @@ final readonly class Site
                     'entry' => $entry,
                     'newest' => $entry === $newest,
                     'archived' => in_array($entry, $archived, true),
+                    'archivedOn' => in_array($entry, $archived, true) ? Entries::archivedOn($entry->shipped) : null,
                     'before' => $all[$index + 1] ?? null,
                     'after' => $all[$index - 1] ?? null,
                     'url' => self::URL.self::entryPath($entry),
@@ -154,6 +156,7 @@ final readonly class Site
                     'filterTopics' => $filterTopics,
                 ],
                 ['description' => $entry->sentence, 'markdown' => Markdown::entryPath($entry), 'shareTitle' => self::shareTitle($entry)]
+                    + (in_array($entry, $archived, true) ? ['section' => '/archive/'] : [])
                     + ($this->shareCards ? ['image' => ShareCard::url($entry), 'imageAlt' => ShareCard::alt($entry)] : []),
             );
         }
@@ -395,6 +398,7 @@ final readonly class Site
             'imageAlt' => null,
             'title' => $title,
             'path' => $path,
+            'section' => $path,
             'today' => Format::date($this->today),
             'themeScript' => trim(file_get_contents(self::ASSETS.'/theme.js')),
             'analyticsToken' => self::ANALYTICS_TOKEN,

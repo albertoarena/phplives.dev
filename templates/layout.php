@@ -4,6 +4,7 @@
  * @var string $title
  * @var string|null $shareTitle The title on share cards, when it differs from the page title.
  * @var string|null $path Null on the page for missing addresses.
+ * @var string|null $section The address the nav marks as current. It is $path, or /archive/ on an archived entry's page.
  * @var string $themeScript
  * @var string $analyticsToken
  * @var string $content
@@ -57,7 +58,7 @@ $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
       <a class="mark" href="/">phplives.dev</a>
       <nav class="nav" aria-label="Main">
 <?php foreach ($nav as $href => $label): ?>
-        <a href="<?= $e($href) ?>"<?= $href === $path ? ' aria-current="page"' : '' ?>><?= $e($label) ?></a>
+        <a href="<?= $e($href) ?>"<?= $href === $section ? ' aria-current="page"' : '' ?>><?= $e($label) ?></a>
 <?php endforeach ?>
         <a class="wide" href="/#devnull">Commit it on /dev/null</a>
       </nav>

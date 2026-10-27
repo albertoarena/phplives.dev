@@ -10,6 +10,7 @@
  * @var list<\PhpLives\Bundle> $bundles Every other entry, by week and by month.
  * @var string $cutoff
  * @var string $stacks
+ * @var int $archivedCount How many parcels are in the archive. The slip links to it when there are any.
  * @var list<\PhpLives\Post> $posts
  * @var string $copyScript
  * @var array<string, int> $counts
@@ -42,6 +43,9 @@ use PhpLives\Format;
 <?php if ($entries): ?>
           <div><dt>Last shipped</dt><dd class="mono"><time datetime="<?= $entries[0]->shipped->format('Y-m-d') ?>"><?= $e(Format::date($entries[0]->shipped)) ?></time></dd></div>
           <div><dt>Stacks</dt><dd><?= $e($stacks) ?></dd></div>
+<?php endif ?>
+<?php if ($archivedCount > 0): ?>
+          <div class="slip-archive"><dt>Archive</dt><dd><a href="/archive/"><?= $archivedCount ?> older <?= $archivedCount === 1 ? 'parcel' : 'parcels' ?><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></a></dd></div>
 <?php endif ?>
         </dl>
         <p class="slip-foot">Each date comes from the project's own source.</p>

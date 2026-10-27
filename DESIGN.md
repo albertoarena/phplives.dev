@@ -320,7 +320,7 @@ The page is one column of sections inside a 1320px wrap with a 40px side gutter.
 
 ### Entry page (`/entries/{slug}/`)
 One page per entry. Top to bottom:
-- **Back link:** inside the wrap, with a left arrow. It reads "Back to the manifest", or "Back to the archive" for an archived entry. It is 44px tall.
+- **Back link:** inside the wrap, with a left arrow. It reads "Back to the manifest", or "Back to the archive" for an archived entry. It is 44px tall. On an archived entry's page, the top nav marks Archive as the current section.
 - **Depot:** a full-bleed area outside the wrap, so it runs from page edge to page edge. It clips anything that goes past the sides. It has 16px of space on top and 96px at the end (8px and 64px on narrow screens).
 - **Shelf:** a 600px column, centred in the depot. On narrow screens it is the full width minus the gutters (100% minus 80px, then minus 32px below 700px). It holds the entry label, then the docket 28px under it.
 - **Neighbour stubs, from 1100px:** absolutely placed beside the label, 210px from the top of the depot. Each stub starts 40px past the page edge, so the edge always cuts its barcode and the stub reads as torn off. It is at most 360px wide, and it always leaves a gap of at least clamp(40px, 5cqi, 96px) before the label. On wide screens the gap grows, and the stub keeps its size.
@@ -377,6 +377,7 @@ Segmented groups on the field: the theme toggle (Light, Dark, System), the view 
 ### Shipping label (signature)
 A 4x6 thermal label, one per entry. White paper, 6px radius, paper shadow. The label is its own size container. Its blocks, top to bottom:
 1. **Newest parcel strip** (newest only): Signal Orange, uppercase weight 800. It is printed at the top of the FROM block and runs to the paper edge, so it never pushes the other labels in a row down.
+   **Archive strip** (an archived entry's own page only): the same strip in Soft Rule grey, never orange, reading "In the archive: over 6 months old". It fits on one line on a phone. The home page never shows an archived entry, so only the entry page has it.
 2. **FROM:** one line per maker. The name links to their GitHub. A small mono "/dev/null ↗" link follows when they have a profile there. The route code block sits on the right.
 3. **CONTENTS:** the project name (title) and one plain sentence.
 4. **SHIPPED:** the mono date, the date proof link, the waves and the ring postmark. The postmark is 118px, turned -9deg, at 90% opacity, with a multiply blend. Its ring reads PHPLIVES.DEV over SHIPPED around the date. The waves fill only the gap between the date and the ring. They hide when the label is narrower than 378px.
@@ -411,7 +412,7 @@ A white sheet under the entry label, with the paper shadow and a 6px radius. Its
 1. **Sheet head:** "Parcel details" and the tracking number in mono, closed by a print rule.
 2. **Details text** (optional): two or three plain sentences, at 17px.
 3. **Install** (only when the entry has a package): the command strip with `composer require` and the Copy button. Here the strip is a Soft Rule tint with no shadow.
-4. **Facts:** a list of term and value, split by Soft Rule lines. The order is fixed: Made by, Source, Docs, Licence, Topics, Shipped, Date from, Added, Checked. Docs, Licence and Topics show only when the entry gives them. Topics holds the entry's topic tags. Terms sit in a 110px column (88px on narrow screens). Links carry a small out arrow. Made by lists each maker, with their GitHub and /dev/null links.
+4. **Facts:** a list of term and value, split by Soft Rule lines. The order is fixed: Made by, Source, Docs, Licence, Topics, Shipped, Date from, Added, Checked, Archived. Docs, Licence and Topics show only when the entry gives them. Archived shows only on an archived entry: the day the daily build moved it, the first day whose cutoff is after its ship date. Topics holds the entry's topic tags. Terms sit in a 110px column (88px on narrow screens). Links carry a small out arrow. Made by lists each maker, with their GitHub and /dev/null links.
 5. **Share foot:** a 2px perforation above it. "Share this parcel", the page address in mono, then the "Copy link" and "Share" buttons side by side, in the same outline style. "Copy link" is hidden when the browser has no clipboard. "Share" opens the device's own share menu, and it is hidden when the browser has none. The share card title is "Name: shipped with PHP", without the site name, because cards already show it.
 6. **Badge for your README:** under the share foot, split from it by a Soft Rule line. The caption "Badge for your README", the line "Listed here? Add this badge to your README." with the badge image at its right, then the command strip with the badge Markdown and the Copy button. The strip is the same Soft Rule tint as Install, with no shadow. The Markdown wraps, so the whole snippet stays in view. The link goes to the entry page, with no tracking tags.
 7. **QR code for this page:** under the badge, split from it by a Soft Rule line. The caption "QR code for this page", the line "Put it on a slide, a poster or a flyer. Scan it with a phone camera to open this page.", then the "Download SVG" and "Download PNG" links, in the same outline style as the share buttons. A preview of the code sits at the right, in the same place as the badge image above. Screen readers skip the preview, because the label already has the code. The files are at `/entries/{slug}/qr.svg` and `qr.png`. Both are Print Black on white, with a quiet zone of 4 modules. The PNG file is about 1000px wide, for print. Without GD, the build writes only the SVG file, and the PNG link is left out.
@@ -453,7 +454,7 @@ The main page groups the entries in bundles. Each bundle opens with a head on th
 The stack code printed inverse: Print Black block, white condensed weight 900 code, the stack name in small type below it. The same block, smaller, marks the stack in table rows.
 
 ### Manifest slip
-The white slip in the hero. A head with "Manifest" and today's date over a 3px print rule. Then rows of term and value: Parcels, Shipped since, Last shipped and Stacks. A perforated foot holds one note, and it hides on narrow screens.
+The white slip in the hero. A head with "Manifest" and today's date over a 3px print rule. Then rows of term and value: Parcels, Shipped since, Last shipped and Stacks. Parcels counts only the parcels on the main page, so it agrees with Shipped since. When the archive has parcels, a last row, Archive, links to it: "1 older parcel" or "N older parcels", in Archivo 700 with a right arrow. With an empty archive, the row is left out. A perforated foot holds one note, and it hides on narrow screens.
 
 ### Manifest sheet
 The table shared by the archive and the List view. A head and a foot closed by print rules. Columns: No., Shipped, Project, Contents, From, Stack, Track. Rows take a Field Line tint on hover. The first row of the List view carries the NEWEST tag.
