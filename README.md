@@ -21,13 +21,15 @@ Shipped something with PHP, or seen something that belongs here?
 [`CONTRIBUTING.md`](CONTRIBUTING.md) says what qualifies and how an entry file
 looks.
 
-Is your project listed? Its entry page has a badge for your README.
+Is your project listed? Its entry page has a badge for your README. It also has a
+QR code of the page, for slides, posters and flyers.
 
 ## How it works
 
 A small PHP build script, with no framework, turns one PHP file per entry into
 static HTML. It also writes an Atom feed (and one per stack, all listed on
-`/feeds/`), a sitemap, `robots.txt`, `llms.txt` and a Markdown copy of each entry. It draws a share card for each entry page with GD.
+`/feeds/`), a sitemap, `robots.txt`, `llms.txt` and a Markdown copy of each entry. It draws a share card for each entry page with GD. It also makes a QR code of each
+entry page, as SVG and PNG, with [chillerlan/php-qrcode](https://github.com/chillerlan/php-qrcode).
 GitHub Actions runs the tests, builds the site and deploys it to Cloudflare Workers.
 A daily build moves old entries to the archive.
 
@@ -46,7 +48,8 @@ bin/card-fonts makes the fonts of the share cards, in assets/fonts/card/
 
 You need PHP 8.4 or later and Composer. The share cards need the GD extension with
 FreeType. Without it, the site still builds, and entry pages use the site's own share
-card. For the browser tests, you also need Node 24 (see `.nvmrc`).
+card. The PNG file of each QR code needs GD with PNG support. Without it, entry pages
+offer the QR code as SVG only. For the browser tests, you also need Node 24 (see `.nvmrc`).
 
 ```sh
 composer install
