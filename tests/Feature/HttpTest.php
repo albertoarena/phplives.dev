@@ -7,7 +7,7 @@ use Tests\FakeDevNull;
 
 it('reads JSON and its status', function () {
     expect(Http::getJson(FakeDevNull::url().'/api/v1/users/nunomaduro'))
-        ->toBe([200, ['data' => ['username' => 'nunomaduro']]]);
+        ->toBe([200, ['data' => ['handle' => 'nunomaduro']]]);
 });
 
 it('reads the body of an error too', function () {
@@ -24,7 +24,7 @@ it('gives status 0 when nothing answers', function () {
 });
 
 it('follows redirects to the final answer', function () {
-    expect(Http::getJson(FakeDevNull::url().'/moved'))->toBe([200, ['data' => ['username' => 'nunomaduro']]])
+    expect(Http::getJson(FakeDevNull::url().'/moved'))->toBe([200, ['data' => ['handle' => 'nunomaduro']]])
         ->and(Http::status(FakeDevNull::url().'/moved'))->toBe(200);
 });
 

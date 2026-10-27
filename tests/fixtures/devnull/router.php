@@ -61,7 +61,7 @@ if ($path === '/api/v1/users/albertoarena/commits') {
 }
 
 if (preg_match('#^/api/v1/users/([^/]+)$#', $path, $match) && in_array($match[1], $users, true)) {
-    echo json_encode(['data' => ['username' => $match[1]]]);
+    echo json_encode(['data' => ['handle' => $match[1]]]);
 
     return;
 }

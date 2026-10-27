@@ -18,9 +18,12 @@ function fakeDevNull(array $responses, ?array &$requests = []): DevNull
     });
 }
 
+/**
+ * A profile as the API gives it. It names the user in `handle`.
+ */
 function user(string $username): array
 {
-    return [200, ['data' => ['username' => $username]]];
+    return [200, ['data' => ['handle' => $username, 'name' => 'Someone', 'html_url' => "https://dev-null.test/@{$username}"]]];
 }
 
 function commit(string $id, string $body, string $created, ?string $parent = null): array
@@ -79,8 +82,59 @@ it('gives up on profiles when the API is down', function (int $status) {
 })->with([
     'no answer' => 0,
     'server error' => 500,
-    'rate limit' => 429,
 ]);
+
+/**
+ * A fake API that gives each URL its answers in turn, and records each request and each wait.
+ *
+ * @param  array<string, list<array{int, mixed}>>  $answers
+ */
+function busyDevNull(array $answers, ?array &$requests = [], ?array &$waits = []): DevNull
+{
+    return new DevNull(
+        'https://dev-null.test',
+        function (string $url) use (&$answers, &$requests): array {
+            $requests[] = $url;
+
+            return array_shift($answers[$url]) ?? [404, ['message' => 'Not found']];
+        },
+        function (int $seconds) use (&$waits): void {
+            $waits[] = $seconds;
+        },
+    );
+}
+
+it('waits and asks again when the API says too many requests', function () {
+    $url = 'https://dev-null.test/api/v1/users/nunomaduro';
+    $devnull = busyDevNull([$url => [[429, null], [429, null], user('nunomaduro')]], $requests, $waits);
+
+    expect($devnull->profiles(['nunomaduro']))->toBe(['nunomaduro'])
+        ->and($requests)->toBe([$url, $url, $url])
+        ->and($waits)->toBe([DevNull::RETRY_SECONDS, DevNull::RETRY_SECONDS]);
+});
+
+it('gives up on profiles when the API still says too many requests after a minute or more', function () {
+    $url = 'https://dev-null.test/api/v1/users/nunomaduro';
+    $devnull = busyDevNull([$url => array_fill(0, DevNull::MAX_RETRIES + 1, [429, null])], $requests, $waits);
+
+    expect($devnull->profiles(['nunomaduro']))->toBeNull()
+        ->and($requests)->toHaveCount(DevNull::MAX_RETRIES + 1)
+        ->and(array_sum($waits))->toBeGreaterThanOrEqual(60);
+});
+
+it('waits on posts too when the API says too many requests', function () {
+    $url = 'https://dev-null.test/api/v1/users/albertoarena/commits';
+    $devnull = busyDevNull([$url => [[429, null], commits([commit('1', 'See phplives.dev', '2026-10-20T10:00:00+00:00')])]], $requests, $waits);
+
+    expect($devnull->posts('albertoarena'))->toHaveCount(1)
+        ->and($waits)->toBe([DevNull::RETRY_SECONDS]);
+});
+
+it('still reads a profile that names the user in `username`, as the API once did', function () {
+    $devnull = fakeDevNull(['https://dev-null.test/api/v1/users/nunomaduro' => [200, ['data' => ['username' => 'nunomaduro']]]]);
+
+    expect($devnull->profiles(['nunomaduro']))->toBe(['nunomaduro']);
+});
 
 it('gives up on profiles when the API answers with something that is not a user', function () {
     $devnull = fakeDevNull(['https://dev-null.test/api/v1/users/nunomaduro' => [200, ['oops']]]);
