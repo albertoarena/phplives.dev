@@ -96,6 +96,7 @@ final readonly class Site
                 'counts' => $this->stackCounts($current),
                 'topics' => $this->topicCounts($current),
                 'manifestScript' => $this->script('manifest.js'),
+                'weekScript' => $this->script('week.js'),
             ]),
             'archive/index.html' => $this->page('archive', 'phplives.dev: archive', '/archive/', [
                 'entries' => $this->entries->archived(),
