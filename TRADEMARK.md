@@ -64,6 +64,8 @@ You do not need permission for any of this, and you are welcome to it:
   when your project is listed. Link it to your project's entry page. Each entry
   page gives the Markdown to copy. Use the badge as it is, without changing its
   text or colours.
+- Put the QR code from your entry page on slides, posters, flyers or other print,
+  when your project is listed.
 - **Fork the repository on GitHub to contribute.** Nothing on this page applies to
   that. See "Contributing" below.
 - Use the code for your own site, as the licence allows. See "Running your own site"
