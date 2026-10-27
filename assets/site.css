@@ -402,6 +402,59 @@ body{margin:0;background:var(--field)}
   .stubs,.weeks{grid-template-columns:minmax(0,1fr)}
   .span-2,.span-3,.span-4{--s:1}
 }
+/* The marker under This week: "2 / 3" and one bar per label. Its script shows it only while the row scrolls sideways. */
+.week-pos{display:flex;align-items:center;gap:10px;margin:12px 0 0;font-size:12px;font-weight:600;color:var(--on-field-2)}
+.week-pos .dots{display:flex;gap:5px}
+.week-pos .dots i{width:18px;height:3px;border-radius:2px;background:var(--line)}
+.week-pos .dots i.on{background:var(--on-field)}
+/* On a phone: a shorter top of the page, so This week comes sooner, and shorter labels,
+   so the heading and a whole label fit on one screen. The next label shows at the edge. */
+@container (max-width:440px){
+  .top{padding:12px 0;gap:6px 12px}
+  .nav a{padding:8px 0}
+  .theme{padding:2px}
+  .theme button{font-size:12px;min-height:28px;padding:0 9px}
+  .hero{padding:20px 0 24px;gap:20px}
+  .hero h1{font-size:48px}
+  .hero h1 .stuck{margin-top:10px;padding:3px 14px 8px}
+  .lede{margin-top:16px;font-size:16px}
+  .send{margin-top:18px;gap:10px 18px}
+  .send-note{margin-top:10px;font-size:14px}
+  /* The slip in two columns. Stacks takes the last row, across both. */
+  .slip-head{padding:10px 16px}
+  .slip-head h2{font-size:20px}
+  .slip dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px;padding:2px 16px 4px}
+  .slip dl div{display:block;padding:7px 0}
+  .slip dt{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+  .slip dd{font-size:14px}
+  .slip dl div.slip-stacks{grid-column:1 / -1;order:1;border-bottom:0}
+  .slip dl div.slip-archive{border-bottom:1px solid var(--rule-soft)}
+  /* Topic and Labels / List share one row. */
+  .sec-head h2{font-size:24px}
+  .sec-head p{font-size:14px}
+  .sec-tools{margin:10px 0 8px;gap:10px}
+  .sec-tools .filter:has(select){flex:1 1 0;min-width:0;flex-wrap:nowrap}
+  .sec-tools .filter select{min-width:0;width:100%}
+  .sec-tools .view{margin-left:0}
+  .sec-tools .view button{padding:0 12px}
+  .bundle-new .bundle-head{margin-bottom:12px}
+  .bundle-note{font-size:14px}
+  .grid{grid-auto-columns:82%;gap:14px}
+  .bundle-new .blk{padding:12px 14px}
+  .bundle-new .from>.lab-new{margin:-12px -14px 0;padding:7px 14px;font-size:12px}
+  .bundle-new .route{min-width:58px;padding:6px 8px 5px}
+  .bundle-new .route b{font-size:32px}
+  .bundle-new .route span{margin-top:4px;font-size:10px}
+  .bundle-new .makers .who{font-size:16px}
+  .bundle-new .contents :is(h2,h3,h4){font-size:28px}
+  .bundle-new .contents p{margin-top:6px;font-size:15px;line-height:1.4}
+  .bundle-new .ship{min-height:76px}
+  .bundle-new .ship .date{font-size:22px}
+  .bundle-new .ship .proof{margin-top:2px}
+  .bundle-new .pm{width:84px;height:84px;margin-top:-42px;right:8px}
+  .bundle-new .bars{height:30px;margin-bottom:8px}
+  .bundle-new .lab-foot{padding-top:2px}
+}
 
 /* Details links: on each label, and in the Track column of each list row */
 .lab-foot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:6px}

@@ -120,6 +120,23 @@ it('says how many full labels were added this week', function (array $added, str
     'more' => [['2026-10-12', '2026-10-13', '2026-10-16', '2026-10-16'], 'This week', '4 parcels have been added since Monday 12/10. Here are the newest 3. The others are in the bundles below, by shipped date.'],
 ]);
 
+it('puts a hidden marker under the This week row, for the script that shows it on phones', function () {
+    writeEntry($this->dir, '2026-10-14-a.php', ['added' => '2026-10-16']);
+    writeEntry($this->dir, '2026-10-13-b.php', ['added' => '2026-10-16']);
+
+    $main = pages($this)['index.html'];
+    $row = $main->querySelector('#this-week [data-week-row]');
+    $pos = $main->querySelector('#this-week [data-week-pos]');
+
+    expect($row->classList->contains('grid'))->toBeTrue()
+        ->and($row->nextElementSibling)->toBe($pos)
+        ->and($pos->hasAttribute('hidden'))->toBeTrue()
+        ->and($pos->getAttribute('aria-hidden'))->toBe('true')
+        ->and($pos->querySelector('[data-week-n]'))->not->toBeNull()
+        ->and($pos->querySelector('[data-week-dots]'))->not->toBeNull()
+        ->and(texts($main, '#this-week [data-week-hint]'))->toBe(['Swipe for more']);
+});
+
 it('bundles the other entries by the week or the month they shipped, with a count', function () {
     foreach (['2026-10-14' => 'a', '2026-10-13' => 'b', '2026-10-12' => 'c'] as $day => $slug) {
         writeEntry($this->dir, "{$day}-{$slug}.php", ['added' => '2026-10-16']);
@@ -611,13 +628,14 @@ it('shows how to commit on /dev/null from a terminal', function (array $posts) {
     'with posts' => [[new Post('https://dev-null.sh/@albertoarena/commits/c1', 'See https://phplives.dev', new DateTimeImmutable('2026-10-16'))]],
 ]);
 
-it('runs the copy and the manifest scripts inline, at the end of the main page', function () {
+it('runs the copy, the manifest and the This week scripts inline, at the end of the main page', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php');
     $scripts = array_map(fn ($s) => $s->textContent, iterator_to_array(pages($this)['index.html']->body->querySelectorAll('script:not([src])')));
 
-    expect($scripts)->toHaveCount(2)
+    expect($scripts)->toHaveCount(3)
         ->and($scripts[0])->toContain('data-copy')
-        ->and($scripts[1])->toContain('data-stack');
+        ->and($scripts[1])->toContain('data-stack')
+        ->and($scripts[2])->toContain('data-week-pos');
 });
 
 it('links to the privacy page from the footer of every page', function (string $page) {

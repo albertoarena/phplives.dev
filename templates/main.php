@@ -16,6 +16,7 @@
  * @var array<string, int> $counts
  * @var array<string, int> $topics Entries per topic, for the topics with 2 entries or more.
  * @var string $manifestScript
+ * @var string $weekScript The marker under This week, for phones.
  * @var string $today
  */
 use PhpLives\Bundle;
@@ -42,7 +43,7 @@ use PhpLives\Format;
           <div><dt>Shipped since</dt><dd class="mono"><?= $e($cutoff) ?></dd></div>
 <?php if ($entries): ?>
           <div><dt>Last shipped</dt><dd class="mono"><time datetime="<?= $entries[0]->shipped->format('Y-m-d') ?>"><?= $e(Format::date($entries[0]->shipped)) ?></time></dd></div>
-          <div><dt>Stacks</dt><dd><?= $e($stacks) ?></dd></div>
+          <div class="slip-stacks"><dt>Stacks</dt><dd><?= $e($stacks) ?></dd></div>
 <?php endif ?>
 <?php if ($archivedCount > 0): ?>
           <div class="slip-archive"><dt>Archive</dt><dd><a href="/archive/"><?= $archivedCount ?> older <?= $archivedCount === 1 ? 'parcel' : 'parcels' ?><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></a></dd></div>
@@ -78,11 +79,12 @@ use PhpLives\Format;
             <h3 id="this-week-title"><?= $e($latestTitle) ?></h3>
             <p class="bundle-note"><?= $e($latestNote) ?></p>
           </div>
-          <div class="grid">
+          <div class="grid" data-week-row>
 <?php $heading = 'h4'; foreach ($featured as $i => $entry) {
     require __DIR__.'/entry.php';
 } ?>
           </div>
+          <p class="week-pos mono" data-week-pos aria-hidden="true" hidden><span data-week-n></span><span class="dots" data-week-dots></span><span data-week-hint>Swipe for more</span></p>
         </section>
 <?php foreach ($bundles as $b => $bundle): $n = count($bundle->entries); ?>
 <?php if ($bundle->kind === 'week' && ($bundles[$b - 1] ?? null)?->kind !== 'week'): ?>
@@ -155,3 +157,4 @@ require __DIR__.'/table.php';
   </section>
   <script><?= $copyScript ?></script>
   <script><?= $manifestScript ?></script>
+  <script><?= $weekScript ?></script>
