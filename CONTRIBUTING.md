@@ -144,7 +144,7 @@ Each entry page has the Markdown for a "Featured on phplives.dev" badge. You may
 add it to your project's README. See [`TRADEMARK.md`](TRADEMARK.md).
 
 Your entry page also has a QR code, as an SVG file and a PNG file. Put it on a
-slide, a poster or a flyer. People can then open your entry with a phone camera.
+slide, a poster or a flyer. People scan it with a phone camera to open your entry.
 
 ## Your project is listed and you want a change
 

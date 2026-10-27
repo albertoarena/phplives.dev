@@ -279,7 +279,7 @@ it('offers the QR code as SVG and PNG files, under the badge', function () {
 
     expect($doc->querySelector('.docket .dk-badge + .dk-qr'))->not->toBeNull()
         ->and(texts($doc, '.dk-qr .cap'))->toBe(['QR code for this page'])
-        ->and(texts($doc, '.dk-qr p'))->toBe(['Put it on a slide, a poster or a flyer. A phone camera opens this page.'])
+        ->and(texts($doc, '.dk-qr p'))->toBe(['Put it on a slide, a poster or a flyer. Scan it with a phone camera to open this page.'])
         ->and(array_map(fn ($a) => $a->getAttribute('href'), $links))->toBe(['/entries/pest-5/qr.svg', '/entries/pest-5/qr.png'])
         ->and(array_map(fn ($a) => $a->getAttribute('download'), $links))->toBe(['phplives-pest-5-qr.svg', 'phplives-pest-5-qr.png'])
         ->and(texts($doc, '.dk-qr .dk-qr-actions a'))->toBe(['Download SVG of the QR code', 'Download PNG of the QR code'])

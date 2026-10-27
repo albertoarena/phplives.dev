@@ -116,7 +116,7 @@ $onEntryPage = true;
           <span class="cap">QR code for this page</span>
           <div class="dk-qr-body">
             <div>
-              <p>Put it on a slide, a poster or a flyer. A phone camera opens this page.</p>
+              <p>Put it on a slide, a poster or a flyer. Scan it with a phone camera to open this page.</p>
               <div class="dk-qr-actions">
 <?php foreach (array_filter(['svg' => QrCode::svgPath($entry), 'png' => $qrPng ? QrCode::pngPath($entry) : null]) as $type => $path): ?>
                 <a href="<?= $e($path) ?>" download="<?= $e(QrCode::fileName($entry, $type)) ?>">Download <?= strtoupper($type) ?><span class="sr-only"> of the QR code</span></a>

@@ -28,8 +28,10 @@ QR code of the page, for slides, posters and flyers.
 
 A small PHP build script, with no framework, turns one PHP file per entry into
 static HTML. It also writes an Atom feed (and one per stack, all listed on
-`/feeds/`), a sitemap, `robots.txt`, `llms.txt` and a Markdown copy of each entry. It draws a share card for each entry page with GD. It also makes a QR code of each
-entry page, as SVG and PNG, with [chillerlan/php-qrcode](https://github.com/chillerlan/php-qrcode).
+`/feeds/`), a sitemap, `robots.txt`, `llms.txt` and a Markdown copy of each
+entry. It draws a share card for each entry page with GD. It also makes a QR code
+of each entry page, as SVG and PNG, with
+[chillerlan/php-qrcode](https://github.com/chillerlan/php-qrcode).
 GitHub Actions runs the tests, builds the site and deploys it to Cloudflare Workers.
 A daily build moves old entries to the archive.
 
