@@ -107,4 +107,19 @@ final readonly class Entries
 
         return $firstOfMonth->setDate((int) $firstOfMonth->format('Y'), (int) $firstOfMonth->format('n'), $day);
     }
+
+    /**
+     * The day an entry moves to the archive: the first day whose cutoff is after its
+     * ship date. The daily build moves it on that day.
+     */
+    public static function archivedOn(DateTimeImmutable $shipped): DateTimeImmutable
+    {
+        $day = $shipped->setTime(0, 0)->modify('+'.(self::MONTHS_ON_MAIN_PAGE - 1).' months');
+
+        while (self::cutoff($day) <= $shipped->setTime(0, 0)) {
+            $day = $day->modify('+1 day');
+        }
+
+        return $day;
+    }
 }

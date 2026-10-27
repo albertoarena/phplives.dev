@@ -109,6 +109,35 @@ it('links back to the manifest, or to the archive for an archived entry', functi
         ->and(texts(entryPage($this, 'old'), '.back a'))->toBe(['Back to the archive']);
 });
 
+it('prints an archive strip on the label of an archived entry', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+    writeEntry($this->dir, '2026-03-01-old.php');
+
+    expect(texts(entryPage($this, 'old'), '.depot .lab .from > .lab-archive'))->toBe(['In the archive: over 6 months old'])
+        // It shares the strip of the newest parcel, so no label carries both.
+        ->and(texts(entryPage($this, 'old'), '.lab-new'))->toBe(['In the archive: over 6 months old'])
+        ->and(entryPage($this, 'pest-5')->querySelector('.lab-archive'))->toBeNull();
+});
+
+it('marks the archive as the current section on an archived entry page', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+    writeEntry($this->dir, '2026-03-01-old.php');
+
+    expect(hrefs(entryPage($this, 'old'), '.nav a[aria-current]'))->toBe(['/archive/'])
+        ->and(hrefs(entryPage($this, 'pest-5'), '.nav a[aria-current]'))->toBe([]);
+});
+
+it('gives the day an archived entry moved to the archive on its docket', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+    writeEntry($this->dir, '2026-03-01-old.php');
+    $old = entryPage($this, 'old');
+
+    expect(array_slice(texts($old, '.dk-facts dt'), -1))->toBe(['Archived'])
+        ->and(array_slice(texts($old, '.dk-facts dd'), -1))->toBe(['02/09/2026'])
+        ->and($old->querySelector('.dk-facts > div:last-child time')?->getAttribute('datetime'))->toBe('2026-09-02')
+        ->and(texts(entryPage($this, 'pest-5'), '.dk-facts dt'))->not->toContain('Archived');
+});
+
 it('links to the parcels shipped just before and just after, over all entries', function () {
     writeEntry($this->dir, '2026-03-01-old.php', ['name' => 'Old']);
     writeEntry($this->dir, '2026-08-01-middle.php', ['name' => 'Middle', 'stack' => 'symfony']);

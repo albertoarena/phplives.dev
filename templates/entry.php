@@ -10,6 +10,7 @@
  * @var bool|null $onEntryPage True on the entry's own page: the name is the page heading (h1), the newest
  *                             parcel is marked by $newest, and the label has no link to its page.
  * @var bool|null $newest On the entry page: true when this is the newest parcel.
+ * @var bool|null $archived On the entry page: true when the entry is in the archive. Its label gets the archive strip.
  * @var string|null $newestSlug On the main page: the slug of the newest parcel. Without it, the first label is the newest.
  * @var \PhpLives\QrCode|null $qr On the entry page: the QR code of the page, beside the barcode.
  */
@@ -26,6 +27,8 @@ $heading = $own ? 'h1' : (in_array($heading ?? null, ['h2', 'h3', 'h4'], true) ?
           <div class="blk from">
 <?php if ($isNewest): ?>
             <div class="lab-new">Newest parcel</div>
+<?php elseif ($own && ($archived ?? false)): ?>
+            <div class="lab-new lab-archive">In the archive: over 6 months old</div>
 <?php endif ?>
             <div>
               <span class="cap">From</span>

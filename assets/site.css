@@ -51,6 +51,8 @@ body{margin:0;background:var(--field)}
 .slip dl div:last-child{border-bottom:0}
 .slip dt{font-size:13px;font-weight:600;color:var(--ink-2)}
 .slip dd{margin:0;font-size:15px;font-weight:600}
+.slip-archive a{font-weight:700}
+.slip-archive svg{display:inline;vertical-align:-2px;margin-left:6px}
 .slip-foot{padding:12px 22px 16px;border-top:2px dashed var(--perf);font-size:13px;color:var(--ink-2)}
 
 .sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:16px;padding:0 0 12px}
@@ -128,6 +130,8 @@ body{margin:0;background:var(--field)}
 /* The strip sits inside the From block and runs to the paper edge. */
 .from>.lab-new{grid-column:1 / -1;margin:-16px -18px 2px}
 .depot .from>.lab-new{margin:-20px -24px 6px}
+/* An archived entry's label: the same strip as the newest parcel, in the soft grey of the docket strips. Never orange. */
+.lab-new.lab-archive{background:var(--rule-soft)}
 .blk{padding:16px 18px;border-bottom:3px solid var(--ink)}
 .blk:last-child{border-bottom:0}
 .blk.from{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:start}

@@ -121,3 +121,20 @@ it('moves the cutoff to the last day of a shorter month', function (string $toda
     ['2028-08-31', '2028-02-29'],
     ['2026-01-15', '2025-07-15'],
 ]);
+
+it('knows the day an entry moves to the archive: the first day the cutoff passes its ship date', function (string $shipped, string $archived) {
+    expect(Entries::archivedOn(new DateTimeImmutable($shipped))->format('Y-m-d'))->toBe($archived);
+})->with([
+    ['2026-04-26', '2026-10-27'],
+    ['2026-03-01', '2026-09-02'],
+    ['2026-08-31', '2027-03-01'],
+    ['2026-02-28', '2026-09-01'],
+]);
+
+it('agrees with the cutoff on the day an entry moves to the archive', function () {
+    $shipped = new DateTimeImmutable('2026-04-26');
+    $day = Entries::archivedOn($shipped);
+
+    expect(Entries::cutoff($day) > $shipped)->toBeTrue()
+        ->and(Entries::cutoff($day->modify('-1 day')) > $shipped)->toBeFalse();
+});
