@@ -42,12 +42,17 @@ final readonly class Site
     /** True when each entry page has its own share card. See ShareCard. */
     private bool $shareCards;
 
+    /** True when each entry page offers its QR code as a PNG file too. See QrCode. */
+    private bool $qrPng;
+
     /**
      * @param  list<string>  $devnullUsers  GitHub usernames with a /dev/null profile.
      * @param  list<Post>  $posts  The site account's /dev/null posts that link to the site.
      * @param  bool  $entryPages  True when the site has a page for each entry. See ENTRY_PAGES.
      * @param  bool|null  $shareCards  False to share entry pages with the site card. Null to draw
      *                                 a card for each entry page when GD can.
+     * @param  bool|null  $qrPng  False to offer the QR code as SVG only. Null to write the PNG file
+     *                            too when GD can.
      */
     public function __construct(
         private Entries $entries,
@@ -56,9 +61,11 @@ final readonly class Site
         private array $posts = [],
         private bool $entryPages = self::ENTRY_PAGES,
         ?bool $shareCards = null,
+        ?bool $qrPng = null,
     ) {
         $this->devnullUsers = array_fill_keys(array_map(strtolower(...), $devnullUsers), true);
         $this->shareCards = $entryPages && ($shareCards ?? ShareCard::available());
+        $this->qrPng = $entryPages && ($qrPng ?? QrCode::pngAvailable());
     }
 
     /**
@@ -140,6 +147,8 @@ final readonly class Site
                     'url' => self::URL.self::entryPath($entry),
                     'shareTitle' => self::shareTitle($entry),
                     'badge' => Markdown::badge($entry),
+                    'qr' => QrCode::forEntry($entry),
+                    'qrPng' => $this->qrPng,
                     'copyScript' => $this->script('copy.js'),
                     'shareScript' => $this->script('share.js'),
                     'filterTopics' => $filterTopics,
@@ -170,7 +179,7 @@ final readonly class Site
 
     /**
      * The pages, and the files that help people and tools find them: robots.txt, the
-     * sitemap, llms.txt, the Atom feeds, a Markdown copy of each entry, and the headers
+     * sitemap, llms.txt, the Atom feeds, a Markdown copy and the QR code of each entry, and the headers
      * that Cloudflare serves them with.
      *
      * @return array<string, string> Each file's content, keyed by its path in the output folder.
@@ -196,6 +205,10 @@ final readonly class Site
 
         foreach ($this->entries->all() as $entry) {
             $files[ltrim(Markdown::entryPath($entry), '/')] = Markdown::entry($entry);
+
+            if ($this->entryPages) {
+                $files[ltrim(QrCode::svgPath($entry), '/')] = QrCode::svg($entry);
+            }
         }
 
         return $files + ['_headers' => self::headers()];
@@ -271,6 +284,12 @@ final readonly class Site
 
         if ($this->shareCards) {
             $this->writeShareCards($outDir);
+        }
+
+        if ($this->qrPng) {
+            foreach ($this->entries->all() as $entry) {
+                file_put_contents(rtrim($outDir, '/').QrCode::pngPath($entry), QrCode::png($entry));
+            }
         }
     }
 

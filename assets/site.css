@@ -426,6 +426,11 @@ body{margin:0;background:var(--field)}
 .depot .bars{height:60px;margin-bottom:14px}
 .depot .track a{font-size:14px}
 .depot .tid{font-size:12px}
+/* The QR code has its own cell beside the barcode, split by a print rule, as on a real parcel label */
+.depot .blk.qr-blk{display:grid;grid-template-columns:minmax(0,1fr) auto;padding:0}
+.depot .qr-main{padding:20px 24px;min-width:0}
+.depot .qr-cell{display:grid;align-content:center;gap:6px;padding:20px 24px;border-left:3px solid var(--ink)}
+.qr-code{display:block;flex:none;fill:var(--ink)}
 
 .docket{margin-top:28px;background:var(--label);color:var(--ink);border-radius:6px;box-shadow:var(--shadow);overflow:hidden}
 .docket a:focus-visible,.docket button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
@@ -461,6 +466,11 @@ body{margin:0;background:var(--field)}
 .dk-badge .cli-line{background:var(--rule-soft);box-shadow:none}
 /* The whole snippet stays in view, so it can be selected by hand */
 .dk-badge .cli-line code{white-space:normal;overflow-wrap:anywhere}
+.dk-qr{padding:14px 24px 18px;border-top:1px solid var(--rule-soft)}
+.dk-qr-body{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px 24px;align-items:center;margin-top:6px}
+.dk-qr p{margin:0 0 12px;font-size:15px}
+.dk-qr-actions{display:flex;flex-wrap:wrap;gap:10px}
+.dk-qr-actions a{display:inline-flex;align-items:center;font-size:13px;font-weight:800;min-height:36px;padding:0 14px;border:2px solid var(--ink);border-radius:4px;color:var(--ink);text-decoration:none}
 
 .nbr{margin-top:28px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .pl .nstub{display:grid;grid-template-columns:28px minmax(0,1fr);background:var(--label);color:var(--ink);border-radius:6px;box-shadow:var(--shadow);text-decoration:none;position:relative;min-width:0}
@@ -516,7 +526,9 @@ body{margin:0;background:var(--field)}
   .dk-details,.dk-install{padding-inline:18px}
   .dk-facts{padding:2px 18px}
   .dk-facts>div{grid-template-columns:88px minmax(0,1fr);gap:10px}
-  .dk-share,.dk-badge{padding-inline:18px}
+  .dk-share,.dk-badge,.dk-qr{padding-inline:18px}
+  .depot .qr-main{padding:16px 18px}
+  .depot .qr-cell{padding:16px 18px}
   .nbr{gap:12px}
   .nstub-name{font-size:20px}
   .nstub-body{padding:14px 22px 12px 12px}

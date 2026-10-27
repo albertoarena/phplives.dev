@@ -14,11 +14,14 @@
  * @var string $url The page's own address.
  * @var string $shareTitle
  * @var string $badge The Markdown for the entry's README badge.
+ * @var \PhpLives\QrCode $qr The QR code of the page.
+ * @var bool $qrPng True when the QR code is also offered as a PNG file.
  * @var string $copyScript
  * @var string $shareScript
  * @var list<string> $filterTopics The topics the main page can filter by.
  */
 use PhpLives\Format;
+use PhpLives\QrCode;
 
 $arrowOut = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>';
 $i = 0;
@@ -108,6 +111,20 @@ $onEntryPage = true;
           </div>
           <div class="cli-line"><code><?= $e($badge) ?></code><button type="button" data-copy="<?= $e($badge) ?>" data-copy-status="badge-status" data-copy-fail="Could not copy. Select the Markdown and copy it." hidden>Copy</button></div>
           <span class="sr-only" id="badge-status" role="status"></span>
+        </div>
+        <div class="dk-qr">
+          <span class="cap">QR code for this page</span>
+          <div class="dk-qr-body">
+            <div>
+              <p>Put it on a slide, a poster or a flyer. Scan it with a phone camera to open this page.</p>
+              <div class="dk-qr-actions">
+<?php foreach (array_filter(['svg' => QrCode::svgPath($entry), 'png' => $qrPng ? QrCode::pngPath($entry) : null]) as $type => $path): ?>
+                <a href="<?= $e($path) ?>" download="<?= $e(QrCode::fileName($entry, $type)) ?>">Download <?= strtoupper($type) ?><span class="sr-only"> of the QR code</span></a>
+<?php endforeach ?>
+              </div>
+            </div>
+            <svg class="qr-code" width="<?= $qr->size() * 3 ?>" height="<?= $qr->size() * 3 ?>" viewBox="0 0 <?= $qr->size() * 3 ?> <?= $qr->size() * 3 ?>" shape-rendering="crispEdges" aria-hidden="true"><path d="<?= $qr->path(3) ?>"/></svg>
+          </div>
         </div>
       </section>
 <?php if ($before !== null || $after !== null): ?>

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use PhpLives\QrCode;
 use PhpLives\ShareCard;
 use Tests\FakeDevNull;
 
@@ -143,6 +144,22 @@ it('draws a share card for each entry, current and archived', function () {
         ->and(getimagesize($this->tmp.'/dist/entries/pest-5/card.png'))->toMatchArray([0 => 1200, 1 => 630, 'mime' => 'image/png'])
         ->and(getimagesize($this->tmp.'/dist/entries/old/card.png'))->toMatchArray([0 => 1200, 1 => 630])
         ->and(file_get_contents($this->tmp.'/dist/entries/pest-5/index.html'))->toContain('https://phplives.dev/entries/pest-5/card.png?v=');
+});
+
+it('writes the PNG file of the QR code for each entry, current and archived', function () {
+    if (! QrCode::pngAvailable()) {
+        $this->markTestSkipped('GD with PNG support is not installed.');
+    }
+
+    writeEntry($this->tmp.'/entries', '2026-09-01-pest-5.php');
+    writeEntry($this->tmp.'/entries', '2026-03-01-old.php', ['name' => 'Old']);
+
+    [$status] = build($this->tmp, options: ['--no-cards']);
+
+    expect($status)->toBe(0)
+        ->and(getimagesize($this->tmp.'/dist/entries/pest-5/qr.png'))->toMatchArray(['mime' => 'image/png'])
+        ->and($this->tmp.'/dist/entries/old/qr.png')->toBeFile()
+        ->and($this->tmp.'/dist/entries/pest-5/qr.svg')->toBeFile();
 });
 
 it('falls back to the site card when the cards are not drawn', function () {

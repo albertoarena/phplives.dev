@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Dom\HTMLDocument;
 use PhpLives\Entries;
+use PhpLives\QrCode;
 use PhpLives\ShareCard;
 use PhpLives\Site;
 
@@ -80,7 +81,7 @@ it('shows the full label, with the name as the page heading', function () {
 
     expect(texts($doc, 'h1'))->toBe(['Pest 5'])
         ->and($doc->querySelectorAll('.depot .lab'))->toHaveCount(1)
-        ->and(texts($doc, '.depot .lab .cap'))->toBe(['From', 'Contents', 'Shipped', 'Track'])
+        ->and(texts($doc, '.depot .lab .cap'))->toBe(['From', 'Contents', 'Shipped', 'Track', 'Scan'])
         ->and(texts($doc, '.depot .lab .contents p'))->toBe(['A testing framework for PHP, focused on simplicity.'])
         ->and(texts($doc, '.depot .lab .route b'))->toBe(['LRV'])
         ->and(texts($doc, '.depot .lab .tid'))->toBe(texts($home, '#manifest .lab:first-child .tid'))
@@ -248,6 +249,58 @@ it('offers the maker the Markdown for a README badge, under the share foot', fun
         ->and($doc->getElementById('badge-status')?->getAttribute('role'))->toBe('status')
         ->and($doc->querySelector('.dk-badge img')->getAttribute('src'))->toBe('/badge.svg')
         ->and($doc->querySelector('.dk-badge img')->getAttribute('alt'))->toBe('Featured on phplives.dev badge');
+});
+
+it('puts a QR code of the page on the label, beside the barcode', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+    $doc = entryPage($this, 'pest-5');
+    $entry = Entries::load($this->dir, $this->today)->all()[0];
+    $code = $doc->querySelector('.lab .qr-blk .qr-cell svg.qr-code');
+
+    expect($doc->querySelector('.lab .qr-blk .qr-main .bars'))->not->toBeNull()
+        ->and($doc->querySelector('.lab .qr-blk .qr-main .track'))->not->toBeNull()
+        ->and(texts($doc, '.lab .qr-cell .cap'))->toBe(['Scan'])
+        ->and($code->getAttribute('role'))->toBe('img')
+        ->and($code->getAttribute('aria-label'))->toBe('QR code that opens this page')
+        ->and($code->querySelector('path')->getAttribute('d'))->toBe(QrCode::forEntry($entry)->path(3));
+});
+
+it('keeps the QR code off the labels on the main page', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+
+    expect(sitePages($this)['index.html']->querySelector('.qr-code'))->toBeNull();
+});
+
+it('offers the QR code as SVG and PNG files, under the badge', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+    $doc = (new Site(Entries::load($this->dir, $this->today), $this->today, qrPng: true))->pages()['entries/pest-5/index.html'];
+    $doc = HTMLDocument::createFromString($doc, LIBXML_NOERROR);
+    $links = iterator_to_array($doc->querySelectorAll('.dk-qr .dk-qr-actions a'));
+
+    expect($doc->querySelector('.docket .dk-badge + .dk-qr'))->not->toBeNull()
+        ->and(texts($doc, '.dk-qr .cap'))->toBe(['QR code for this page'])
+        ->and(texts($doc, '.dk-qr p'))->toBe(['Put it on a slide, a poster or a flyer. Scan it with a phone camera to open this page.'])
+        ->and(array_map(fn ($a) => $a->getAttribute('href'), $links))->toBe(['/entries/pest-5/qr.svg', '/entries/pest-5/qr.png'])
+        ->and(array_map(fn ($a) => $a->getAttribute('download'), $links))->toBe(['phplives-pest-5-qr.svg', 'phplives-pest-5-qr.png'])
+        ->and(texts($doc, '.dk-qr .dk-qr-actions a'))->toBe(['Download SVG of the QR code', 'Download PNG of the QR code'])
+        // The label above shows the same code to screen readers, so the preview is hidden from them.
+        ->and($doc->querySelector('.dk-qr svg.qr-code')->getAttribute('aria-hidden'))->toBe('true');
+});
+
+it('offers only the SVG file when GD cannot write the PNG file', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+    $html = (new Site(Entries::load($this->dir, $this->today), $this->today, qrPng: false))->pages()['entries/pest-5/index.html'];
+    $doc = HTMLDocument::createFromString($html, LIBXML_NOERROR);
+
+    expect(texts($doc, '.dk-qr .dk-qr-actions a'))->toBe(['Download SVG of the QR code']);
+});
+
+it('writes the SVG file of the QR code next to each entry page', function () {
+    writeEntry($this->dir, '2026-09-01-pest-5.php');
+    $entries = Entries::load($this->dir, $this->today);
+
+    expect((new Site($entries, $this->today))->files()['entries/pest-5/qr.svg'])->toBe(QrCode::svg($entries->all()[0]))
+        ->and((new Site($entries, $this->today, entryPages: false))->files())->not->toHaveKey('entries/pest-5/qr.svg');
 });
 
 it('escapes entry text on the entry page', function () {

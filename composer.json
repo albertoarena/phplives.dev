@@ -4,7 +4,8 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": "^8.4"
+        "php": "^8.4",
+        "chillerlan/php-qrcode": "^6.0"
     },
     "require-dev": {
         "pestphp/pest": "^5.0"

@@ -11,6 +11,7 @@
  *                             parcel is marked by $newest, and the label has no link to its page.
  * @var bool|null $newest On the entry page: true when this is the newest parcel.
  * @var string|null $newestSlug On the main page: the slug of the newest parcel. Without it, the first label is the newest.
+ * @var \PhpLives\QrCode|null $qr On the entry page: the QR code of the page, beside the barcode.
  */
 use PhpLives\Format;
 
@@ -77,7 +78,12 @@ $heading = $own ? 'h1' : (in_array($heading ?? null, ['h2', 'h3', 'h4'], true) ?
               <text x="60" y="73" fill="currentColor" font-family="JetBrains Mono, monospace" font-size="12" font-weight="600" text-anchor="middle"><?= $entry->shipped->format('Y') ?></text>
             </svg>
           </div>
+<?php if ($own): ?>
+          <div class="blk qr-blk">
+            <div class="qr-main">
+<?php else: ?>
           <div class="blk">
+<?php endif ?>
             <svg class="bars" viewBox="0 0 <?= array_sum(array_column(Format::barcode($tid), 'width')) * 1.8 ?> 46" preserveAspectRatio="none" aria-hidden="true">
 <?php foreach (Format::barcode($tid) as $bar): $w = $bar['width'] * 1.8; ?>
 <?php if ($bar['ink']): ?>              <rect x="<?= $x ?>" width="<?= $w ?>" height="46"/>
@@ -97,6 +103,13 @@ $heading = $own ? 'h1' : (in_array($heading ?? null, ['h2', 'h3', 'h4'], true) ?
             </div>
 <?php else: ?>
             <p class="tid mono"><?= $e($tid) ?></p>
+<?php endif ?>
+<?php if ($own): ?>
+            </div>
+            <div class="qr-cell">
+              <span class="cap">Scan</span>
+              <svg class="qr-code" width="<?= $qr->size() * 3 ?>" height="<?= $qr->size() * 3 ?>" viewBox="0 0 <?= $qr->size() * 3 ?> <?= $qr->size() * 3 ?>" shape-rendering="crispEdges" role="img" aria-label="QR code that opens this page"><path d="<?= $qr->path(3) ?>"/></svg>
+            </div>
 <?php endif ?>
           </div>
         </article>
