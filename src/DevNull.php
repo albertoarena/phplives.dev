@@ -21,17 +21,51 @@ final readonly class DevNull
 
     public const int MAX_PAGES = 5;
 
+    /**
+     * The API allows 60 requests a minute, and the build asks once for each maker.
+     * When it says too many requests (429), the build waits this long and asks again.
+     */
+    public const int RETRY_SECONDS = 5;
+
+    /** How many times the build asks again, so it waits a little more than a minute in all. */
+    public const int MAX_RETRIES = 14;
+
     /** @var Closure(string): array{int, mixed} */
     private Closure $get;
 
+    /** @var Closure(int): void */
+    private Closure $wait;
+
     /**
      * @param  (Closure(string): array{int, mixed})|null  $get  Gets a URL, as Http::getJson does.
+     * @param  (Closure(int): void)|null  $wait  Waits a number of seconds, as sleep() does.
      */
     public function __construct(
         private string $url = self::URL,
         ?Closure $get = null,
+        ?Closure $wait = null,
     ) {
         $this->get = $get ?? Http::getJson(...);
+        $this->wait = $wait ?? static function (int $seconds): void {
+            sleep($seconds);
+        };
+    }
+
+    /**
+     * Gets a URL. When the API says too many requests, it waits and asks again.
+     *
+     * @return array{int, mixed}
+     */
+    private function fetch(string $url): array
+    {
+        $answer = ($this->get)($url);
+
+        for ($retry = 0; $answer[0] === 429 && $retry < self::MAX_RETRIES; $retry++) {
+            ($this->wait)(self::RETRY_SECONDS);
+            $answer = ($this->get)($url);
+        }
+
+        return $answer;
     }
 
     /**
@@ -53,13 +87,14 @@ final readonly class DevNull
             }
 
             $seen[$key] = true;
-            [$status, $data] = ($this->get)("{$this->url}/api/v1/users/".rawurlencode($username));
+            [$status, $data] = $this->fetch("{$this->url}/api/v1/users/".rawurlencode($username));
 
             if ($status === 404) {
                 continue;
             }
 
-            if ($status !== 200 || ! is_string($data['data']['username'] ?? null)) {
+            // The API names the user in `handle`. It used `username` before, so both count.
+            if ($status !== 200 || ! is_string($data['data']['handle'] ?? $data['data']['username'] ?? null)) {
                 return null;
             }
 
@@ -81,7 +116,7 @@ final readonly class DevNull
         $url = "{$this->url}/api/v1/users/".rawurlencode($username).'/commits';
 
         for ($page = 0; $page < self::MAX_PAGES; $page++) {
-            [$status, $data] = ($this->get)($url);
+            [$status, $data] = $this->fetch($url);
 
             if ($status !== 200 || ! is_array($data['data'] ?? null)) {
                 return null;
