@@ -47,8 +47,11 @@ final class EntryValidator
     /** A short SPDX licence id, such as MIT or Apache-2.0. */
     private const string LICENCE = '/^[A-Za-z0-9][A-Za-z0-9.+-]{0,39}$/';
 
-    /** A version straight after a language or framework name, as in "Mollie API client for PHP 4.0". */
-    private const string STACK_VERSION = '/\b(?:PHP|Laravel|Symfony|WordPress|NativePHP)\s+v?\d/i';
+    /**
+     * A version straight after a language or framework name, as in "Mollie API client for PHP 4.0".
+     * A name after a dot is part of the product's own name, as in "Readability.php 4.0".
+     */
+    private const string STACK_VERSION = '/(?<!\.)\b(?:PHP|Laravel|Symfony|WordPress|NativePHP)\s+v?\d/i';
 
     /** The language or framework itself, as in "WordPress 7.0". */
     private const string STACK_RELEASE = '/^(?:PHP|Laravel|Symfony|WordPress|NativePHP)\s+v?\d[\w.]*$/i';

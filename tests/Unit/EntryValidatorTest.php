@@ -221,6 +221,7 @@ it('accepts a name with the version after the product', function (string $name) 
     'Laravel Permission 8.0',
     'WordPress 7.0',
     'Laravel 13',
+    'Readability.php 4.0',
 ]);
 
 it('accepts one to three topics', function (array $topics) {
