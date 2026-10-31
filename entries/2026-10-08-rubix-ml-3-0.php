@@ -2,7 +2,7 @@
 
 return [
     'name' => 'Rubix ML 3.0',
-    'sentence' => 'A new major version of Rubix ML, a machine learning and deep learning library for PHP, with parallel work for more of its models.',
+    'sentence' => 'A new major version of Rubix ML, a machine learning and deep learning library for PHP, with more of its models now running in parallel.',
     'details' => 'K Nearest Neighbors and Isolation Forest now run in parallel. Neural networks can stream snapshots to disk. More learners use a validation set, and AdaBoost stops early when it no longer improves.',
     'makers' => [
         ['name' => 'Rubix ML', 'github' => 'RubixML'],
@@ -19,7 +19,7 @@ return [
     'docs' => 'https://rubixml.org/',
     'stack' => 'php',
     'topics' => ['ai'],
-    'devnull' => 'Shipped with PHP: Rubix ML 3.0. A new major version of Rubix ML, a machine learning and deep learning library for PHP, with parallel work for more of its models. https://github.com/RubixML/ML'
+    'devnull' => 'Shipped with PHP: Rubix ML 3.0. A new major version of Rubix ML, a machine learning and deep learning library for PHP, with more of its models now running in parallel. https://github.com/RubixML/ML'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-30',
     'added' => '2026-10-31',

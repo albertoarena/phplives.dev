@@ -3,7 +3,7 @@
 return [
     'name' => 'SlimStat 6.0',
     'sentence' => 'A new major version of SlimStat, a web analytics plugin for WordPress, with click heatmaps and a WooCommerce revenue dashboard.',
-    'details' => 'SlimStat 6 adds a Heatmaps page, reports on channels and UTM campaigns, and opt-in store numbers next to your traffic. Without Pro, a heatmap shows the five most clicked links and buttons of each page. Nothing in the database changes until you click.',
+    'details' => 'SlimStat 6 adds a Heatmaps page, reports on channels and UTM campaigns, and opt-in store numbers next to your traffic. Without Pro, a heatmap shows the five most clicked links and buttons of each page. Your settings and data carry over when you update.',
     'makers' => [
         ['name' => 'VeronaLabs', 'github' => 'veronalabs'],
     ],
