@@ -49,6 +49,8 @@ never makes the case for PHP itself.
 - Each entry has its own page, with its full label, its details and its own share
   image.
 - A Privacy page, a Credits page and a Feeds page.
+- A search field on the main page and the archive. It filters the entries of the
+  page in the browser, by name, sentence, details, maker, package, stack and topic.
 - One entry: name, one plain sentence, maker (with a dev/null link when found),
   shipped date as `DD/MM/YYYY`, the date it was added, source link, one stack tag.
   It may also have a short details text, a Composer package, a licence, a docs

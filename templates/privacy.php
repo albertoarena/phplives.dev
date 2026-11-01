@@ -30,6 +30,7 @@ $mail = 'hello@albertoarena.it';
             <li>It has no accounts and no forms.</li>
             <li>It counts visits with Cloudflare Web Analytics. Cloudflare says that this tool does not collect or use your personal data.</li>
             <li>The fonts come from this site, so no request goes to Google.</li>
+            <li>The search runs in your browser. What you type is not sent to this site's server.</li>
           </ul>
         </section>
 
@@ -115,6 +116,6 @@ $mail = 'hello@albertoarena.it';
           <p>When the site changes what it collects, this page changes too. The date below shows the last change.</p>
         </section>
       </div>
-      <div class="sheet-foot"><span class="updated">Last updated: <span class="mono">17/10/2026</span></span></div>
+      <div class="sheet-foot"><span class="updated">Last updated: <span class="mono">01/11/2026</span></span></div>
     </article>
   </div>

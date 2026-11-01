@@ -16,6 +16,7 @@
  * @var array<string, int> $counts
  * @var array<string, int> $topics Entries per topic, for the topics with 2 entries or more.
  * @var string $manifestScript
+ * @var string $searchIndex The words of each entry, as JSON. See SearchIndex.
  * @var string $weekScript The marker under This week, for phones.
  * @var string $today
  */
@@ -60,6 +61,7 @@ use PhpLives\Format;
           <p>Newest first. <a href="/feeds/">Follow new entries by RSS</a>. <span data-filter-status data-total="<?= count($entries) ?>" role="status"></span></p>
         </div>
 <?php if ($entries): ?>
+<?php require __DIR__.'/search.php' ?>
         <div class="sec-tools" data-tools hidden>
 <?= $site->filterControl($counts) ?>
 <?php if ($topics): ?>
@@ -115,6 +117,7 @@ require __DIR__.'/table.php';
 ?>
         <div class="sheet-foot"><span>Each date comes from the project's own source.</span></div>
       </section>
+<?php require __DIR__.'/search-none.php' ?>
 <?php else: ?>
       <p class="empty">Nothing has shipped in the last 6 months yet.</p>
 <?php endif ?>
@@ -156,5 +159,6 @@ require __DIR__.'/table.php';
     </figure>
   </section>
   <script><?= $copyScript ?></script>
+  <script type="application/json" id="search-index"><?= $searchIndex ?></script>
   <script><?= $manifestScript ?></script>
   <script><?= $weekScript ?></script>

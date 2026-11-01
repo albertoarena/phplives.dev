@@ -90,6 +90,6 @@ $nav = ['/' => 'Manifest', '/archive/' => 'Archive'];
     <p class="fine foot-pages"><a href="/privacy/"<?= $path === '/privacy/' ? ' aria-current="page"' : '' ?>>Privacy</a><span aria-hidden="true">·</span><a href="/credits/"<?= $path === '/credits/' ? ' aria-current="page"' : '' ?>>Credits</a><span aria-hidden="true">·</span><a href="/feeds/"<?= $path === '/feeds/' ? ' aria-current="page"' : '' ?>>Feeds</a></p>
   </footer>
 </div>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='<?= $e(json_encode(['token' => $analyticsToken])) ?>'></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='<?= $e(json_encode(['token' => $analyticsToken, 'spa' => false])) ?>'></script>
 </body>
 </html>
