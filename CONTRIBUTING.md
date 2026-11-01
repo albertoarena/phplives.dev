@@ -25,7 +25,10 @@ A project qualifies when all three are true:
 - A repo creation date alone is not enough.
 
 A new **major** version (such as Pest 5) can be its own entry, dated by its
-release. A minor or patch release does not qualify.
+release. A minor or patch release does not qualify. **TYPO3** is the exception:
+its first release of a major (x.0) brings the breaking changes, and the LTS
+release is the one the project announces, so a TYPO3 major is dated by its LTS
+release. TYPO3 extensions follow the normal rule.
 
 ## Suggest a project
 
