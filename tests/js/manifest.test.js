@@ -495,6 +495,16 @@ describe('manifest script', () => {
       expect(page.key.hidden).toBe(true)
     })
 
+    it('skips a part of the link that does not decode, and keeps the rest', () => {
+      const page = run({ hash: '#q=50%&stack=laravel' })
+
+      expect(page.input.value).toBe('')
+      expect(page.pressed(page.chips)).toEqual(['laravel'])
+      expect(page.tools.hidden).toBe(false)
+
+      expect(run({ hash: '#q=50%25' }).input.value).toBe('50%')
+    })
+
     it('writes the search into the link, before the stack and the topic', () => {
       const page = run()
 

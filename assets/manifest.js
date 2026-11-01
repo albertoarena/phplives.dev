@@ -118,7 +118,8 @@
   if (hash.indexOf('=') !== -1) {
     hash.split('&').forEach(function (pair) {
       var parts = pair.split('=');
-      params[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || '');
+      // A link edited by hand can hold a bad escape, such as "50%". That part is skipped.
+      try { params[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || ''); } catch (e) {}
     });
   }
 
