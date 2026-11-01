@@ -91,13 +91,17 @@ function run({ hash = '', stored = {}, broken = false, select = false, topicSele
   if (indexScript) indexScript.textContent = JSON.stringify(index)
 
   // Two bundles in the first view: one with the php entry, one with the two laravel entries.
-  const groups = [[items[0]], [items[1], items[2]]].map((members) => {
+  // The second has a note with one text for each number of entries it can show, like This week.
+  const groups = [[items[0]], [items[1], items[2]]].map((members, g) => {
     const group = element({ 'data-group': '' })
     const count = element({ 'data-group-count': '' })
     count.textContent = members.length + (members.length === 1 ? ' parcel' : ' parcels')
     group.count = count
+    const note = g === 1 ? element({ 'data-group-notes': JSON.stringify(['Here is the newest 1.', 'Here are the newest 2.']) }) : null
+    if (note) note.textContent = 'Here are the newest 2.'
+    group.note = note
     group.querySelectorAll = (selector) => (selector === '[data-stack]' ? members : [])
-    group.querySelector = (selector) => (selector === '[data-group-count]' ? count : null)
+    group.querySelector = (selector) => ({ '[data-group-count]': count, '[data-group-notes]': note })[selector] ?? null
     return group
   })
 
@@ -277,6 +281,27 @@ describe('manifest script', () => {
 
     page.chip('').click()
     expect(page.groups.map((group) => group.count.textContent)).toEqual(['1 parcel', '2 parcels'])
+  })
+
+  it('fits the note of a bundle to the number of entries it shows', () => {
+    const page = run()
+
+    page.topic('testing').click()
+    expect(page.groups[1].note.textContent).toBe('Here is the newest 1.')
+
+    page.topic('').click()
+    expect(page.groups[1].note.textContent).toBe('Here are the newest 2.')
+
+    page.input.type('excel')
+    expect(page.groups[1].note.textContent).toBe('Here is the newest 1.')
+  })
+
+  it('leaves the note alone when its bundle shows nothing', () => {
+    const page = run()
+
+    page.chip('php').click()
+    expect(page.groups[1].hidden).toBe(true)
+    expect(page.groups[1].note.textContent).toBe('Here are the newest 2.')
   })
 
   it('keeps only the entries of the picked topic, in both views', () => {

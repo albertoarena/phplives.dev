@@ -78,6 +78,8 @@ final readonly class Site
         $featured = Bundles::featured($current, $this->today);
         $rest = array_values(array_filter($current, fn (Entry $e) => ! in_array($e, $featured, true)));
         [$latestTitle, $latestNote] = $this->latestHead($current, count($featured));
+        // A filter can leave fewer labels, so the script needs the note for each number of them.
+        $latestNotes = array_map(fn (int $n) => $this->latestHead($current, count($featured), $n)[1], range(1, max(1, count($featured))));
 
         return [
             'index.html' => $this->page('main', 'phplives.dev: PHP delivers. PHP lives!', '/', [
@@ -87,6 +89,7 @@ final readonly class Site
                 'newestSlug' => $current[0]->slug ?? null,
                 'latestTitle' => $latestTitle,
                 'latestNote' => $latestNote,
+                'latestNotes' => $latestNotes,
                 'bundles' => Bundles::group($rest, $this->today),
                 'cutoff' => $cutoff,
                 'stacks' => $this->stackSummary($current),
@@ -242,18 +245,24 @@ final readonly class Site
      * added this week, so a visitor knows why an older project has a full label.
      *
      * @param  list<Entry>  $entries
+     * @param  int|null  $left  How many labels a filter or a search leaves. Null: all of them.
      * @return array{0: string, 1: string}
      */
-    private function latestHead(array $entries, int $shown): array
+    private function latestHead(array $entries, int $shown, ?int $left = null): array
     {
         $added = Bundles::addedThisWeek($entries, $this->today);
         $since = 'since Monday '.Bundles::weekStart($this->today)->format('d/m');
+        $left ??= $shown;
 
         return match (true) {
-            $added === 0 => ['Added last', "Nothing has been added {$since}. ".($shown === 1 ? 'This one was' : "These {$shown} were").' added last.'],
+            $added === 0 => ['Added last', "Nothing has been added {$since}. ".($left === 1 ? 'This one was' : "These {$left} were").' added last.'],
             $added < $shown => ['This week', ($added === 1 ? '1 parcel has' : "{$added} parcels have")." been added {$since}. The rest were added before."],
-            $added === $shown => ['This week', ($shown === 1 ? 'It has' : "All {$shown} have")." been added {$since}."],
-            default => ['This week', "{$added} parcels have been added {$since}. Here are the newest {$shown}. The others are in the bundles below, by shipped date."],
+            $added === $shown => ['This week', match ($left) {
+                1 => 'It has',
+                2 => 'Both have',
+                default => "All {$left} have",
+            }." been added {$since}."],
+            default => ['This week', "{$added} parcels have been added {$since}. ".($left === 1 ? 'Here is the newest 1.' : "Here are the newest {$left}.").' The others are in the bundles below, by shipped date.'],
         };
     }
 

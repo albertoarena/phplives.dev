@@ -199,6 +199,11 @@
     group.hidden = shown === 0;
     var label = group.querySelector('[data-group-count]');
     if (label) label.textContent = shown + (shown === 1 ? ' parcel' : ' parcels');
+    // A note that counts the entries (This week) has one text for each number the bundle can show.
+    var note = group.querySelector('[data-group-notes]');
+    var notes = [];
+    try { notes = note ? JSON.parse(note.getAttribute('data-group-notes')) : []; } catch (e) {}
+    if (shown > 0 && notes[shown - 1]) note.textContent = notes[shown - 1];
   }
 
   function listen(f) {
