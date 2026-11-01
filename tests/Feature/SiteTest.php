@@ -120,6 +120,33 @@ it('says how many full labels were added this week', function (array $added, str
     'more' => [['2026-10-12', '2026-10-13', '2026-10-16', '2026-10-16'], 'This week', '4 parcels have been added since Monday 12/10. Here are the newest 3. The others are in the bundles below, by shipped date.'],
 ]);
 
+it('gives the This week note one text for each number of labels a filter can leave', function (array $added, array $notes) {
+    foreach ($added as $i => $day) {
+        writeEntry($this->dir, '2026-09-0'.($i + 1)."-e{$i}.php", ['added' => $day]);
+    }
+
+    $note = pages($this)['index.html']->querySelector('#this-week .bundle-note');
+
+    expect(json_decode($note->getAttribute('data-group-notes'), true))->toBe($notes);
+})->with([
+    'none' => [['2026-10-01', '2026-10-02', '2026-10-03'], [
+        'Nothing has been added since Monday 12/10. This one was added last.',
+        'Nothing has been added since Monday 12/10. These 2 were added last.',
+        'Nothing has been added since Monday 12/10. These 3 were added last.',
+    ]],
+    'one' => [['2026-10-12', '2026-10-02', '2026-10-03'], array_fill(0, 3, '1 parcel has been added since Monday 12/10. The rest were added before.')],
+    'all three' => [['2026-10-12', '2026-10-13', '2026-10-16'], [
+        'It has been added since Monday 12/10.',
+        'Both have been added since Monday 12/10.',
+        'All 3 have been added since Monday 12/10.',
+    ]],
+    'more' => [['2026-10-12', '2026-10-13', '2026-10-16', '2026-10-16'], [
+        '4 parcels have been added since Monday 12/10. Here is the newest 1. The others are in the bundles below, by shipped date.',
+        '4 parcels have been added since Monday 12/10. Here are the newest 2. The others are in the bundles below, by shipped date.',
+        '4 parcels have been added since Monday 12/10. Here are the newest 3. The others are in the bundles below, by shipped date.',
+    ]],
+]);
+
 it('puts a hidden marker under the This week row, for the script that shows it on phones', function () {
     writeEntry($this->dir, '2026-10-14-a.php', ['added' => '2026-10-16']);
     writeEntry($this->dir, '2026-10-13-b.php', ['added' => '2026-10-16']);

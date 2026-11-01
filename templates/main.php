@@ -7,6 +7,7 @@
  * @var string|null $newestSlug The entry that shipped last: the newest parcel, on a label or a stub.
  * @var string $latestTitle
  * @var string $latestNote
+ * @var list<string> $latestNotes The note for 1, 2 or 3 labels, for the script to use when a filter leaves fewer.
  * @var list<\PhpLives\Bundle> $bundles Every other entry, by week and by month.
  * @var string $cutoff
  * @var string $stacks
@@ -79,7 +80,7 @@ use PhpLives\Format;
         <section class="bundle-new" id="this-week" data-group aria-labelledby="this-week-title">
           <div class="bundle-head">
             <h3 id="this-week-title"><?= $e($latestTitle) ?></h3>
-            <p class="bundle-note"><?= $e($latestNote) ?></p>
+            <p class="bundle-note" data-group-notes="<?= $e(json_encode($latestNotes)) ?>"><?= $e($latestNote) ?></p>
           </div>
           <div class="grid" data-week-row>
 <?php $heading = 'h4'; foreach ($featured as $i => $entry) {
