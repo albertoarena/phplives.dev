@@ -173,6 +173,12 @@ components:
     typography: "{typography.mono-data}"
     rounded: "{rounded.sticker}"
     padding: "6px 6px 6px 14px"
+  search-slip:
+    backgroundColor: "{colors.thermal-white}"
+    textColor: "{colors.print-black}"
+    rounded: "{rounded.sticker}"
+    padding: "6px 6px 6px 16px"
+    height: "58px"
   copy-button:
     textColor: "{colors.print-black}"
     rounded: "{rounded.strip}"
@@ -250,7 +256,7 @@ One deep Prussian blue ink, white paper, near-black print and a single signal or
 - **Pale Field** (`pale-field`): the light theme background. A pale blue-grey, so the white labels stand out from it.
 - **Field Muted Ink** (`field-muted-ink`): secondary text on the field, such as the lede and section notes.
 - **Field Line** (`field-line`): hairlines on the field (top bar, footer), toggle group borders, and hover fills.
-- **Thermal White** (`thermal-white`): the paper of labels, stubs, the manifest slip, the sheets, the dispatch strip, the command strip and the CTA button.
+- **Thermal White** (`thermal-white`): the paper of labels, stubs, the manifest slip, the search slip, the sheets, the dispatch strip, the command strip and the CTA button.
 - **Print Black** (`print-black`): the ink on paper. It draws the 3px print rules, the route code blocks and the barcode.
 - **Print Grey** (`print-grey`): captions and secondary text on paper (FROM, SHIPPED, date proof, tracking number).
 - **Soft Rule** (`soft-rule`): 1px row dividers inside sheets and the slip. On a stub it is the line above the credits row.
@@ -308,7 +314,7 @@ The theme follows the device by default. A Light / Dark / System toggle in the t
 The page is one column of sections inside a 1320px wrap with a 40px side gutter. The root is a size container, so the layout responds to its own width (container queries), not to the viewport.
 
 - **Hero:** two columns (1.4fr and 1fr, 64px gap), aligned to the bottom. It is short: 32px of padding on top and 36px below (28px and 32px on narrow screens). The line is on the left, with the lede, the contribute row and its note under it. The white manifest slip is on the right. Below 1100px it becomes one column and the slip caps at 560px.
-- **Section head:** the title on the left, with the note "Newest first." on the same line. The tools sit on their own row below it, with 24px of space under them (16px on narrow screens): the stack filter and the topic filter on the left, Labels / List at the right end. When the row is too narrow, the filters wrap and Labels / List stays at the end.
+- **Section head:** the title on the left, with the note "Newest first." on the same line. The search slip sits below it, across the full width of the wrap, 20px under the note. The tools sit on their own row below the slip, 16px under it, with 24px of space under them (16px on narrow screens): the stack filter and the topic filter on the left, Labels / List at the right end. When the row is too narrow, the filters wrap and Labels / List stays at the end.
 - **This week:** up to three full labels in one row, with a 32px gap. On a wide screen the first row of labels starts inside the first screen. At 960px and below, the row scrolls sideways with scroll snap. Each column is min(380px, 42%), so the next label shows at the edge. At 700px and below a column is 86% wide, and at 440px and below it is 82% wide, with a 14px gap. While the row scrolls sideways, a marker sits 12px under it. The marker shows "1 / 3" in mono and one short bar for each label. The bar of the label in view is in the field ink. "Swipe for more" follows, until the last label is in view. The marker counts only the labels that the filters show. It hides when fewer than 2 labels show, and it needs its script. The row runs into the side gutter, so labels scroll to the edge of the page. The labels share their row tracks (a subgrid), so FROM, CONTENTS, SHIPPED and TRACK start at the same height on every label in the row. Each block takes the height of the tallest one, and its text stays at the top. The tracking number and the Details link sit at the bottom of the TRACK block.
 - **Bundles:** the stubs sit in a grid of 4 columns, with gaps of 24px (rows) and 20px (columns). The grid has 3 columns at 1100px and below. It has 2 columns at 700px and below, with gaps of 18px and 14px. It has 1 column at 440px and below. All these widths are container widths.
 - **Weeks share rows:** the week bundles that follow each other sit in one grid with the same columns. Each week spans one column per stub, up to the number of columns. Its stubs use a column subgrid, so they line up with the stubs of the other weeks. The stubs in one row have the same height.
@@ -330,7 +336,7 @@ One page per entry. Top to bottom:
 
 ## Elevation & Depth
 
-Depth is paper lying on a surface. Every sheet of paper (label, slip, sheet, sticker, CTA, command strip, docket, stub) has one soft drop shadow tinted with Prussian blue. Nothing else casts a shadow. A label lifts 3px on hover, and its shadow grows. On its own entry page the label does not lift, because it is not a link there. Stubs never lift: a home stub keeps its drop shadow, and a neighbour stub keeps the rest shadow. The command strip inside the docket has no shadow, because it is printed on the docket, not laid on it. In the dark theme the shadows are black and deeper.
+Depth is paper lying on a surface. Every sheet of paper (label, slip, search slip, sheet, sticker, CTA, command strip, docket, stub) has one soft drop shadow tinted with Prussian blue. Nothing else casts a shadow. A label lifts 3px on hover, and its shadow grows. On its own entry page the label does not lift, because it is not a link there. Stubs never lift: a home stub keeps its drop shadow, and a neighbour stub keeps the rest shadow. The command strip inside the docket has no shadow, because it is printed on the docket, not laid on it. In the dark theme the shadows are black and deeper.
 
 ### Shadow Vocabulary
 - **Paper rest** (`--shadow`): every sheet of paper at rest. A 1px contact line plus a long soft fall.
@@ -372,8 +378,26 @@ Segmented groups on the field: the theme toggle (Light, Dark, System), the view 
 - **Stack chips:** "All" plus one chip per stack, up to 6, most common first. Each shows its route code in condensed weight 900 and a mono count. With more than 6 stacks a native select replaces the chips.
 - **Topic filter:** the caption "Topic", then "All" plus one choice per topic, most common first, with a count. A topic shows only when at least 2 entries on the page have it. A topic chip shows its label in Archivo 700, never a route code. With more than 6 topics a native select replaces the chips. When no topic has 2 entries, the topic filter is left out.
 - **Stack and topic together:** an entry shows when it has the picked stack and the picked topic. The status line names both: "Showing 3 of 74 parcels: Laravel, Testing."
-- **Behaviour:** the state lives in the URL hash (`#stack=laravel&topic=testing&view=list`). An unknown stack or topic in the hash is ignored. The view is also kept in `localStorage`. Without JavaScript the tools stay hidden. The page then shows the full labels and every bundle of stubs.
-- **Filter and bundles:** the filters hide a bundle when none of its entries is left. They also rewrite the parcel count of each bundle.
+- **Behaviour:** the state lives in the URL hash (`#q=queue&stack=laravel&topic=testing&view=list`). An unknown stack or topic in the hash is ignored. The view is also kept in `localStorage`. Without JavaScript the tools stay hidden. The page then shows the full labels and every bundle of stubs.
+- **Filter and bundles:** the filters hide a bundle when none of its entries is left. They also rewrite the parcel count of each bundle. Space between bundles follows only a bundle that shows, so a filtered page starts right under the tools. When nothing is left, the empty views take no room.
+
+### Search slip
+A strip of white paper above the filters, on the main page and the archive. It is the only tool on paper, because a visitor types on it.
+- **Shape:** Thermal White, sticker corners (5px), the paper rest shadow. 58px tall, with 6px of padding (16px on the left). 54px tall below 700px, with 4px of padding (12px on the left).
+- **Inside, left to right:** a magnifier icon (20px, stroke, hidden from screen readers); the caption "Search" in the label style (Print Grey), closed on its right by a 3px Print Black print rule; the input in Archivo 600 at 20px (17px below 700px, so a phone does not zoom in), Print Black, with the placeholder "Project, maker or word" in Print Grey.
+- **At the right end:** a "/" key cap while the field is empty (mono 12px, Print Grey, Soft Rule border, 2px at the bottom; hidden below 700px), or a "Clear" button once it has text, in the outline style of the Copy button.
+- **Focus:** a 2px ring in the field's text colour around the whole slip, 3px out. No orange.
+- **Words:** plain "Search" and "project", never "parcel", so the field says what it does. The status line keeps its own words: "Showing 4 of 112 parcels: “queue”, Laravel."
+- **Matching:** each word typed must start a word of an entry (its name, sentence, details, makers, GitHub usernames, package, stack and topics), and every word must match. Case, accents and punctuation do not count. A word of 5 letters or more loses a plural "s". A short list of other words is kept by hand in the script ("ecommerce" and "shop" find E-commerce). Results keep their order, newest first, in their bundles.
+- **Keys:** "/" goes to the field, unless the focus is already in a field. Escape clears it. Enter closes the keyboard on a phone.
+- **Status line:** while the visitor types, it waits 400ms after the last key, so a screen reader does not read every letter.
+- Without JavaScript the slip stays hidden, like the other tools.
+
+### No match
+What shows in place of the entries when the search and the filters leave nothing. It is an empty slot on the field, not paper: a 2px dashed Field Line outline, 6px radius, 36px by 32px of padding (24px by 18px below 700px), at most 760px wide.
+- **Title** in the bundle style, written by the script: "No project matches “stripe”.", then " in Laravel" when a stack or a topic is picked. With no words typed: "No project matches plain PHP and MCP."
+- **Note:** "Check the spelling, or try a shorter word." in Field Muted Ink.
+- **Actions:** an outline button in the field's text colour, "Clear the search", or "Clear all filters" when a stack or a topic is picked. Then a bold link, "Is a project missing? Suggest it in an issue", to the issue form.
 
 ### Shipping label (signature)
 A 4x6 thermal label, one per entry. White paper, 6px radius, paper shadow. The label is its own size container. Its blocks, top to bottom:

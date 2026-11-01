@@ -9,6 +9,7 @@
  * @var array<string, int> $counts
  * @var array<string, int> $topics Entries per topic, for the topics with 2 entries or more.
  * @var string $manifestScript
+ * @var string $searchIndex The words of each entry, as JSON. See SearchIndex.
  */
 ?>
   <div class="wrap">
@@ -18,6 +19,7 @@
         <p>Projects that shipped more than 6 months ago. They stay on the site, newest first. <span data-filter-status data-total="<?= count($entries) ?>" role="status"></span></p>
       </div>
 <?php if ($entries): ?>
+<?php require __DIR__.'/search.php' ?>
       <div class="sec-tools" data-tools hidden>
 <?= $site->filterControl($counts) ?>
 <?php if ($topics): ?>
@@ -26,6 +28,9 @@
       </div>
 <?php endif ?>
     </section>
+<?php if ($entries): ?>
+<?php require __DIR__.'/search-none.php' ?>
+<?php endif ?>
     <section class="sheet" id="archive" aria-labelledby="sheet-title">
       <div class="sheet-head">
         <h2 id="sheet-title">Shipped before <?= $e($cutoff) ?></h2>
@@ -39,4 +44,5 @@
       <div class="sheet-foot"><span>Each date comes from the project's own source.</span><span class="mono"><?= $e($today) ?></span></div>
     </section>
   </div>
+  <script type="application/json" id="search-index"><?= $searchIndex ?></script>
   <script><?= $manifestScript ?></script>

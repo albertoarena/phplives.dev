@@ -23,7 +23,7 @@ $own = $onEntryPage ?? false;
 $isNewest = $own ? ($newest ?? false) : (isset($newestSlug) ? $entry->slug === $newestSlug : $i === 0);
 $heading = $own ? 'h1' : (in_array($heading ?? null, ['h2', 'h3', 'h4'], true) ? $heading : 'h3');
 ?>
-        <article class="lab<?= $isNewest ? ' newest' : '' ?>" style="--i: <?= $i ?>" data-stack="<?= $e($entry->stack) ?>" data-topics="<?= $e(implode(' ', $entry->topics)) ?>" aria-labelledby="t-<?= $id ?>">
+        <article class="lab<?= $isNewest ? ' newest' : '' ?>" style="--i: <?= $i ?>" data-stack="<?= $e($entry->stack) ?>" data-topics="<?= $e(implode(' ', $entry->topics)) ?>" data-slug="<?= $e($entry->slug) ?>" aria-labelledby="t-<?= $id ?>">
           <div class="blk from">
 <?php if ($isNewest): ?>
             <div class="lab-new">Newest parcel</div>

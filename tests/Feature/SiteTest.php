@@ -478,7 +478,7 @@ it('loads Cloudflare Web Analytics, and nothing else that tracks', function (str
 
     expect($beacons)->toHaveCount(1)
         ->and($beacons[0]->getAttribute('type'))->toBe('module')
-        ->and(json_decode($beacons[0]->getAttribute('data-cf-beacon'), true))->toBe(['token' => Site::ANALYTICS_TOKEN])
+        ->and(json_decode($beacons[0]->getAttribute('data-cf-beacon'), true))->toBe(['token' => Site::ANALYTICS_TOKEN, 'spa' => false])
         ->and(Site::ANALYTICS_TOKEN)->toMatch('/^[0-9a-f]{32}$/')
         ->and($doc->querySelectorAll('script[src]'))->toHaveCount(1);
 })->with(['index.html', 'archive/index.html', 'privacy/index.html', 'credits/index.html', 'feeds/index.html']);
@@ -630,7 +630,7 @@ it('shows how to commit on /dev/null from a terminal', function (array $posts) {
 
 it('runs the copy, the manifest and the This week scripts inline, at the end of the main page', function () {
     writeEntry($this->dir, '2026-09-01-pest-5.php');
-    $scripts = array_map(fn ($s) => $s->textContent, iterator_to_array(pages($this)['index.html']->body->querySelectorAll('script:not([src])')));
+    $scripts = array_map(fn ($s) => $s->textContent, iterator_to_array(pages($this)['index.html']->body->querySelectorAll('script:not([src]):not([type])')));
 
     expect($scripts)->toHaveCount(3)
         ->and($scripts[0])->toContain('data-copy')
@@ -667,7 +667,7 @@ it('says what the site collects on the privacy page', function () {
             'https://www.cloudflare.com/privacypolicy/',
             'https://albertoarena.it/?utm_source=phplives.dev&utm_medium=footer',
         )
-        ->and(texts($doc, '.policy .updated'))->toBe(['Last updated: 17/10/2026']);
+        ->and(texts($doc, '.policy .updated'))->toBe(['Last updated: 01/11/2026']);
 });
 
 it('has no copy script on the privacy page', function () {
@@ -788,7 +788,7 @@ it('filters the archive too', function () {
     expect(texts($archive, '[data-stack-choice]'))->toBe(['All 1', 'SYM 1'])
         ->and(array_map(fn ($r) => $r->getAttribute('data-stack'), iterator_to_array($archive->querySelectorAll('tbody tr[data-stack]'))))->toBe(['symfony'])
         ->and($archive->querySelector('[data-filter-status]')->getAttribute('role'))->toBe('status')
-        ->and($archive->body->querySelectorAll('script:not([src])'))->toHaveCount(1);
+        ->and($archive->body->querySelectorAll('script:not([src]):not([type])'))->toHaveCount(1);
 });
 
 it('turns the filter into a dropdown when there are too many stacks', function () {
@@ -1056,4 +1056,86 @@ it('keeps the last part of a track link and its arrow on one line', function () 
     expect($tail->textContent)->toBe('pest')
         ->and($tail->querySelector('svg'))->not->toBeNull()
         ->and($css)->toContain('.lab .track .tail{white-space:nowrap}');
+});
+
+function searchIndex(HTMLDocument $doc): array
+{
+    return json_decode($doc->querySelector('script#search-index[type="application/json"]')->textContent, true, flags: JSON_THROW_ON_ERROR);
+}
+
+it('puts a search field above the tools, on the main page and the archive', function (string $page) {
+    stackEntries($this);
+    $doc = pages($this)[$page];
+    $slip = $doc->querySelector('.search[role="search"]');
+    $input = $slip->querySelector('input[data-search]');
+
+    expect($slip->hasAttribute('data-tools'))->toBeTrue()
+        ->and($slip->hasAttribute('hidden'))->toBeTrue()
+        ->and($input->getAttribute('type'))->toBe('search')
+        ->and($input->getAttribute('placeholder'))->toBe('Project, maker or word')
+        ->and($input->getAttribute('autocomplete'))->toBe('off')
+        ->and($input->getAttribute('spellcheck'))->toBe('false')
+        ->and($input->getAttribute('enterkeyhint'))->toBe('search')
+        ->and($slip->querySelector('label[for="'.$input->getAttribute('id').'"]')?->textContent)->toBe('Search')
+        ->and(texts($doc, '.search [data-search-key]'))->toBe(['/'])
+        ->and(texts($doc, '.search button[data-search-clear]'))->toBe(['Clear'])
+        ->and($slip->querySelector('button[data-search-clear]')->hasAttribute('hidden'))->toBeTrue()
+        ->and($slip->nextElementSibling?->classList->contains('sec-tools'))->toBeTrue();
+})->with(['index.html', 'archive/index.html']);
+
+it('writes a search index with the words of each entry on the page', function () {
+    writeEntry($this->dir, '2026-10-01-mollie.php', [
+        'name' => 'Mollie Module',
+        'sentence' => 'Takes payments in Magento.',
+        'details' => 'It adds saved cards.',
+        'makers' => [['name' => 'Mollie Team', 'github' => 'mollie'], ['name' => 'Jane Roe']],
+        'package' => 'mollie/magento2',
+        'topics' => ['e-commerce', 'api'],
+        'devnull' => 'Shipped with PHP: Mollie Module. https://example.com',
+    ]);
+    writeEntry($this->dir, '2026-09-01-plain.php', ['name' => 'Plain', 'stack' => 'laravel']);
+    writeEntry($this->dir, '2026-02-01-old.php', ['name' => 'Old', 'stack' => 'symfony']);
+    $pages = pages($this);
+    $index = searchIndex($pages['index.html']);
+
+    expect(array_keys($index))->toBe(['mollie', 'plain'])
+        ->and($index['mollie'])->toBe('Mollie Module Takes payments in Magento. It adds saved cards. Mollie Team mollie Jane Roe mollie/magento2 plain PHP E-commerce APIs')
+        ->and($index['plain'])->toBe('Plain A testing framework for PHP, focused on simplicity. Nuno Maduro nunomaduro Laravel')
+        ->and($index['mollie'])->not->toContain('Shipped with PHP')
+        ->and($index['mollie'])->not->toContain('https://')
+        ->and(array_keys(searchIndex($pages['archive/index.html'])))->toBe(['old']);
+});
+
+it('keeps the search index safe inside its script tag', function () {
+    writeEntry($this->dir, '2026-10-01-tag.php', ['name' => 'Tag', 'sentence' => 'Parses </script> & <b> tags.']);
+
+    expect(searchIndex(pages($this)['index.html'])['tag'])->toContain('Parses </script> & <b> tags.');
+});
+
+it('tags each label, stub and list row with its slug, for the search', function () {
+    stackEntries($this);
+    $main = pages($this)['index.html'];
+    $slugs = fn (string $selector) => array_map(fn ($n) => $n->getAttribute('data-slug'), iterator_to_array($main->querySelectorAll($selector)));
+
+    expect($slugs('#manifest [data-view="labels"] [data-stack]'))->toBe(['a', 'b', 'c'])
+        ->and($slugs('#manifest [data-view="list"] tbody tr[data-stack]'))->toBe(['a', 'b', 'c'])
+        ->and(array_map(fn ($r) => $r->getAttribute('data-slug'), iterator_to_array(pages($this)['archive/index.html']->querySelectorAll('tbody tr[data-stack]'))))->toBe(['old']);
+});
+
+it('has a hidden block for a search with no match, with a way to suggest a project', function (string $page) {
+    stackEntries($this);
+    $doc = pages($this)[$page];
+    $none = $doc->querySelector('[data-search-none]');
+
+    expect($none->hasAttribute('hidden'))->toBeTrue()
+        ->and(texts($doc, '[data-search-none] [data-search-none-title]'))->toBe(['No project matches.'])
+        ->and(texts($doc, '[data-search-none] p'))->toBe(['Check the spelling, or try a shorter word.'])
+        ->and(texts($doc, '[data-search-none] button[data-search-reset]'))->toBe(['Clear the search'])
+        ->and(hrefs($doc, '[data-search-none] a'))->toBe(['https://github.com/albertoarena/phplives.dev/issues/new?template=suggest-a-project.yml'])
+        ->and(texts($doc, '[data-search-none] a'))->toBe(['Is a project missing? Suggest it in an issue']);
+})->with(['index.html', 'archive/index.html']);
+
+it('says on the privacy page that the search runs in the browser', function () {
+    expect(texts(pages($this)['privacy/index.html'], '#in-short + ul li'))
+        ->toContain("The search runs in your browser. What you type is not sent to this site's server.");
 });

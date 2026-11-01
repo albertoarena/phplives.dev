@@ -77,6 +77,43 @@ body{margin:0;background:var(--field)}
 .filter select:focus-visible{outline:0}
 .filter select{font:inherit;font-size:14px;font-weight:700;color:var(--on-field);background:var(--field);border:0;border-radius:4px;min-height:36px;padding:0 8px}
 .filter select:hover{background:var(--line)}
+
+/* Search: a paper slip above the filters. The script shows it with the other tools. */
+.search{box-sizing:border-box;display:flex;flex:none;width:100%;align-items:center;gap:14px;margin:4px 0 0;min-height:58px;padding:6px 6px 6px 16px;background:var(--label);color:var(--ink);border-radius:5px;box-shadow:var(--shadow)}
+.search+.sec-tools{margin-top:0}
+.head .search+.sec-tools{margin-top:-16px}
+.search:focus-within{outline:2px solid var(--on-field);outline-offset:3px}
+.search-glass{flex:none}
+.search label{font-size:11px;line-height:36px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;padding-right:16px;border-right:3px solid var(--ink)}
+.search input{flex:1 1 auto;min-width:0;min-height:44px;margin:0;padding:0;font:inherit;font-size:20px;font-weight:600;color:var(--ink);background:transparent;border:0;border-radius:0;outline:0;-webkit-appearance:none;appearance:none}
+.search input::placeholder{color:var(--ink-2);font-weight:500;opacity:1}
+.search input::-webkit-search-cancel-button,.search input::-webkit-search-decoration{-webkit-appearance:none;appearance:none}
+.search-key{flex:none;font-size:12px;font-weight:600;line-height:22px;padding:0 8px;margin-right:10px;color:var(--ink-2);border:1px solid var(--rule-soft);border-bottom-width:2px;border-radius:3px}
+.search-clear{flex:none;font:inherit;font-size:14px;font-weight:800;color:var(--ink);background:transparent;border:2px solid var(--ink);border-radius:4px;min-height:40px;padding:0 14px;cursor:pointer}
+.search-clear:hover{background:var(--rule-soft)}
+.search-clear:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+/* In place of the entries, when nothing matches: an empty slot on the field, not paper. */
+/* When nothing is left, the empty views take no room. */
+.bundles:not(:has([data-stack]:not([hidden]))){padding-bottom:0}
+.list-sheet:not(:has(tr[data-stack]:not([hidden]))){display:none}
+.search-none{display:flex;flex-direction:column;align-items:flex-start;gap:14px;max-width:760px;margin:0 0 24px;padding:36px 32px;border:2px dashed var(--line);border-radius:6px}
+.search-none h3{margin:0;font-size:26px;line-height:1.1;font-weight:800;font-stretch:75%;letter-spacing:-.005em;word-spacing:.12em;overflow-wrap:anywhere}
+.search-none p{margin:0;font-size:16px;color:var(--on-field-2)}
+.search-none-acts{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-top:4px}
+.search-none button{font:inherit;font-size:14px;font-weight:800;color:var(--on-field);background:transparent;border:2px solid var(--on-field);border-radius:4px;min-height:40px;padding:0 14px;cursor:pointer}
+.search-none button:hover{background:var(--line)}
+.search-none button:focus-visible{outline:2px solid var(--on-field);outline-offset:2px}
+.search-none a{font-size:15px;font-weight:700}
+@container (max-width:700px){
+  .search{gap:10px;min-height:54px;margin:12px 0 8px;padding:4px 4px 4px 12px}
+  .search label{padding-right:10px}
+  /* 16px or more, so a phone does not zoom in on the field. */
+  .search input{font-size:17px}
+  .search-key{display:none}
+  .search-clear{padding:0 10px}
+  .search-none{padding:24px 18px}
+  .search-none h3{font-size:22px}
+}
 .new-tag{display:inline-block;margin-left:8px;vertical-align:2px;background:var(--signal);color:var(--ink);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:2px;font-stretch:100%}
 .list-sheet{margin-bottom:96px}
 
@@ -96,8 +133,11 @@ body{margin:0;background:var(--field)}
 .bundle-count{font-size:13px;font-weight:600;color:var(--on-field-2);white-space:nowrap}
 .bundle-new{margin-bottom:64px}
 .bundle-new .bundle-head{margin-bottom:16px;padding-bottom:6px}
-.bundle+.bundle{margin-top:52px}
-.weeks+.bundle{margin-top:72px}
+/* Space only after a bundle that shows, so a filtered page starts right under the tools. */
+.bundle:not([hidden])~.bundle{margin-top:52px}
+/* The filters and the search can hide every week. Then the weeks take no room. */
+.weeks:not(:has(>.bundle:not([hidden]))){display:none}
+.weeks:has(>.bundle:not([hidden]))+.bundle{margin-top:72px}
 /* The weeks of this month share one row when they are small. Their stubs stay on the same 4-column grid. */
 .weeks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:52px 20px}
 .span-1{--s:1}.span-2{--s:2}.span-3{--s:3}.span-4{--s:4}
@@ -249,8 +289,8 @@ body{margin:0;background:var(--field)}
   .grid{gap:22px}
   .bundles{padding-bottom:64px}
   .bundle-new{margin-bottom:48px}
-  .bundle+.bundle{margin-top:40px}
-  .weeks+.bundle{margin-top:52px}
+  .bundle:not([hidden])~.bundle{margin-top:40px}
+  .weeks:has(>.bundle:not([hidden]))+.bundle{margin-top:52px}
   .stubs,.weeks{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px}
   .weeks{row-gap:40px}
   .span-3,.span-4{--s:2}
