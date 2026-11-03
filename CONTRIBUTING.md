@@ -30,6 +30,10 @@ its first release of a major (x.0) brings the breaking changes, and the LTS
 release is the one the project announces, so a TYPO3 major is dated by its LTS
 release. TYPO3 extensions follow the normal rule.
 
+A project's first **1.0**, after earlier 0.x releases, counts as a new major when
+its release notes list real changes. A 1.0 that changes nothing from the last 0.x
+release does not qualify.
+
 ## Suggest a project
 
 The easiest way is an issue. Use the
