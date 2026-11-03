@@ -12,6 +12,7 @@ return [
         'url' => 'https://github.com/aamplugin/advanced-access-manager/releases/tag/8.0.0',
     ],
     'source' => 'https://github.com/aamplugin/advanced-access-manager',
+    'licence' => 'GPL-3.0-or-later',
     'stack' => 'wordpress',
     'topics' => ['security', 'mcp'],
     'devnull' => 'Shipped with PHP: Advanced Access Manager 8.0. A new major version of Advanced Access Manager, an access governance plugin for WordPress, with a new interface, a security audit and an MCP service. https://github.com/aamplugin/advanced-access-manager'

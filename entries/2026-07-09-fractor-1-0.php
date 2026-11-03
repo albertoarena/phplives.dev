@@ -6,6 +6,8 @@ return [
     'details' => 'The main package runs the rules. Other packages hold the rules for each file type, or for TYPO3. Version 1.0 adds new command line options and a processor for XLIFF files.',
     'makers' => [
         ['name' => 'Friends of TYPO3', 'github' => 'FriendsOfTYPO3'],
+        ['name' => 'Andreas Wolf', 'github' => 'andreaswolf'],
+        ['name' => 'Simon Schaufelberger', 'github' => 'simonschaufi'],
     ],
     'shipped' => '2026-07-09',
     'proof' => [
