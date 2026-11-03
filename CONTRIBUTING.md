@@ -74,7 +74,7 @@ return [
 |---|---|
 | `name` | The project's name, as the project writes it. |
 | `sentence` | One plain sentence that says what the project does. 160 characters at most. |
-| `makers` | One or more makers, each with a `name` and a `github` username. The first is the lead. Use a person or an organisation, as the project credits it. |
+| `makers` | One or more makers, each with a `name`. Add a `github` username when the maker has one. The first maker is the lead. Use a person or an organisation, as the project credits it. |
 | `shipped` | The shipped date, as `YYYY-MM-DD`. See "Which date counts". |
 | `proof` | The link that proves the date. `kind` is `release`, `tag` or `post`. |
 | `source` | The project's own home: its repo, or its site for a closed product. |
