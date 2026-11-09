@@ -4,9 +4,10 @@
 /**
  * Checks that every link in some entry files still works.
  *
- *   bin/check-links [--entries=entries] [--today=YYYY-MM-DD] [entries/file.php ...]
+ *   bin/check-links [--entries=entries] [--today=YYYY-MM-DD] [--wait=5] [entries/file.php ...]
  *
- * With no files, it checks every entry. It fails when a link is broken.
+ * With no files, it checks every entry. It fails when a link is broken. A link
+ * that gives no answer gets one more try after --wait seconds.
  */
 
 declare(strict_types=1);
@@ -18,9 +19,10 @@ use PhpLives\LinkCheck;
 require __DIR__.'/../vendor/autoload.php';
 
 $root = dirname(__DIR__);
-$options = getopt('', ['entries:', 'today:'], $rest) + [
+$options = getopt('', ['entries:', 'today:', 'wait:'], $rest) + [
     'entries' => "{$root}/entries",
     'today' => 'today',
+    'wait' => LinkCheck::RETRY_SECONDS,
 ];
 $files = array_map(basename(...), array_slice($argv, $rest));
 
@@ -47,7 +49,10 @@ if ($missing = array_diff($files, array_keys($byFile))) {
     exit(1);
 }
 
-$check = new LinkCheck();
+$wait = (int) $options['wait'];
+$check = new LinkCheck(wait: static function () use ($wait): void {
+    sleep($wait);
+});
 $checked = 0;
 $broken = 0;
 

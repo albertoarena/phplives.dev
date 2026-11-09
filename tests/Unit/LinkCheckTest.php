@@ -11,10 +11,14 @@ use PhpLives\LinkCheck;
  */
 function fakeWeb(array $statuses, ?array &$requests = []): LinkCheck
 {
-    return new LinkCheck(function (string $url, string $method) use ($statuses, &$requests): int {
+    return new LinkCheck(function (string $url, string $method) use (&$statuses, &$requests): int {
         $requests[] = "{$method} {$url}";
+        $status = $statuses["{$method} {$url}"] ?? 404;
 
-        return $statuses["{$method} {$url}"] ?? 404;
+        // A list of statuses gives one answer per request, in order.
+        return is_array($status) ? array_shift($statuses["{$method} {$url}"]) : $status;
+    }, function (int $seconds) use (&$requests): void {
+        $requests[] = "wait {$seconds}";
     });
 }
 
@@ -78,6 +82,35 @@ it('does not ask twice when HEAD works', function () {
 it('gives the status of the whole page when both fail', function () {
     expect(fakeWeb(['HEAD https://example.com' => 403, 'GET https://example.com' => 410])->status('https://example.com'))
         ->toBe(410);
+});
+
+it('waits and tries once more when a link gives no answer', function () {
+    $check = fakeWeb([
+        'HEAD https://example.com' => [0, 200],
+        'GET https://example.com' => 0,
+    ], $requests);
+
+    expect($check->status('https://example.com'))->toBe(200)
+        ->and($requests)->toBe([
+            'HEAD https://example.com',
+            'GET https://example.com',
+            'wait '.LinkCheck::RETRY_SECONDS,
+            'HEAD https://example.com',
+        ]);
+});
+
+it('gives no answer when the second try gets none either', function () {
+    $check = fakeWeb(['HEAD https://example.com' => 0, 'GET https://example.com' => 0], $requests);
+
+    expect($check->status('https://example.com'))->toBe(0)
+        ->and($requests)->toHaveCount(5);
+});
+
+it('does not try again when a link answers with an error', function () {
+    fakeWeb(['HEAD https://example.com' => 404, 'GET https://example.com' => 404], $requests)
+        ->status('https://example.com');
+
+    expect($requests)->toBe(['HEAD https://example.com', 'GET https://example.com']);
 });
 
 it('says which statuses are good', function (int $status, bool $ok) {

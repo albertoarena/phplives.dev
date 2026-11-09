@@ -11,15 +11,25 @@ use Closure;
  */
 final readonly class LinkCheck
 {
+    /** How long to wait before asking again a link that gave no answer. */
+    public const int RETRY_SECONDS = 5;
+
     /** @var Closure(string, string): int */
     private Closure $status;
 
+    /** @var Closure(int): void */
+    private Closure $wait;
+
     /**
      * @param  (Closure(string, string): int)|null  $status  Gets a URL with a method, as Http::status does.
+     * @param  (Closure(int): void)|null  $wait  Waits a number of seconds, as sleep() does.
      */
-    public function __construct(?Closure $status = null)
+    public function __construct(?Closure $status = null, ?Closure $wait = null)
     {
         $this->status = $status ?? Http::status(...);
+        $this->wait = $wait ?? static function (int $seconds): void {
+            sleep($seconds);
+        };
     }
 
     /**
@@ -55,10 +65,26 @@ final readonly class LinkCheck
     }
 
     /**
-     * The status a link answers with. Some servers refuse a HEAD request, so a
-     * link that fails with HEAD gets a second try with GET.
+     * The status a link answers with. A server that gives no answer at all may
+     * only be slow for a moment, so the link gets one more try after a wait.
      */
     public function status(string $url): int
+    {
+        $status = $this->ask($url);
+
+        if ($status === 0) {
+            ($this->wait)(self::RETRY_SECONDS);
+            $status = $this->ask($url);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Some servers refuse a HEAD request, so a link that fails with HEAD gets a
+     * second try with GET.
+     */
+    private function ask(string $url): int
     {
         $status = ($this->status)($url, 'HEAD');
 

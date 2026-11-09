@@ -34,7 +34,7 @@ function brokenEntry(string $dir, string $file, string $name): string
 function checkLinks(string $tmp, array $files = []): array
 {
     $command = implode(' ', array_map(escapeshellarg(...), [
-        PHP_BINARY, dirname(__DIR__, 2).'/bin/check-links', "--entries={$tmp}/entries", '--today=2026-10-16', ...$files,
+        PHP_BINARY, dirname(__DIR__, 2).'/bin/check-links', "--entries={$tmp}/entries", '--today=2026-10-16', '--wait=0', ...$files,
     ]));
     exec($command.' 2>&1', $output, $status);
 
