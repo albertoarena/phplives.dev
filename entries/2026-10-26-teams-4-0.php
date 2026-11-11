@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://docs.gerassimov.me/teams/',
     'stack' => 'laravel',
+    'topics' => ['security'],
     'devnull' => 'Shipped with PHP: Teams 4.0. A new major version of Teams, a Laravel package for teams with their own roles, groups and permissions, now with a fluent API. https://github.com/Jurager/teams'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-11-03',

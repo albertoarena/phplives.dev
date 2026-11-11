@@ -18,6 +18,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://jeroennoten.github.io/Laravel-AdminLTE',
     'stack' => 'laravel',
+    'topics' => ['ui'],
     'devnull' => 'Shipped with PHP: Laravel-AdminLTE 4.0. A new major version of Laravel-AdminLTE, which adds the AdminLTE admin panel to Laravel, now on Bootstrap 5.3 and without jQuery. https://github.com/jeroennoten/Laravel-AdminLTE'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-11-06',

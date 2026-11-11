@@ -34,6 +34,9 @@ final class Format
         'e-commerce' => 'E-commerce',
         'business' => 'Business apps',
         'social' => 'Social and community',
+        'documents' => 'Documents and images',
+        'ui' => 'UI components',
+        'dates' => 'Dates and scheduling',
     ];
 
     private const array PROOFS = [

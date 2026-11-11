@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://chatifyphp.com/docs',
     'stack' => 'laravel',
+    'topics' => ['social'],
     'devnull' => 'Shipped with PHP: Chatify 2.0. A new major version of Chatify, a real-time chat package for Laravel, rebuilt with group chats, saved messages and a Vue 3 messenger. https://github.com/munafio/chatify'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-11-03',

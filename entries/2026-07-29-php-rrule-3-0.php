@@ -16,6 +16,7 @@ return [
     'package' => 'rlanvin/php-rrule',
     'licence' => 'MIT',
     'stack' => 'php',
+    'topics' => ['dates'],
     'devnull' => 'Shipped with PHP: php-rrule 3.0. A new major version of php-rrule, a light and fast library for recurring dates in PHP, based on the RFC 5545 recurrence rules. https://github.com/rlanvin/php-rrule'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-11-03',

@@ -16,6 +16,7 @@ return [
     'package' => 'gotenberg/gotenberg-php',
     'licence' => 'MIT',
     'stack' => 'php',
+    'topics' => ['api', 'documents'],
     'devnull' => 'Shipped with PHP: Gotenberg PHP client 3.0. A new major version of the PHP client for Gotenberg, an API that converts documents to PDF, rebuilt around stages for Gotenberg 9. https://github.com/gotenberg/gotenberg-php'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-11-06',

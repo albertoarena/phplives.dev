@@ -16,6 +16,7 @@ return [
     'source' => 'https://github.com/orangelabweb/imagemagick-engine',
     'licence' => 'GPL-2.0-or-later',
     'stack' => 'wordpress',
+    'topics' => ['documents'],
     'devnull' => 'Shipped with PHP: ImageMagick Engine 2.0. A new major version of ImageMagick Engine, a WordPress plugin that resizes images with ImageMagick instead of GD for better quality. https://github.com/orangelabweb/imagemagick-engine'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-11-03',

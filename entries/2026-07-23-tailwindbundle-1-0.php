@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://symfony.com/bundles/TailwindBundle/current/index.html',
     'stack' => 'symfony',
+    'topics' => ['ui'],
     'devnull' => 'Shipped with PHP: TailwindBundle 1.0. The first stable version of TailwindBundle by SymfonyCasts, which brings Tailwind CSS to Symfony\'s AssetMapper component, with no Node needed. https://github.com/SymfonyCasts/tailwind-bundle'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-25',

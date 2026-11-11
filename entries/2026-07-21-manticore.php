@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://github.com/manticorephp/compiler/tree/main/docs',
     'stack' => 'php',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: Manticore. An ahead-of-time compiler for PHP, written in PHP, that turns PHP code into static binaries that run with no PHP runtime. https://github.com/manticorephp/compiler'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',
