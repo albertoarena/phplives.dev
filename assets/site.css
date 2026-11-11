@@ -631,3 +631,99 @@ body{margin:0;background:var(--field)}
   .nstub-body{padding:14px 22px 12px 12px}
   .nstub-next .nstub-body{padding:14px 12px 12px 22px}
 }
+
+/* The Map view: a routing chart. The depot, one hub for each stack or topic, and the
+   branch of the open hub: its bins, and a shelf of stubs. Lines are 2px in the field ink,
+   and the route of the picked hub and bin is 3px at full strength. Below 700px it is an
+   outline: each branch opens under its hub. The script reads --map-outline. */
+.map{container:map / inline-size;margin:0 0 8px;--map-gap:32px;--map-line:color-mix(in srgb,var(--on-field) 30%,transparent)}
+.map-chart{position:relative;display:grid;grid-template-columns:180px 240px minmax(0,1fr);column-gap:var(--map-gap);align-items:start;align-content:start;padding:4px 0 16px}
+.map-depot{position:relative;background:var(--label);color:var(--ink);border-radius:6px;box-shadow:var(--shadow)}
+.map-depot::after{content:'';position:absolute;left:100%;top:50%;width:calc(var(--map-gap) / 2);border-top:2px solid var(--map-line)}
+.map-depot-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:12px 14px 8px;border-bottom:3px solid var(--ink)}
+.map-depot-head b{font-size:20px;font-weight:850;font-stretch:72%;word-spacing:.12em}
+.map-depot-head span{font-size:11px;font-weight:600;color:var(--ink-2)}
+.map-depot-row{display:flex;justify-content:space-between;margin:0;padding:8px 14px;font-size:13px;font-weight:600}
+.map-depot-row span{color:var(--ink-2)}
+.map-depot-row b{font-size:15px}
+.map-depot-foot{margin:0;padding:8px 14px 10px;border-top:2px dashed var(--perf);font-size:11px;line-height:1.35;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)}
+.map-hubs{--hub-h:64px;position:relative;display:grid;gap:14px;margin:0;padding:0;list-style:none}
+.map-hubs-topic{--hub-h:48px;gap:10px}
+.map-hubs::before{content:'';position:absolute;left:calc(var(--map-gap) / -2 - 1px);top:calc(var(--hub-h) / 2);bottom:calc(var(--hub-h) / 2);border-left:2px solid var(--map-line)}
+.map-node{position:relative}
+.map-node::before{content:'';position:absolute;left:calc(var(--map-gap) / -2);top:calc(var(--hub-h) / 2 - 1px);width:calc(var(--map-gap) / 2);border-top:2px solid var(--map-line)}
+.map-node:has(>[aria-expanded="true"])::before{border-top:3px solid var(--on-field);margin-top:-.5px}
+.map-hub{position:relative;box-sizing:border-box;display:flex;align-items:center;gap:12px;width:100%;height:var(--hub-h);padding:0 12px 0 10px;font:inherit;text-align:left;color:var(--ink);background:var(--label);border:0;border-radius:6px;box-shadow:var(--shadow);cursor:pointer}
+.map-hub[aria-expanded="true"]{box-shadow:inset 0 0 0 3px var(--ink),var(--shadow)}
+.map-hub[aria-expanded="true"]::after{content:'';position:absolute;left:100%;top:calc(50% - 1.5px);width:var(--map-gap);border-top:3px solid var(--on-field)}
+.map-hub:hover .map-name,.map-bin:hover .map-name{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.2em}
+.map-hub:focus-visible,.map-bin:focus-visible,.map-more:focus-visible{outline:2px solid var(--on-field);outline-offset:3px}
+.map-code{flex:none;background:var(--ink);color:var(--label);font-weight:900;font-stretch:62%;font-size:22px;line-height:.86;letter-spacing:.01em;padding:6px 7px 5px;border-radius:3px}
+.map-name{flex:1 1 auto;min-width:0;font-size:19px;line-height:1.05;font-weight:800;font-stretch:75%;word-spacing:.12em}
+.map-hubs-topic .map-name{font-size:17px;font-weight:750}
+.map-n{flex:none;font-size:13px;font-weight:600;color:var(--ink-2)}
+.map-chev{flex:none}
+.map-branch{grid-column:3;display:grid;grid-template-columns:220px minmax(0,1fr);column-gap:var(--map-gap);align-items:start}
+.map-bins{position:relative;display:flex;flex-direction:column;gap:10px}
+.map-bins::before{content:'';position:absolute;left:calc(var(--map-gap) / -2 - 1px);top:22px;bottom:22px;border-left:2px solid var(--map-line)}
+.map-bins::after{content:'';position:absolute;left:calc(var(--map-gap) / -2 - 1.5px);top:22px;height:calc(var(--bin-y, 22px) - 22px);border-left:3px solid var(--on-field)}
+.map-bin{position:relative;box-sizing:border-box;display:flex;align-items:center;gap:10px;height:44px;padding:0 12px;font:inherit;text-align:left;color:var(--ink);background:var(--label);border:0;border-radius:5px;box-shadow:var(--shadow);cursor:pointer}
+.map-bin::before{content:'';position:absolute;left:calc(var(--map-gap) / -2);top:21px;width:calc(var(--map-gap) / 2);border-top:2px solid var(--map-line)}
+.map-bin[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--ink),var(--shadow)}
+.map-bin[aria-pressed="true"]::before{border-top:3px solid var(--on-field);top:20.5px}
+.map-bin[aria-pressed="true"]::after{content:'';position:absolute;left:100%;top:20.5px;width:calc(var(--map-gap) / 2);border-top:3px solid var(--on-field)}
+.map-bin .map-name{font-size:15px;font-weight:700;font-stretch:100%;word-spacing:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.map-bin:first-child .map-name{font-weight:800}
+.map-bin .map-code{font-size:16px;padding:4px 6px 3px;border-radius:2px}
+.map-shelf{position:relative;min-width:0}
+.map-shelf::before{content:'';position:absolute;left:calc(var(--map-gap) / -2 - 1.5px);top:min(14px,var(--bin-y, 22px));height:calc(max(14px,var(--bin-y, 22px)) - min(14px,var(--bin-y, 22px)) + 3px);border-left:3px solid var(--on-field)}
+.map-shelf::after{content:'';position:absolute;left:calc(var(--map-gap) / -2);top:12.5px;width:calc(var(--map-gap) / 2 - 6px);border-top:3px solid var(--on-field)}
+.map-shelf .bundle-head{margin-bottom:18px}
+.map .stubs{grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px 20px}
+.map .stub{animation:none}
+.map [data-cut="true"]{display:none}
+.map-more{margin:24px 0 0;font:inherit;font-size:15px;font-weight:800;color:var(--on-field);background:transparent;border:2px solid var(--on-field);border-radius:4px;min-height:44px;padding:0 16px;cursor:pointer}
+.map-more:hover{background:var(--line)}
+.sec-tools .map-sort{margin-left:0}
+/* The picked bin in the depot: its kind as a caption, its name under it, and Clear at the right. */
+.map-only{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"kind clear" "name clear";align-items:center;gap:2px 10px;border-top:1px solid var(--rule-soft)}
+.map-only [data-map-only-kind]{grid-area:kind;font-size:11px;line-height:1.2;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)}
+.map-only b{grid-area:name;min-width:0;font-size:14px;line-height:1.25;font-weight:800;overflow-wrap:anywhere}
+.map-only-clear{grid-area:clear}
+.map-only-clear{flex:none;font:inherit;font-size:12px;font-weight:800;color:var(--ink);background:transparent;border:2px solid var(--ink);border-radius:4px;min-height:32px;padding:0 10px;cursor:pointer}
+.map-only-clear:hover{background:var(--rule-soft)}
+.map-only-clear:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+/* Between the outline and the full chart: the depot sits above the hubs, and the shelf has one column. */
+@container map (min-width:761px) and (max-width:1040px){
+  .map-chart{grid-template-columns:220px minmax(0,1fr)}
+  .map-depot{grid-column:1;grid-row:1;margin-bottom:14px}
+  .map-depot::after,.map-depot-foot{display:none}
+  .map-hubs{grid-column:1;grid-row:2}
+  .map-branch{grid-column:2;grid-row:2;grid-template-columns:200px minmax(0,1fr)}
+  .map .stubs{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+}
+@container map (max-width:760px){
+  .map-chart{--map-outline:1;display:block;padding-top:0}
+  .map-depot{margin:0 0 12px}
+  .map-depot::after,.map-hub[aria-expanded="true"]::after,.map-bins::before,.map-bins::after,.map-bin::before,.map-bin::after,.map-shelf::before,.map-shelf::after{display:none}
+  .map-depot-head{padding:10px 14px 6px}
+  .map-depot-foot{display:none}
+  .map-hubs{--hub-h:56px;gap:12px;padding-left:24px}
+  .map-hubs-topic{--hub-h:48px}
+  .map-hubs::before{left:7px;top:-12px}
+  .map-node::before{left:-17px;width:17px}
+  .map-name{font-size:18px}
+  .map-hub[aria-expanded="true"] .map-chev{transform:rotate(90deg)}
+  .map-branch{position:relative;display:block;margin:12px 0 4px;padding-left:18px}
+  .map-branch::before{content:'';position:absolute;left:4px;top:-12px;bottom:8px;border-left:3px solid var(--on-field)}
+  .map-bins{flex-direction:row;flex-wrap:wrap;gap:8px}
+  .map-bin{height:auto;min-height:40px;padding:0 11px;color:var(--on-field);background:transparent;border:1px solid var(--line);border-radius:4px;box-shadow:none}
+  .map-bin[aria-pressed="true"]{color:var(--field);background:var(--on-field);border-color:var(--on-field);box-shadow:none}
+  .map-bin .map-name{font-size:14px}
+  .map-bin .map-code{background:none;color:inherit;padding:0;font-size:17px}
+  .map-bin .map-n{color:inherit;opacity:.8;font-size:12px}
+  .map-shelf{margin-top:18px}
+  .map-shelf .bundle-head{margin-bottom:14px}
+  .map .stubs{grid-template-columns:minmax(0,1fr);gap:18px}
+}
+@container (max-width:440px){.map-sort .filter-cap{display:none}}

@@ -99,9 +99,10 @@ it('marks the newest on its stub when the entry that shipped last is not on a fu
     expect(texts($main, '#this-week article.lab h4'))->not->toContain('Fresh')
         ->and($main->querySelectorAll('.lab.newest'))->toHaveCount(0)
         ->and($main->querySelectorAll('.lab-new'))->toHaveCount(0)
-        ->and(texts($main, '.stub.newest h4'))->toBe(['Fresh'])
-        ->and(texts($main, '.stub.newest .new-tag'))->toBe(['Newest'])
-        ->and($main->querySelectorAll('.stub .new-tag'))->toHaveCount(1);
+        ->and(texts($main, '[data-view="labels"] .stub.newest h4'))->toBe(['Fresh'])
+        ->and(texts($main, '[data-view="labels"] .stub.newest .new-tag'))->toBe(['Newest'])
+        ->and($main->querySelectorAll('[data-view="labels"] .stub .new-tag'))->toHaveCount(1)
+        ->and(texts($main, '[data-view="map"] .stub.newest h4'))->toBe(['Fresh']);
 });
 
 it('says how many full labels were added this week', function (array $added, string $title, string $note) {
@@ -400,7 +401,8 @@ it('escapes entry text', function () {
 
     $main = pages($this)['index.html'];
 
-    expect(texts($main, '#manifest h4'))->toBe(['<script>alert(1)</script>'])
+    expect(texts($main, '#manifest [data-view="labels"] h4'))->toBe(['<script>alert(1)</script>'])
+        ->and(texts($main, '#manifest [data-view="map"] h4'))->toBe(['<script>alert(1)</script>'])
         ->and($main->querySelectorAll('#manifest script'))->toHaveCount(0);
 });
 
@@ -786,21 +788,21 @@ it('shows the main list as labels and as a list, each entry tagged with its stac
         ->and($list->hasAttribute('hidden'))->toBeTrue();
 });
 
-it('has a Labels / List toggle on the main page only', function () {
+it('has a Labels / List / Map toggle on the main page only', function () {
     stackEntries($this);
     $pages = pages($this);
 
-    expect(texts($pages['index.html'], '[data-view-choice]'))->toBe(['Labels', 'List'])
-        ->and(array_map(fn ($b) => $b->getAttribute('aria-pressed'), iterator_to_array($pages['index.html']->querySelectorAll('[data-view-choice]'))))->toBe(['true', 'false'])
+    expect(texts($pages['index.html'], '[data-view-choice]'))->toBe(['Labels', 'List', 'Map'])
+        ->and(array_map(fn ($b) => $b->getAttribute('aria-pressed'), iterator_to_array($pages['index.html']->querySelectorAll('[data-view-choice]'))))->toBe(['true', 'false', 'false'])
         ->and($pages['archive/index.html']->querySelectorAll('[data-view-choice]'))->toHaveCount(0);
 });
 
 it('filters by stack, most common first, with counts', function () {
     stackEntries($this);
     $main = pages($this)['index.html'];
-    $chips = iterator_to_array($main->querySelectorAll('#manifest [data-stack-choice]'));
+    $chips = iterator_to_array($main->querySelectorAll('#manifest [data-filter] [data-stack-choice]'));
 
-    expect(texts($main, '#manifest [data-stack-choice]'))->toBe(['All 3', 'LRV 2', 'PHP 1'])
+    expect(texts($main, '#manifest [data-filter] [data-stack-choice]'))->toBe(['All 3', 'LRV 2', 'PHP 1'])
         ->and(array_map(fn ($b) => $b->getAttribute('data-stack-choice'), $chips))->toBe(['', 'laravel', 'php'])
         ->and(array_map(fn ($b) => $b->getAttribute('data-stack-label'), $chips))->toBe(['', 'Laravel', 'plain PHP'])
         ->and(array_map(fn ($b) => $b->getAttribute('aria-pressed'), $chips))->toBe(['true', 'false', 'false'])
@@ -857,9 +859,9 @@ it('tags each entry with its topics, in both views', function () {
 it('filters by topic, most common first, with counts, and only topics with 2 entries or more', function () {
     topicEntries($this);
     $main = pages($this)['index.html'];
-    $chips = iterator_to_array($main->querySelectorAll('#manifest [data-topic-choice]'));
+    $chips = iterator_to_array($main->querySelectorAll('#manifest [data-filter] [data-topic-choice]'));
 
-    expect(texts($main, '#manifest [data-topic-choice]'))->toBe(['All 5', 'MCP 3', 'Testing 2'])
+    expect(texts($main, '#manifest [data-filter] [data-topic-choice]'))->toBe(['All 5', 'MCP 3', 'Testing 2'])
         ->and(array_map(fn ($b) => $b->getAttribute('data-topic-choice'), $chips))->toBe(['', 'mcp', 'testing'])
         ->and(array_map(fn ($b) => $b->getAttribute('data-topic-label'), $chips))->toBe(['', 'MCP', 'Testing'])
         ->and(array_map(fn ($b) => $b->getAttribute('aria-pressed'), $chips))->toBe(['true', 'false', 'false'])
@@ -878,7 +880,7 @@ it('has no topic filter when no topic has 2 entries', function () {
     stackEntries($this);
     $pages = pages($this);
 
-    expect($pages['index.html']->querySelectorAll('[data-topic-choice], [data-topic-select]'))->toHaveCount(0)
+    expect($pages['index.html']->querySelectorAll('[data-filter] [data-topic-choice], [data-topic-select]'))->toHaveCount(0)
         ->and($pages['archive/index.html']->querySelectorAll('[data-topic-choice], [data-topic-select]'))->toHaveCount(0);
 });
 
@@ -1165,4 +1167,99 @@ it('has a hidden block for a search with no match, with a way to suggest a proje
 it('says on the privacy page that the search runs in the browser', function () {
     expect(texts(pages($this)['privacy/index.html'], '#in-short + ul li'))
         ->toContain("The search runs in your browser. What you type is not sent to this site's server.");
+});
+
+function mapEntries(object $test): void
+{
+    writeEntry($test->dir, '2026-10-01-a.php', ['name' => 'A', 'stack' => 'laravel', 'topics' => ['testing', 'devtools']]);
+    writeEntry($test->dir, '2026-09-01-b.php', ['name' => 'B', 'stack' => 'laravel', 'topics' => ['mcp', 'testing']]);
+    writeEntry($test->dir, '2026-08-01-c.php', ['name' => 'C', 'stack' => 'php', 'topics' => ['mcp']]);
+    writeEntry($test->dir, '2026-07-01-d.php', ['name' => 'D', 'stack' => 'laravel']);
+    writeEntry($test->dir, '2026-01-01-old.php', ['name' => 'Old', 'stack' => 'symfony', 'topics' => ['ai', 'testing']]);
+}
+
+function attrs(HTMLDocument $doc, string $selector, string $attr): array
+{
+    return array_map(fn ($node) => $node->getAttribute($attr), iterator_to_array($doc->querySelectorAll($selector)));
+}
+
+it('offers a Map view beside Labels and List, on the main page only', function () {
+    mapEntries($this);
+    $pages = pages($this);
+    $main = $pages['index.html'];
+
+    expect(texts($main, '#manifest .view [data-view-choice]'))->toBe(['Labels', 'List', 'Map'])
+        ->and($main->querySelector('#manifest [data-view="map"]')->hasAttribute('hidden'))->toBeTrue()
+        ->and($pages['archive/index.html']->querySelector('[data-view="map"]'))->toBeNull()
+        ->and($pages['archive/index.html']->querySelector('[data-map]'))->toBeNull();
+});
+
+it('marks the filters, so the Map can put its sort in their place', function () {
+    mapEntries($this);
+    $main = pages($this)['index.html'];
+
+    expect($main->querySelectorAll('#manifest .sec-tools [data-filter]'))->toHaveCount(2)
+        ->and(texts($main, '#manifest [data-map-sort] [data-map-sort-choice]'))->toBe(['Stack', 'Topic'])
+        ->and(attrs($main, '[data-map-sort-choice]', 'aria-pressed'))->toBe(['true', 'false'])
+        ->and($main->querySelector('[data-map-sort]')->hasAttribute('hidden'))->toBeTrue();
+});
+
+it('puts a hub on the map for each stack, most common first, with its count', function () {
+    mapEntries($this);
+    $main = pages($this)['index.html'];
+
+    expect(attrs($main, '[data-map-hubs="stack"] [data-map-hub]', 'data-stack-choice'))->toBe(['laravel', 'php'])
+        ->and(texts($main, '[data-map-hubs="stack"] [data-map-hub] [data-map-count]'))->toBe(['3', '1'])
+        ->and(texts($main, '[data-map-hubs="stack"] [data-map-hub] .map-code'))->toBe(['LRV', 'PHP'])
+        ->and(texts($main, '[data-map-hubs="stack"] [data-map-hub] .map-name'))->toBe(['Laravel', 'plain PHP'])
+        ->and(attrs($main, '[data-map-hubs="stack"] [data-map-hub]', 'aria-expanded'))->toBe(['false', 'false'])
+        ->and($main->querySelectorAll('[data-map-hubs="stack"] > li[data-map-node]'))->toHaveCount(2);
+});
+
+it('puts a hub on the map for each topic, with Other last for the entries with no topic', function () {
+    mapEntries($this);
+    $main = pages($this)['index.html'];
+
+    expect(attrs($main, '[data-map-hubs="topic"] [data-map-hub]', 'data-topic-choice'))->toBe(['mcp', 'testing', 'none'])
+        ->and(attrs($main, '[data-map-hubs="topic"] [data-map-hub]', 'data-topic-label'))->toBe(['MCP', 'Testing', 'Other'])
+        ->and(texts($main, '[data-map-hubs="topic"] [data-map-hub] [data-map-count]'))->toBe(['2', '2', '1'])
+        ->and($main->querySelector('[data-map-hubs="topic"]')->hasAttribute('hidden'))->toBeTrue();
+});
+
+it('leaves Other off the map when every entry has a topic', function () {
+    writeEntry($this->dir, '2026-10-01-a.php', ['topics' => ['testing']]);
+    writeEntry($this->dir, '2026-09-01-b.php', ['topics' => ['testing']]);
+
+    expect(attrs(pages($this)['index.html'], '[data-map-hubs="topic"] [data-map-hub]', 'data-topic-choice'))->toBe(['testing']);
+});
+
+it('gives the branch a bin for each topic, and one for each stack, with All first', function () {
+    mapEntries($this);
+    $main = pages($this)['index.html'];
+
+    expect(attrs($main, '[data-map-bins="stack"] [data-map-bin="stack"]', 'data-topic-choice'))->toBe(['', 'mcp', 'testing', 'none'])
+        ->and(attrs($main, '[data-map-bins="topic"] [data-map-bin="topic"]', 'data-stack-choice'))->toBe(['', 'laravel', 'php'])
+        ->and(texts($main, '[data-map-bins="stack"] [data-map-bin] .map-name'))->toBe(['All', 'MCP', 'Testing', 'Other'])
+        ->and($main->querySelector('[data-map-branch]')->hasAttribute('hidden'))->toBeTrue()
+        ->and($main->querySelector('[data-map-branch] [data-map-more]')->hasAttribute('hidden'))->toBeTrue();
+});
+
+it('shelves one stub for each entry on the map, with ids of its own', function () {
+    mapEntries($this);
+    $main = pages($this)['index.html'];
+    $ids = attrs($main, '[id]', 'id');
+
+    expect(texts($main, '[data-map-branch] [data-map-stub] h4'))->toBe(['A', 'B', 'C', 'D'])
+        ->and(attrs($main, '[data-map-stub]', 'data-topics'))->toBe(['testing devtools', 'mcp testing', 'mcp', ''])
+        ->and($ids)->toBe(array_values(array_unique($ids)))
+        ->and($main->querySelector('[data-map]')->getAttribute('data-map-limit'))->toBe('6');
+});
+
+it('counts the parcels in the map depot', function () {
+    mapEntries($this);
+    $main = pages($this)['index.html'];
+
+    expect(texts($main, '[data-map-depot]'))->toBe(['4'])
+        ->and($main->querySelector('[data-map-only]')->hasAttribute('hidden'))->toBeTrue()
+        ->and(texts($main, '[data-map-only] [data-map-only-clear]'))->toBe(['Clear this filter']);
 });

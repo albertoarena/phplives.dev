@@ -8,14 +8,16 @@
  * @var \PhpLives\Entry $entry
  * @var int $j Its place in its bundle. It times the tear-in.
  * @var string|null $newestSlug The slug of the newest parcel, which gets the NEWEST tag.
+ * @var string|null $idPrefix 's-' for the bundles, 'm-' for the Map shelf, so each id is used once.
+ * @var bool|null $mapStub Whether the stub sits on the Map shelf.
  */
 use PhpLives\Format;
 
-$id = 's-'.$e($entry->slug);
+$id = ($idPrefix ?? 's-').$e($entry->slug);
 $link = $site->entryLink($entry);
 $isNewest = $entry->slug === ($newestSlug ?? null);
 ?>
-            <article class="stub<?= $isNewest ? ' newest' : '' ?>" style="--j: <?= min($j, 11) ?>" data-stack="<?= $e($entry->stack) ?>" data-topics="<?= $e(implode(' ', $entry->topics)) ?>" data-slug="<?= $e($entry->slug) ?>" aria-labelledby="<?= $id ?>">
+            <article class="stub<?= $isNewest ? ' newest' : '' ?>" style="--j: <?= min($j, 11) ?>" data-stack="<?= $e($entry->stack) ?>" data-topics="<?= $e(implode(' ', $entry->topics)) ?>" data-slug="<?= $e($entry->slug) ?>"<?= ($mapStub ?? false) ? ' data-map-stub' : '' ?> aria-labelledby="<?= $id ?>">
               <div class="stub-paper">
                 <div class="stub-top">
                   <h4 id="<?= $id ?>"><?= $e($entry->name) ?></h4>

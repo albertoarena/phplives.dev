@@ -98,6 +98,7 @@ final readonly class Site
                 'copyScript' => trim(file_get_contents(self::ASSETS.'/copy.js')),
                 'counts' => $this->stackCounts($current),
                 'topics' => $this->topicCounts($current),
+                'noTopic' => count(array_filter($current, fn (Entry $e) => $e->topics === [])),
                 'searchIndex' => SearchIndex::json($current),
                 'manifestScript' => $this->script('manifest.js'),
                 'weekScript' => $this->script('week.js'),
