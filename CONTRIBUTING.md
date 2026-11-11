@@ -98,10 +98,11 @@ new code needs at least 2 entries. Until then, the entry goes under its parent s
 
 **Topics:** `ai` (AI), `mcp` (MCP), `testing` (Testing), `security` (Security),
 `devtools` (Developer tools), `self-hosted` (Self-hosted), `database` (Databases),
-`api` (APIs), `cms` (CMS), `e-commerce` (E-commerce), `business` (Business apps)
-or `social` (Social and community). A topic must be clear from the project's own
-source: its README, its description or its keywords. The site shows a topic in the
-filter only when at least 2 entries have it.
+`api` (APIs), `cms` (CMS), `e-commerce` (E-commerce), `business` (Business apps),
+`social` (Social and community), `documents` (Documents and images),
+`ui` (UI components) or `dates` (Dates and scheduling). A topic must be clear from
+the project's own source: its README, its description or its keywords. The site
+shows a topic in the filter only when at least 2 entries have it.
 
 ### Rules for the text
 

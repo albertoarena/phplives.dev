@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://tempestphp.com/3.x/packages/markdown',
     'stack' => 'php',
+    'topics' => ['documents'],
     'devnull' => 'Shipped with PHP: tempest/markdown. A fast and extensible Markdown parser in pure PHP, which uses a simple lexer instead of regex. https://github.com/tempestphp/markdown'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

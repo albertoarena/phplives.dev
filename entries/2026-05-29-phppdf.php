@@ -16,6 +16,7 @@ return [
     'package' => 'dragonofmercy/phppdf',
     'licence' => 'MIT',
     'stack' => 'php',
+    'topics' => ['documents'],
     'devnull' => 'Shipped with PHP: phppdf. A PDF library for PHP 8.4, written in pure PHP, with no runtime dependencies beyond the mbstring, openssl and zlib extensions. https://github.com/dragonofmercy/php-pdf'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-25',

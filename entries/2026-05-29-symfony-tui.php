@@ -18,6 +18,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://symfony.com/doc/current/tui.html',
     'stack' => 'symfony',
+    'topics' => ['devtools', 'ui'],
     'devnull' => 'Shipped with PHP: Symfony TUI. A new Symfony component for building rich, interactive terminal apps in PHP, with widgets, layouts and real-time rendering. https://github.com/symfony/tui'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-23',

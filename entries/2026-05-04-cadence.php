@@ -16,6 +16,7 @@ return [
     'package' => 'directorytree/cadence',
     'licence' => 'MIT',
     'stack' => 'laravel',
+    'topics' => ['dates'],
     'devnull' => 'Shipped with PHP: Cadence. Model-based scheduling for Laravel: you attach cron or RRULE schedules to any Eloquent model, and Cadence fires events when they are due. https://github.com/DirectoryTree/Cadence'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-25',

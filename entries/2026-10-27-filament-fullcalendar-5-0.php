@@ -16,6 +16,7 @@ return [
     'package' => 'saade/filament-fullcalendar',
     'licence' => 'MIT',
     'stack' => 'laravel',
+    'topics' => ['ui', 'dates'],
     'devnull' => 'Shipped with PHP: Filament FullCalendar 5.0. A new major version of the FullCalendar widget for Filament, now on FullCalendar 7 and with a theme that takes its colors from your panel. https://github.com/saade/filament-fullcalendar'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-11-10',

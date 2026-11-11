@@ -15,6 +15,7 @@ return [
     ],
     'source' => 'https://github.com/codesnippetspro/code-snippets',
     'stack' => 'wordpress',
+    'topics' => ['devtools'],
     'devnull' => 'Shipped with PHP: Code Snippets 4.0. A new major version of Code Snippets, a WordPress plugin for adding and managing PHP and other code snippets on a site. https://github.com/codesnippetspro/code-snippets'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-11-06',

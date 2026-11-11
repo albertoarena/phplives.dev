@@ -29,6 +29,7 @@ final class EntryValidator
     public const array TOPICS = [
         'ai', 'mcp', 'testing', 'security', 'devtools', 'self-hosted',
         'database', 'api', 'cms', 'e-commerce', 'business', 'social',
+        'documents', 'ui', 'dates',
     ];
 
     public const int MAX_TOPICS = 3;

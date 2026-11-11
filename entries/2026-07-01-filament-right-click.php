@@ -16,6 +16,7 @@ return [
     'package' => 'leek/filament-right-click',
     'licence' => 'MIT',
     'stack' => 'laravel',
+    'topics' => ['ui'],
     'devnull' => 'Shipped with PHP: Filament Right Click. Right-click menus for Filament table rows and Flowforge Kanban cards, where each menu item runs a native Filament action. https://github.com/leek/filament-right-click'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-23',

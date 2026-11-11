@@ -17,6 +17,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://realrashid.github.io/sweet-alert/',
     'stack' => 'laravel',
+    'topics' => ['ui'],
     'devnull' => 'Shipped with PHP: Sweet Alert 8.0. A new major version of Sweet Alert, which shows SweetAlert2 popups and toasts in Laravel, rebuilt around a fluent builder API. https://github.com/realrashid/sweet-alert'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-11-10',

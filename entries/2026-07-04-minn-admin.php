@@ -16,6 +16,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://minnadmin.com/docs/',
     'stack' => 'wordpress',
+    'topics' => ['ui'],
     'devnull' => 'Shipped with PHP: Minn Admin. A new admin for WordPress, served at /minn-admin/ beside the classic one, as a single-page app on the WordPress REST API. https://github.com/austinginder/minn-admin'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

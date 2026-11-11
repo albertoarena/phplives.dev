@@ -57,7 +57,10 @@ it('gives each topic a label', function () {
     }
 
     expect(Format::topicLabel('mcp'))->toBe('MCP')
-        ->and(Format::topicLabel('testing'))->toBe('Testing');
+        ->and(Format::topicLabel('testing'))->toBe('Testing')
+        ->and(Format::topicLabel('documents'))->toBe('Documents and images')
+        ->and(Format::topicLabel('ui'))->toBe('UI components')
+        ->and(Format::topicLabel('dates'))->toBe('Dates and scheduling');
 });
 
 it('names the kind of date proof', function (string $kind, string $label) {

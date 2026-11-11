@@ -15,6 +15,7 @@ return [
     'source' => 'https://github.com/aktasfatih/kanso',
     'licence' => 'AGPL-3.0-or-later',
     'stack' => 'php',
+    'topics' => ['business'],
     'devnull' => 'Shipped with PHP: Kanso. Fast, open-source kanban boards for Nextcloud, with reviews, projects and realtime sync. https://github.com/aktasfatih/kanso'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

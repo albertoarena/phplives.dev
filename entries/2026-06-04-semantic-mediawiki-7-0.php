@@ -17,6 +17,7 @@ return [
     'licence' => 'GPL-2.0-or-later',
     'docs' => 'https://www.semantic-mediawiki.org/wiki/Semantic_MediaWiki_7.0.0',
     'stack' => 'php',
+    'topics' => ['database'],
     'devnull' => 'Shipped with PHP: Semantic MediaWiki 7.0. A new major version of Semantic MediaWiki, which lets you store and query data in wiki pages, with an easier install and faster queries. https://github.com/SemanticMediaWiki/SemanticMediaWiki'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-28',

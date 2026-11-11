@@ -18,6 +18,7 @@ return [
     'licence' => 'MIT',
     'docs' => 'https://livewire-powergrid.com/',
     'stack' => 'laravel',
+    'topics' => ['ui'],
     'devnull' => 'Shipped with PHP: PowerGrid 7.0. A new major version of PowerGrid, which builds data tables with Laravel Livewire, rewritten for Livewire 4 and Tailwind CSS 4. https://github.com/Power-Components/livewire-powergrid'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-30',

@@ -16,6 +16,7 @@ return [
     'package' => 'sabre/vobject',
     'licence' => 'BSD-3-Clause',
     'stack' => 'php',
+    'topics' => ['dates'],
     'devnull' => 'Shipped with PHP: sabre/vobject 5.0. A new major version of sabre/vobject, which lets you parse and change iCalendar and vCard objects with PHP. https://github.com/sabre-io/vobject'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-28',

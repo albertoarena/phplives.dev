@@ -17,6 +17,7 @@ return [
     'licence' => 'GPL-3.0-or-later',
     'docs' => 'https://actionscheduler.org',
     'stack' => 'wordpress',
+    'topics' => ['dates'],
     'devnull' => 'Shipped with PHP: Action Scheduler 4.0. A new major version of Action Scheduler, a job queue for background tasks in WordPress, made to ship inside plugins with no server access needed. https://github.com/woocommerce/action-scheduler'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-25',

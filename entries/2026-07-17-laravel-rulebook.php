@@ -16,6 +16,7 @@ return [
     'package' => 'mathiasonea/laravel-rulebook',
     'licence' => 'MIT',
     'stack' => 'laravel',
+    'topics' => ['dates'],
     'devnull' => 'Shipped with PHP: Laravel Rulebook. A Laravel package that picks which business rule applies on a given date and explains why it applied. https://github.com/mathiasonea/laravel-rulebook'
         ."\n\n".'See more at https://phplives.dev',
     'checked' => '2026-10-21',

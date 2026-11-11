@@ -230,6 +230,7 @@ it('accepts one to three topics', function (array $topics) {
     [['testing']],
     [['ai', 'mcp']],
     [['ai', 'mcp', 'devtools']],
+    [['documents', 'ui', 'dates']],
 ]);
 
 it('reports an unknown topic', function () {
