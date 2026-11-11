@@ -9,6 +9,7 @@
   // Bundles of entries (a week, a month). A bundle with no entry left to show is hidden.
   var groups = document.querySelectorAll('[data-group]');
   var search = searchField();
+  var map = mapParts();
 
   // Two filters, by stack and by topic. Each has chips or a dropdown, and its choices:
   // { value, label }. The first choice is "All".
@@ -25,6 +26,16 @@
     for (j = 0; j < chips.length; j++) choices.push(read(chips[j], chips[j].getAttribute('data-' + kind + '-choice')));
     if (dropdown) for (j = 0; j < dropdown.options.length; j++) choices.push(read(dropdown.options[j], dropdown.options[j].getAttribute('value')));
     return { kind: kind, chips: chips, dropdown: dropdown, choices: choices, value: '' };
+  }
+
+  // One copy of the entries (the page shows each one in every view), to count them.
+  var once = [];
+  var seen = {};
+  for (var o = 0; o < items.length; o++) {
+    var slug = items[o].getAttribute('data-slug');
+    if (seen[slug]) continue;
+    seen[slug] = true;
+    once.push(items[o]);
   }
 
   // The search field, and the words of each entry on the page, which the build writes as JSON.
@@ -45,6 +56,38 @@
       words: words,
       value: '',
       terms: [],
+    };
+  }
+
+  // The Map view: hubs that open a branch, with bins that narrow it, and a shelf of stubs.
+  // Its hubs and bins are stack and topic choices too, so the filters drive them.
+  function mapParts() {
+    var root = document.querySelector('[data-map]');
+    var stubs = [];
+    for (var j = 0; j < items.length; j++) if (items[j].getAttribute('data-map-stub') !== null) stubs.push(items[j]);
+    return {
+      root: root,
+      stubs: stubs,
+      nodes: document.querySelectorAll('[data-map-node]'),
+      bins: document.querySelectorAll('[data-map-bin]'),
+      hubLists: document.querySelectorAll('[data-map-hubs]'),
+      binGroups: document.querySelectorAll('[data-map-bins]'),
+      sortButtons: document.querySelectorAll('[data-map-sort-choice]'),
+      sortGroups: document.querySelectorAll('[data-map-sort]'),
+      filterBoxes: document.querySelectorAll('[data-filter]'),
+      branch: document.querySelector('[data-map-branch]'),
+      title: document.querySelector('[data-map-title]'),
+      total: document.querySelector('[data-map-total]'),
+      depot: document.querySelector('[data-map-depot]'),
+      more: document.querySelector('[data-map-more]'),
+      only: document.querySelector('[data-map-only]'),
+      onlyKind: document.querySelector('[data-map-only-kind]'),
+      onlyLabel: document.querySelector('[data-map-only-label]'),
+      onlyClear: document.querySelector('[data-map-only-clear]'),
+      limit: root ? Number(root.getAttribute('data-map-limit')) || 6 : 6,
+      sort: 'stack',
+      all: false,
+      key: '',
     };
   }
 
@@ -93,15 +136,24 @@
     return null;
   }
 
+  // Whether an entry has a stack or a topic. An empty value is "All". The topic "none"
+  // (Other) is the entries with no topic.
+  function has(kind, value, item) {
+    if (!value) return true;
+    if (kind === 'stack') return item.getAttribute('data-stack') === value;
+    var topics = item.getAttribute('data-topics') || '';
+    if (value === 'none') return topics.trim() === '';
+    return (' ' + topics + ' ').indexOf(' ' + value + ' ') !== -1;
+  }
+
+  function typed(item) {
+    return !search.terms.length || found(item);
+  }
+
   // An entry matches when it has the picked stack and the picked topic, and the words
   // typed in the search. An empty pick or an empty search matches all.
   function matches(item) {
-    var stack = filters.stack.value;
-    var topic = filters.topic.value;
-    if (stack && item.getAttribute('data-stack') !== stack) return false;
-    if (topic && (' ' + (item.getAttribute('data-topics') || '') + ' ').indexOf(' ' + topic + ' ') === -1) return false;
-    if (search.terms.length && !found(item)) return false;
-    return true;
+    return has('stack', filters.stack.value, item) && has('topic', filters.topic.value, item) && typed(item);
   }
 
   function stored() {
@@ -126,7 +178,13 @@
   filters.stack.value = params.stack && find(filters.stack, params.stack) ? params.stack : '';
   filters.topic.value = params.topic && find(filters.topic, params.topic) ? params.topic : '';
   if (search.input) setSearch(params.q || '');
-  var view = params.view === 'list' || params.view === 'labels' ? params.view : (stored() === 'list' ? 'list' : 'labels');
+  // A view the page does not have (a stored Map on the archive) falls back to Labels.
+  var views = ['labels'];
+  for (var p = 0; p < panes.length; p++) if (views.indexOf(panes[p].getAttribute('data-view')) === -1) views.push(panes[p].getAttribute('data-view'));
+  if (!panes.length) views.push('list');
+  function known(name) { return name !== null && views.indexOf(name) !== -1; }
+  var view = known(params.view) ? params.view : (known(stored()) ? stored() : 'labels');
+  if (map.root && params.sort === 'topic') map.sort = 'topic';
   var touched = false;
   var later = null;
 
@@ -140,8 +198,11 @@
     for (j = 0; j < groups.length; j++) count(groups[j]);
     sync(filters.stack);
     sync(filters.topic);
+    recount(filters.stack);
+    recount(filters.topic);
     for (j = 0; j < viewButtons.length; j++) viewButtons[j].setAttribute('aria-pressed', viewButtons[j].getAttribute('data-view-choice') === view ? 'true' : 'false');
     for (j = 0; j < panes.length; j++) panes[j].hidden = panes[j].getAttribute('data-view') !== view;
+    if (map.root) renderMap();
 
     var labels = [];
     if (filters.stack.value) labels.push(find(filters.stack, filters.stack.value).label);
@@ -180,10 +241,155 @@
       if (search.terms.length) parts.push('q=' + encodeURIComponent(search.value.trim().replace(/\s+/g, ' ')));
       if (filters.stack.value) parts.push('stack=' + encodeURIComponent(filters.stack.value));
       if (filters.topic.value) parts.push('topic=' + encodeURIComponent(filters.topic.value));
-      if (panes.length && view === 'list') parts.push('view=list');
+      if (panes.length && view !== 'labels') parts.push('view=' + view);
+      if (view === 'map' && map.sort === 'topic') parts.push('sort=topic');
       var own = location.hash.indexOf('=') !== -1;
       if (parts.length) history.replaceState(null, '', location.pathname + '#' + parts.join('&'));
       else if (own) history.replaceState(null, '', location.pathname);
+    }
+  }
+
+  function label(kind, value) {
+    var choice = find(filters[kind], value);
+    return choice ? choice.label : '';
+  }
+
+  function setCount(el, n) {
+    var count = el.querySelector('[data-map-count]');
+    if (count) count.textContent = String(n);
+  }
+
+  // The hubs of the picked sort, each with its count, and the branch of the open hub.
+  // A hub or a bin with nothing left hides, unless it is the one picked.
+  function renderMap() {
+    var hubKind = map.sort;
+    var binKind = hubKind === 'stack' ? 'topic' : 'stack';
+    var open = filters[hubKind].value;
+    var picked = filters[binKind].value;
+    var j;
+    function tally(test) {
+      var n = 0;
+      for (var k = 0; k < map.stubs.length; k++) if (typed(map.stubs[k]) && test(map.stubs[k])) n++;
+      return n;
+    }
+
+    for (j = 0; j < map.filterBoxes.length; j++) map.filterBoxes[j].hidden = view === 'map';
+    for (j = 0; j < map.sortGroups.length; j++) map.sortGroups[j].hidden = view !== 'map';
+    for (j = 0; j < map.sortButtons.length; j++) map.sortButtons[j].setAttribute('aria-pressed', map.sortButtons[j].getAttribute('data-map-sort-choice') === hubKind ? 'true' : 'false');
+    for (j = 0; j < map.hubLists.length; j++) map.hubLists[j].hidden = map.hubLists[j].getAttribute('data-map-hubs') !== hubKind;
+    for (j = 0; j < map.binGroups.length; j++) map.binGroups[j].hidden = map.binGroups[j].getAttribute('data-map-bins') !== hubKind;
+    // The depot counts what the search and the bin leave, across every hub.
+    if (map.depot) map.depot.textContent = String(tally(function (s) { return has(binKind, picked, s); }));
+
+    var openNode = null;
+    for (j = 0; j < map.nodes.length; j++) {
+      var hub = map.nodes[j].querySelector('[data-map-hub]');
+      var value = hub ? hub.getAttribute('data-' + hubKind + '-choice') : null;
+      if (value === null) continue;
+      var n = tally(function (s) { return has(hubKind, value, s) && has(binKind, picked, s); });
+      var isOpen = open !== '' && value === open;
+      setCount(hub, n);
+      hub.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      map.nodes[j].hidden = n === 0 && !isOpen;
+      if (isOpen) openNode = map.nodes[j];
+    }
+
+    map.open = openNode;
+    if (map.branch) {
+      map.branch.hidden = !openNode;
+      if (openNode && map.branch.parentNode !== openNode && openNode.appendChild) openNode.appendChild(map.branch);
+    }
+
+    for (j = 0; j < map.bins.length; j++) {
+      var bin = map.bins[j];
+      if (bin.getAttribute('data-map-bin') !== hubKind) continue;
+      var binValue = bin.getAttribute('data-' + binKind + '-choice') || '';
+      var m = tally(function (s) { return has(hubKind, open, s) && has(binKind, binValue, s); });
+      setCount(bin, m);
+      bin.hidden = m === 0 && binValue !== picked;
+    }
+
+    // The picked bin (a topic, or a stack when sorted by topic) narrows every hub, so the
+    // depot names it, with a button to clear it, whether a hub is open or not.
+    if (map.only) {
+      var orphan = picked !== '';
+      map.only.hidden = !orphan;
+      if (orphan) {
+        if (map.onlyKind) map.onlyKind.textContent = binKind === 'topic' ? 'Topic' : 'Stack';
+        if (map.onlyLabel) map.onlyLabel.textContent = label(binKind, picked);
+      }
+    }
+
+    if (map.title) map.title.textContent = open ? label(hubKind, open) + (picked ? ', ' + label(binKind, picked) : '') : '';
+
+    // The shelf shows the first stubs of the branch, then all of them on request.
+    // A new branch starts short again.
+    var key = hubKind + '|' + open + '|' + picked;
+    if (key !== map.key) { map.key = key; map.all = false; }
+    var shown = 0;
+    for (j = 0; j < map.stubs.length; j++) {
+      var cut = false;
+      if (!map.stubs[j].hidden) { shown++; cut = !map.all && shown > map.limit; }
+      map.stubs[j].setAttribute('data-cut', cut ? 'true' : 'false');
+    }
+    if (map.total) map.total.textContent = shown + (shown === 1 ? ' parcel' : ' parcels');
+    if (map.more) {
+      map.more.hidden = shown <= map.limit;
+      map.more.textContent = map.all ? 'Show fewer' : 'Show all ' + shown;
+    }
+    place();
+  }
+
+  // Where the branch sits. On a narrow screen it opens under its hub, as an outline.
+  // On a wide one it is the third column of the chart, level with its hub, and the
+  // line from the picked bin runs to the shelf. The stylesheet sets --map-outline.
+  function place() {
+    var node = map.open;
+    var branch = map.branch;
+    if (!node || !branch || !map.root.style || typeof getComputedStyle !== 'function') return;
+    var outline = getComputedStyle(map.root).getPropertyValue('--map-outline').trim() === '1';
+    var hub = node.querySelector('[data-map-hub]');
+    var first = null;
+    var picked = null;
+    for (var j = 0; j < map.bins.length; j++) {
+      var bin = map.bins[j];
+      if (bin.getAttribute('data-map-bin') !== map.sort || bin.hidden) continue;
+      if (!first) first = bin;
+      if (bin.getAttribute('aria-pressed') === 'true') picked = bin;
+    }
+    if (outline) {
+      if (branch.parentNode !== node) node.appendChild(branch);
+      branch.style.marginTop = '';
+    } else {
+      if (branch.parentNode !== map.root) map.root.appendChild(branch);
+      branch.style.marginTop = (node.offsetTop + (hub.offsetHeight - (first ? first.offsetHeight : hub.offsetHeight)) / 2) + 'px';
+    }
+    if (picked) branch.style.setProperty('--bin-y', (picked.offsetTop + picked.offsetHeight / 2) + 'px');
+  }
+
+  // Each choice of a filter counts its entries within the pick of the other filter and
+  // the search, so a choice that leads to nothing says 0.
+  function recount(f) {
+    var other = f.kind === 'stack' ? 'topic' : 'stack';
+    function size(value) {
+      var n = 0;
+      for (var k = 0; k < once.length; k++) if (typed(once[k]) && has(other, filters[other].value, once[k]) && has(f.kind, value, once[k])) n++;
+      return n;
+    }
+    for (var j = 0; j < f.chips.length; j++) {
+      var chip = f.chips[j];
+      if (chip.getAttribute('data-map-hub') !== null || chip.getAttribute('data-map-bin') !== null) continue;
+      var n = size(chip.getAttribute('data-' + f.kind + '-choice') || '');
+      var number = typeof chip.querySelector === 'function' ? chip.querySelector('.n') : null;
+      if (number) number.textContent = String(n);
+      var name = chip.getAttribute('aria-label');
+      if (name) chip.setAttribute('aria-label', name.replace(/\d+ entr(y|ies)$/, n + (n === 1 ? ' entry' : ' entries')));
+    }
+    if (f.dropdown) {
+      for (j = 0; j < f.dropdown.options.length; j++) {
+        var option = f.dropdown.options[j];
+        option.textContent = (option.getAttribute('data-' + f.kind + '-label') || 'All') + ' (' + size(option.getAttribute('value') || '') + ')';
+      }
     }
   }
 
@@ -275,6 +481,35 @@
     })(viewButtons[i]);
   }
 
+  for (i = 0; i < map.sortButtons.length; i++) {
+    (function (button) {
+      button.addEventListener('click', function () {
+        map.sort = button.getAttribute('data-map-sort-choice') === 'topic' ? 'topic' : 'stack';
+        touched = true;
+        render();
+      });
+    })(map.sortButtons[i]);
+  }
+
+  if (map.onlyClear) {
+    map.onlyClear.addEventListener('click', function () {
+      filters[map.sort === 'stack' ? 'topic' : 'stack'].value = '';
+      touched = true;
+      render();
+    });
+  }
+
+  if (map.more) {
+    map.more.addEventListener('click', function () {
+      map.all = !map.all;
+      render();
+    });
+  }
+
   render();
   for (i = 0; i < tools.length; i++) tools[i].hidden = false;
+  if (map.root && typeof window !== 'undefined') {
+    window.addEventListener('resize', place);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+  }
 })();

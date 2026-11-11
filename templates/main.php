@@ -16,6 +16,7 @@
  * @var string $copyScript
  * @var array<string, int> $counts
  * @var array<string, int> $topics Entries per topic, for the topics with 2 entries or more.
+ * @var int $noTopic Entries with no topic, for Other on the Map.
  * @var string $manifestScript
  * @var string $searchIndex The words of each entry, as JSON. See SearchIndex.
  * @var string $weekScript The marker under This week, for phones.
@@ -68,9 +69,15 @@ use PhpLives\Format;
 <?php if ($topics): ?>
 <?= $site->filterControl($topics, kind: 'topic', total: count($entries)) ?>
 <?php endif ?>
-          <div class="view" role="group" aria-label="View">
+          <div class="view map-sort" role="group" aria-label="Sort the map by" data-map-sort hidden>
+            <span class="filter-cap" aria-hidden="true">Sort by</span>
+            <button type="button" data-map-sort-choice="stack" aria-pressed="true">Stack</button>
+            <button type="button" data-map-sort-choice="topic" aria-pressed="false">Topic</button>
+          </div>
+          <div class="view view-choice" role="group" aria-label="View">
             <button type="button" data-view-choice="labels" aria-pressed="true">Labels</button>
             <button type="button" data-view-choice="list" aria-pressed="false">List</button>
+            <button type="button" data-view-choice="map" aria-pressed="false">Map</button>
           </div>
         </div>
 <?php endif ?>
@@ -118,6 +125,7 @@ require __DIR__.'/table.php';
 ?>
         <div class="sheet-foot"><span>Each date comes from the project's own source.</span></div>
       </section>
+<?php require __DIR__.'/map.php' ?>
 <?php require __DIR__.'/search-none.php' ?>
 <?php else: ?>
       <p class="empty">Nothing has shipped in the last 6 months yet.</p>

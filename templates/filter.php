@@ -14,7 +14,7 @@ $caption = $kind === 'topic' ? 'Topic' : 'Stack';
 $label = fn (string $key): string => $kind === 'topic' ? Format::topicLabel($key) : Format::stackLabel($key);
 ?>
 <?php if (count($counts) <= $maxChips): ?>
-          <div class="filter filter-<?= $e($kind) ?>" role="group" aria-label="Filter by <?= $e($kind) ?>">
+          <div class="filter filter-<?= $e($kind) ?>" data-filter role="group" aria-label="Filter by <?= $e($kind) ?>">
             <span class="filter-cap" aria-hidden="true"><?= $e($caption) ?></span>
             <button type="button" data-<?= $e($kind) ?>-choice="" data-<?= $e($kind) ?>-label="" data-count="<?= $total ?>" aria-pressed="true">All <span class="n"><?= $total ?></span></button>
 <?php foreach ($counts as $key => $count): ?>
@@ -26,7 +26,7 @@ $label = fn (string $key): string => $kind === 'topic' ? Format::topicLabel($key
 <?php endforeach ?>
           </div>
 <?php else: ?>
-          <div class="filter filter-select filter-<?= $e($kind) ?>">
+          <div class="filter filter-select filter-<?= $e($kind) ?>" data-filter>
             <label class="filter-cap" for="<?= $e($kind) ?>-filter"><?= $e($caption) ?></label>
             <select id="<?= $e($kind) ?>-filter" data-<?= $e($kind) ?>-select>
               <option value="" data-<?= $e($kind) ?>-label="" data-count="<?= $total ?>">All (<?= $total ?>)</option>

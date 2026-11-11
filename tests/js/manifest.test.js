@@ -45,16 +45,101 @@ const INDEX = {
   excel: 'Laravel Excel 4.0 A new major version. Queued imports with #[Queue]. Café Crème Spartner maatwebsite/excel Laravel MCP',
 }
 
+// The parts of the Map view. Stack hubs: php, laravel. Topic hubs: testing, mcp, none (Other).
+// Sorted by stack, the bins are topics; sorted by topic, they are stacks. "All" has the value "".
+function mapParts(limit) {
+  const counted = (attrs) => {
+    const el = element(attrs, { tagName: 'BUTTON' })
+    const count = element({ 'data-map-count': '' })
+    el.count = count
+    el.querySelector = (selector) => (selector === '[data-map-count]' ? count : null)
+    return el
+  }
+  const hub = (kind, value, label) => counted({ [`data-${kind}-choice`]: value, [`data-${kind}-label`]: label, 'data-map-hub': '', 'aria-pressed': 'false', 'aria-expanded': 'false' })
+  const bin = (sort, kind, value, label) => counted({ [`data-${kind}-choice`]: value, [`data-${kind}-label`]: label, 'data-map-bin': sort, 'aria-pressed': value === '' ? 'true' : 'false' })
+
+  const stackHubs = [hub('stack', 'php', 'plain PHP'), hub('stack', 'laravel', 'Laravel')]
+  const topicHubs = [hub('topic', 'testing', 'Testing'), hub('topic', 'mcp', 'MCP'), hub('topic', 'none', 'Other')]
+  const topicBins = [bin('stack', 'topic', '', ''), bin('stack', 'topic', 'testing', 'Testing'), bin('stack', 'topic', 'mcp', 'MCP'), bin('stack', 'topic', 'none', 'Other')]
+  const stackBins = [bin('topic', 'stack', '', ''), bin('topic', 'stack', 'php', 'plain PHP'), bin('topic', 'stack', 'laravel', 'Laravel')]
+
+  const nodes = [...stackHubs, ...topicHubs].map((button) => {
+    const li = element({ 'data-map-node': '' })
+    li.hub = button
+    li.children = []
+    li.querySelector = (selector) => (selector === '[data-map-hub]' ? button : null)
+    li.appendChild = (child) => { li.children.push(child); child.parent = li }
+    return li
+  })
+  const hubLists = ['stack', 'topic'].map((sort) => element({ 'data-map-hubs': sort }, { hidden: sort !== 'stack' }))
+  const binGroups = ['stack', 'topic'].map((sort) => element({ 'data-map-bins': sort }, { hidden: sort !== 'stack' }))
+  const sortButtons = ['stack', 'topic'].map((sort) => element({ 'data-map-sort-choice': sort, 'aria-pressed': sort === 'stack' ? 'true' : 'false' }, { tagName: 'BUTTON' }))
+  const sortGroup = element({ 'data-map-sort': '' }, { hidden: true })
+  const filterBoxes = [element({ 'data-filter': '' }), element({ 'data-filter': '' })]
+  const root = element({ 'data-map': '', 'data-map-limit': String(limit) })
+  const branch = element({ 'data-map-branch': '' }, { hidden: true })
+  const title = element({ 'data-map-title': '' })
+  const total = element({ 'data-map-total': '' })
+  const depot = element({ 'data-map-depot': '' })
+  const more = element({ 'data-map-more': '' }, { hidden: true, tagName: 'BUTTON' })
+  const only = element({ 'data-map-only': '' }, { hidden: true })
+  const onlyKind = element({ 'data-map-only-kind': '' })
+  const onlyLabel = element({ 'data-map-only-label': '' })
+  const onlyClear = element({ 'data-map-only-clear': '' }, { tagName: 'BUTTON' })
+
+  const find = (list, value) => list.find((el) => (el.getAttribute('data-stack-choice') ?? el.getAttribute('data-topic-choice')) === value)
+  return {
+    stackButtons: [...stackHubs, ...stackBins],
+    topicButtons: [...topicHubs, ...topicBins],
+    nodes, hubLists, binGroups, sortButtons, sortGroup, filterBoxes, root, branch, title, total, depot, more, only, onlyKind, onlyLabel, onlyClear,
+    lists: {
+      '[data-map-node]': nodes,
+      '[data-map-bin]': [...topicBins, ...stackBins],
+      '[data-map-hubs]': hubLists,
+      '[data-map-bins]': binGroups,
+      '[data-map-sort-choice]': sortButtons,
+      '[data-map-sort]': [sortGroup],
+      '[data-filter]': filterBoxes,
+    },
+    singles: {
+      '[data-map]': root,
+      '[data-map-branch]': branch,
+      '[data-map-title]': title,
+      '[data-map-total]': total,
+      '[data-map-depot]': depot,
+      '[data-map-more]': more,
+      '[data-map-only]': only,
+      '[data-map-only-kind]': onlyKind,
+      '[data-map-only-label]': onlyLabel,
+      '[data-map-only-clear]': onlyClear,
+    },
+    stackHub: (value) => find(stackHubs, value),
+    topicHub: (value) => find(topicHubs, value),
+    topicBin: (value) => find(topicBins, value),
+    stackBin: (value) => find(stackBins, value),
+    sort: (value) => sortButtons.find((el) => el.getAttribute('data-map-sort-choice') === value),
+    // The count each hub or bin shows, or null when it is hidden. A hub hides with its node.
+    counts: (list) => Object.fromEntries(list.map((el) => {
+      const node = nodes.find((li) => li.hub === el)
+      const gone = el.hidden || (node && node.hidden)
+      return [el.getAttribute('data-stack-choice') ?? el.getAttribute('data-topic-choice'), gone ? null : el.count.textContent]
+    })),
+    hubs: { stack: stackHubs, topic: topicHubs },
+    bins: { stack: topicBins, topic: stackBins },
+  }
+}
+
 // A main page with three entries in two views, or the archive (one view).
 // Entry 0 is php and testing, entry 1 is laravel with testing and mcp, entry 2 is laravel and mcp.
-function run({ hash = '', stored = {}, broken = false, select = false, topicSelect = false, views = true, index = INDEX } = {}) {
+function run({ hash = '', stored = {}, broken = false, select = false, topicSelect = false, views = true, index = INDEX, map = false, topics = ['testing', 'testing mcp', 'mcp'], limit = 6 } = {}) {
   const stacks = ['php', 'laravel', 'laravel']
-  const topics = ['testing', 'testing mcp', 'mcp']
   const slugs = ['mollie', 'vigilance', 'excel']
   const items = []
-  const make = () => stacks.map((stack, i) => element({ 'data-stack': stack, 'data-topics': topics[i], 'data-slug': slugs[i] }))
+  const make = (attrs = {}) => stacks.map((stack, i) => element({ 'data-stack': stack, 'data-topics': topics[i], 'data-slug': slugs[i], ...attrs }))
   if (views) items.push(...make())
   items.push(...make())
+  // The Map view holds one more copy of the entries: the stubs on its shelf.
+  if (map) items.push(...make({ 'data-map-stub': '' }))
 
   const choices = [['', '', 3], ['laravel', 'Laravel', 2], ['php', 'plain PHP', 1]]
   const chips = select ? [] : choices.map(([stack, label, count]) => element({
@@ -74,8 +159,17 @@ function run({ hash = '', stored = {}, broken = false, select = false, topicSele
     topicDropdown.options = topicChoices.map(([topic, label, count]) => element({ value: topic, 'data-topic-label': label, 'data-count': count }))
   }
 
-  const viewButtons = views ? ['labels', 'list'].map((view) => element({ 'data-view-choice': view, 'aria-pressed': view === 'labels' ? 'true' : 'false' })) : []
-  const panes = views ? [element({ 'data-view': 'labels' }), element({ 'data-view': 'list' }, { hidden: true })] : []
+  const viewNames = map ? ['labels', 'list', 'map'] : ['labels', 'list']
+  const viewButtons = views ? viewNames.map((view) => element({ 'data-view-choice': view, 'aria-pressed': view === 'labels' ? 'true' : 'false' })) : []
+  const panes = views ? viewNames.map((view) => element({ 'data-view': view }, { hidden: view !== 'labels' })) : []
+
+  // The Map: a list of hubs and a group of bins for each sort, and the branch that opens
+  // under a hub. Hubs and bins are stack and topic choices, like the chips of the filters.
+  const m = map ? mapParts(limit) : null
+  if (m) {
+    chips.push(...m.stackButtons)
+    topicChips.push(...m.topicButtons)
+  }
   const tools = element({ 'data-tools': '' }, { hidden: true })
   const slip = element({ 'data-tools': '' }, { hidden: true })
   const status = element({ 'data-filter-status': '', 'data-total': '3' })
@@ -113,6 +207,7 @@ function run({ hash = '', stored = {}, broken = false, select = false, topicSele
     '[data-view]': panes,
     '[data-tools]': [slip, tools],
     '[data-group]': groups,
+    ...(m ? m.lists : {}),
   }
   const singles = {
     '[data-filter-status]': status,
@@ -125,6 +220,7 @@ function run({ hash = '', stored = {}, broken = false, select = false, topicSele
     '[data-search-none-title]': noneTitle,
     '[data-search-reset]': reset,
     '#search-index': indexScript,
+    ...(m ? m.singles : {}),
   }
   const page = element({}, { tagName: 'BODY' })
   const document = {
@@ -150,7 +246,10 @@ function run({ hash = '', stored = {}, broken = false, select = false, topicSele
     input, clear, key, none, noneTitle, reset, press,
     // The slugs of the entries that show, in each view.
     found: () => items.slice(0, 3).filter((item) => !item.hidden).map((item) => item.getAttribute('data-slug')),
-    foundInList: () => items.slice(3).filter((item) => !item.hidden).map((item) => item.getAttribute('data-slug')),
+    foundInList: () => items.slice(3, 6).filter((item) => !item.hidden).map((item) => item.getAttribute('data-slug')),
+    // The stubs on the Map shelf that show: not hidden by a filter, and not cut by the limit.
+    onShelf: () => items.slice(6).filter((item) => !item.hidden && item.getAttribute('data-cut') !== 'true').map((item) => item.getAttribute('data-slug')),
+    map: m,
     chip: (stack) => chips.find((chip) => chip.getAttribute('data-stack-choice') === stack),
     topic: (name) => topicChips.find((chip) => chip.getAttribute('data-topic-choice') === name),
     view: (name) => viewButtons.find((button) => button.getAttribute('data-view-choice') === name),
@@ -676,5 +775,252 @@ describe('manifest script', () => {
       bare.input.type('magento')
       expect(bare.found()).toEqual([])
     })
+  })
+})
+
+describe('map view', () => {
+  it('adds Map to the views, keeps it in the link and remembers it', () => {
+    const page = run({ map: true })
+
+    page.view('map').click()
+
+    expect(page.panes.map((pane) => pane.hidden)).toEqual([true, true, false])
+    expect(page.urls.at(-1)).toBe('/#view=map')
+    expect(page.localStorage.data.view).toBe('map')
+    expect(page.map.sortGroup.hidden).toBe(false)
+    expect(page.map.filterBoxes.map((box) => box.hidden)).toEqual([true, true])
+
+    page.view('labels').click()
+
+    expect(page.map.sortGroup.hidden).toBe(true)
+    expect(page.map.filterBoxes.map((box) => box.hidden)).toEqual([false, false])
+  })
+
+  it('opens the Map from the link or from the stored view', () => {
+    expect(run({ map: true, hash: '#view=map' }).panes[2].hidden).toBe(false)
+    expect(run({ map: true, stored: { view: 'map' } }).panes[2].hidden).toBe(false)
+  })
+
+  it('falls back to Labels for a stored Map on a page without one', () => {
+    const page = run({ stored: { view: 'map' } })
+
+    expect(page.panes.map((pane) => pane.hidden)).toEqual([false, true])
+  })
+
+  it('opens with every branch closed, and counts the parcels of each hub', () => {
+    const page = run({ map: true, hash: '#view=map' })
+
+    expect(page.map.branch.hidden).toBe(true)
+    expect(page.map.counts(page.map.hubs.stack)).toEqual({ php: '1', laravel: '2' })
+    expect(page.map.hubs.stack.map((hub) => hub.getAttribute('aria-expanded'))).toEqual(['false', 'false'])
+    expect(page.map.depot.textContent).toBe('3')
+  })
+
+  it('opens a stack under its hub, with its parcels and its topics', () => {
+    const page = run({ map: true, hash: '#view=map' })
+
+    page.map.stackHub('laravel').click()
+
+    expect(page.map.branch.hidden).toBe(false)
+    expect(page.map.branch.parent).toBe(page.map.nodes[1])
+    expect(page.map.stackHub('laravel').getAttribute('aria-expanded')).toBe('true')
+    expect(page.onShelf()).toEqual(['vigilance', 'excel'])
+    expect(page.map.counts(page.map.bins.stack)).toEqual({ '': '2', testing: '1', mcp: '2', none: null })
+    expect(page.map.title.textContent).toBe('Laravel')
+    expect(page.map.total.textContent).toBe('2 parcels')
+    expect(page.status.textContent).toBe('Showing 2 of 3 parcels: Laravel.')
+    expect(page.urls.at(-1)).toBe('/#stack=laravel&view=map')
+  })
+
+  it('narrows a branch with a topic bin, and closes it from its hub', () => {
+    const page = run({ map: true, hash: '#view=map' })
+
+    page.map.stackHub('laravel').click()
+    page.map.topicBin('testing').click()
+
+    expect(page.onShelf()).toEqual(['vigilance'])
+    expect(page.map.title.textContent).toBe('Laravel, Testing')
+    expect(page.map.total.textContent).toBe('1 parcel')
+    expect(page.map.counts(page.map.hubs.stack)).toEqual({ php: '1', laravel: '1' })
+    expect(page.urls.at(-1)).toBe('/#stack=laravel&topic=testing&view=map')
+
+    page.map.stackHub('laravel').click()
+
+    expect(page.map.branch.hidden).toBe(true)
+  })
+
+  it('keeps the same choice when the visitor goes back to Labels', () => {
+    const page = run({ map: true, hash: '#view=map' })
+
+    page.map.stackHub('laravel').click()
+    page.view('labels').click()
+
+    expect(page.found()).toEqual(['vigilance', 'excel'])
+    expect(page.pressed(page.chips.slice(0, 3))).toEqual(['laravel'])
+    expect(page.urls.at(-1)).toBe('/#stack=laravel')
+  })
+
+  it('sorts by topic, with stacks as the bins', () => {
+    const page = run({ map: true, hash: '#view=map' })
+
+    page.map.sort('topic').click()
+
+    expect(page.map.hubLists.map((list) => list.hidden)).toEqual([true, false])
+    expect(page.map.binGroups.map((group) => group.hidden)).toEqual([true, false])
+    expect(page.map.sortButtons.map((button) => button.getAttribute('aria-pressed'))).toEqual(['false', 'true'])
+    expect(page.map.counts(page.map.hubs.topic)).toEqual({ testing: '2', mcp: '2', none: null })
+    expect(page.urls.at(-1)).toBe('/#view=map&sort=topic')
+
+    page.map.topicHub('mcp').click()
+
+    expect(page.map.branch.parent).toBe(page.map.nodes[3])
+    expect(page.map.counts(page.map.bins.topic)).toEqual({ '': '2', php: null, laravel: '2' })
+    expect(page.map.title.textContent).toBe('MCP')
+    expect(page.urls.at(-1)).toBe('/#topic=mcp&view=map&sort=topic')
+  })
+
+  it('reads the sort from the link, and ignores an unknown one', () => {
+    expect(run({ map: true, hash: '#view=map&sort=topic' }).map.hubLists[1].hidden).toBe(false)
+    expect(run({ map: true, hash: '#view=map&sort=colour' }).map.hubLists[0].hidden).toBe(false)
+  })
+
+  it('finds the parcels with no topic under Other', () => {
+    const page = run({ map: true, hash: '#view=map&sort=topic', topics: ['testing', 'testing mcp', ''] })
+
+    expect(page.map.counts(page.map.hubs.topic)).toEqual({ testing: '2', mcp: '1', none: '1' })
+
+    page.map.topicHub('none').click()
+
+    expect(page.onShelf()).toEqual(['excel'])
+    expect(page.status.textContent).toBe('Showing 1 of 3 parcels: Other.')
+    expect(page.urls.at(-1)).toBe('/#topic=none&view=map&sort=topic')
+  })
+
+  it('opens Other from a link', () => {
+    const page = run({ map: true, hash: '#topic=none&view=map', topics: ['testing', 'testing mcp', ''] })
+
+    expect(page.status.textContent).toBe('Showing 1 of 3 parcels: Other.')
+    expect(page.map.counts(page.map.hubs.stack)).toEqual({ php: null, laravel: '1' })
+  })
+
+  it('prunes the map while the visitor types', () => {
+    const page = run({ map: true, hash: '#view=map' })
+
+    page.input.type('excel')
+
+    expect(page.map.counts(page.map.hubs.stack)).toEqual({ php: null, laravel: '1' })
+    expect(page.map.depot.textContent).toBe('1')
+  })
+
+  it('keeps an open hub in view while a search leaves it empty', () => {
+    const page = run({ map: true, hash: '#stack=php&view=map' })
+
+    page.input.type('excel')
+
+    expect(page.map.counts(page.map.hubs.stack)).toEqual({ php: '0', laravel: '1' })
+    expect(page.none.hidden).toBe(false)
+  })
+
+  it('shows the first stubs of a branch, then all of them', () => {
+    const page = run({ map: true, hash: '#stack=laravel&view=map', limit: 1 })
+
+    expect(page.onShelf()).toEqual(['vigilance'])
+    expect(page.map.more.hidden).toBe(false)
+    expect(page.map.more.textContent).toBe('Show all 2')
+
+    page.map.more.click()
+
+    expect(page.onShelf()).toEqual(['vigilance', 'excel'])
+    expect(page.map.more.textContent).toBe('Show fewer')
+
+    page.map.topicBin('mcp').click()
+
+    expect(page.onShelf()).toEqual(['vigilance'])
+    expect(page.map.more.textContent).toBe('Show all 2')
+  })
+
+  it('hides the button when the branch fits', () => {
+    const page = run({ map: true, hash: '#stack=php&view=map', limit: 1 })
+
+    expect(page.map.more.hidden).toBe(true)
+  })
+})
+
+describe('counts that follow the picks', () => {
+  it('counts each choice of one filter within the pick of the other', () => {
+    const page = run({ select: true, topicSelect: true })
+
+    page.topicDropdown.change('mcp')
+
+    expect(page.dropdown.options.map((option) => option.textContent)).toEqual(['All (2)', 'Laravel (2)', 'plain PHP (0)'])
+    expect(page.topicDropdown.options.map((option) => option.textContent)).toEqual(['All (3)', 'MCP (2)', 'Testing (2)'])
+
+    page.dropdown.change('php')
+
+    expect(page.topicDropdown.options.map((option) => option.textContent)).toEqual(['All (1)', 'MCP (0)', 'Testing (1)'])
+  })
+
+  it('counts within the search too', () => {
+    const page = run({ select: true, topicSelect: true })
+
+    page.input.type('excel')
+
+    expect(page.dropdown.options.map((option) => option.textContent)).toEqual(['All (1)', 'Laravel (1)', 'plain PHP (0)'])
+  })
+
+  it('writes the count of a chip in its number and its name for screen readers', () => {
+    const page = run()
+    const chip = page.chip('php')
+    const n = element({})
+    chip.querySelector = (selector) => (selector === '.n' ? n : null)
+    chip.setAttribute('aria-label', 'PHP, plain PHP, 1 entry')
+
+    page.topic('mcp').click()
+
+    expect(n.textContent).toBe('0')
+    expect(chip.getAttribute('aria-label')).toBe('PHP, plain PHP, 0 entries')
+  })
+})
+
+describe('map filter note', () => {
+  it('shows a filter that no open hub shows, and clears it', () => {
+    const page = run({ map: true, hash: '#topic=mcp&view=map' })
+
+    expect(page.map.only.hidden).toBe(false)
+    expect(page.map.onlyKind.textContent).toBe('Topic')
+    expect(page.map.onlyLabel.textContent).toBe('MCP')
+    expect(page.map.depot.textContent).toBe('2')
+    expect(page.map.counts(page.map.hubs.stack)).toEqual({ php: null, laravel: '2' })
+
+    page.map.onlyClear.click()
+
+    expect(page.map.only.hidden).toBe(true)
+    expect(page.map.counts(page.map.hubs.stack)).toEqual({ php: '1', laravel: '2' })
+    expect(page.urls.at(-1)).toBe('/#view=map')
+  })
+
+  it('names a stack when the map is sorted by topic', () => {
+    const page = run({ map: true, hash: '#stack=laravel&view=map&sort=topic' })
+
+    expect(page.map.onlyKind.textContent).toBe('Stack')
+    expect(page.map.onlyLabel.textContent).toBe('Laravel')
+  })
+
+  it('keeps the note while a hub is open, since the pick narrows every hub', () => {
+    const page = run({ map: true, hash: '#stack=laravel&topic=mcp&view=map' })
+
+    expect(page.map.only.hidden).toBe(false)
+    expect(page.map.onlyLabel.textContent).toBe('MCP')
+
+    page.map.onlyClear.click()
+
+    expect(page.map.branch.hidden).toBe(false)
+    expect(page.onShelf()).toEqual(['vigilance', 'excel'])
+    expect(page.urls.at(-1)).toBe('/#stack=laravel&view=map')
+  })
+
+  it('has no note when no bin is picked', () => {
+    expect(run({ map: true, hash: '#view=map' }).map.only.hidden).toBe(true)
+    expect(run({ map: true, hash: '#stack=laravel&view=map' }).map.only.hidden).toBe(true)
   })
 })
