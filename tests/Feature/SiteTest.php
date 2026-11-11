@@ -421,6 +421,17 @@ it('sums up the manifest', function () {
     ])->and(texts($slip, '#manifest-title'))->toBe(['Shipped since 16/04/2026']);
 });
 
+it('links each stack on the manifest slip to its branch of the Map', function () {
+    writeEntry($this->dir, '2026-10-01-a.php', ['stack' => 'laravel']);
+    writeEntry($this->dir, '2026-09-01-b.php', ['stack' => 'laravel']);
+    writeEntry($this->dir, '2026-08-01-c.php', ['stack' => 'php']);
+    $main = pages($this)['index.html'];
+
+    expect(texts($main, '.slip-stacks dd a'))->toBe(['2 Laravel', '1 plain PHP'])
+        ->and(hrefs($main, '.slip-stacks dd a'))->toBe(['/#stack=laravel&view=map', '/#stack=php&view=map'])
+        ->and(attrs($main, '.slip-stacks dd a', 'data-map-open'))->toBe(['laravel', 'php']);
+});
+
 it('points the manifest to the archive when it has parcels, with the parcels still counted apart', function () {
     writeEntry($this->dir, '2026-10-01-a.php');
     writeEntry($this->dir, '2026-03-01-old.php');
@@ -1208,21 +1219,21 @@ it('puts a hub on the map for each stack, most common first, with its count', fu
     mapEntries($this);
     $main = pages($this)['index.html'];
 
-    expect(attrs($main, '[data-map-hubs="stack"] [data-map-hub]', 'data-stack-choice'))->toBe(['laravel', 'php'])
-        ->and(texts($main, '[data-map-hubs="stack"] [data-map-hub] [data-map-count]'))->toBe(['3', '1'])
-        ->and(texts($main, '[data-map-hubs="stack"] [data-map-hub] .map-code'))->toBe(['LRV', 'PHP'])
-        ->and(texts($main, '[data-map-hubs="stack"] [data-map-hub] .map-name'))->toBe(['Laravel', 'plain PHP'])
-        ->and(attrs($main, '[data-map-hubs="stack"] [data-map-hub]', 'aria-expanded'))->toBe(['false', 'false'])
-        ->and($main->querySelectorAll('[data-map-hubs="stack"] > li[data-map-node]'))->toHaveCount(2);
+    expect(attrs($main, '[data-map-hubs="stack"] [data-map-hub]:not([data-map-week])', 'data-stack-choice'))->toBe(['laravel', 'php'])
+        ->and(texts($main, '[data-map-hubs="stack"] [data-map-hub]:not([data-map-week]) [data-map-count]'))->toBe(['3', '1'])
+        ->and(texts($main, '[data-map-hubs="stack"] [data-map-hub]:not([data-map-week]) .map-code'))->toBe(['LRV', 'PHP'])
+        ->and(texts($main, '[data-map-hubs="stack"] [data-map-hub]:not([data-map-week]) .map-name'))->toBe(['Laravel', 'plain PHP'])
+        ->and(attrs($main, '[data-map-hubs="stack"] [data-map-hub]:not([data-map-week])', 'aria-expanded'))->toBe(['false', 'false'])
+        ->and($main->querySelectorAll('[data-map-hubs="stack"] > li[data-map-node]'))->toHaveCount(3);
 });
 
 it('puts a hub on the map for each topic, with Other last for the entries with no topic', function () {
     mapEntries($this);
     $main = pages($this)['index.html'];
 
-    expect(attrs($main, '[data-map-hubs="topic"] [data-map-hub]', 'data-topic-choice'))->toBe(['mcp', 'testing', 'none'])
-        ->and(attrs($main, '[data-map-hubs="topic"] [data-map-hub]', 'data-topic-label'))->toBe(['MCP', 'Testing', 'Other'])
-        ->and(texts($main, '[data-map-hubs="topic"] [data-map-hub] [data-map-count]'))->toBe(['2', '2', '1'])
+    expect(attrs($main, '[data-map-hubs="topic"] [data-map-hub]:not([data-map-week])', 'data-topic-choice'))->toBe(['mcp', 'testing', 'none'])
+        ->and(attrs($main, '[data-map-hubs="topic"] [data-map-hub]:not([data-map-week])', 'data-topic-label'))->toBe(['MCP', 'Testing', 'Other'])
+        ->and(texts($main, '[data-map-hubs="topic"] [data-map-hub]:not([data-map-week]) [data-map-count]'))->toBe(['2', '2', '1'])
         ->and($main->querySelector('[data-map-hubs="topic"]')->hasAttribute('hidden'))->toBeTrue();
 });
 
@@ -1230,7 +1241,7 @@ it('leaves Other off the map when every entry has a topic', function () {
     writeEntry($this->dir, '2026-10-01-a.php', ['topics' => ['testing']]);
     writeEntry($this->dir, '2026-09-01-b.php', ['topics' => ['testing']]);
 
-    expect(attrs(pages($this)['index.html'], '[data-map-hubs="topic"] [data-map-hub]', 'data-topic-choice'))->toBe(['testing']);
+    expect(attrs(pages($this)['index.html'], '[data-map-hubs="topic"] [data-map-hub]:not([data-map-week])', 'data-topic-choice'))->toBe(['testing']);
 });
 
 it('gives the branch a bin for each topic, and one for each stack, with All first', function () {
@@ -1240,6 +1251,7 @@ it('gives the branch a bin for each topic, and one for each stack, with All firs
     expect(attrs($main, '[data-map-bins="stack"] [data-map-bin="stack"]', 'data-topic-choice'))->toBe(['', 'mcp', 'testing', 'none'])
         ->and(attrs($main, '[data-map-bins="topic"] [data-map-bin="topic"]', 'data-stack-choice'))->toBe(['', 'laravel', 'php'])
         ->and(texts($main, '[data-map-bins="stack"] [data-map-bin] .map-name'))->toBe(['All', 'MCP', 'Testing', 'Other'])
+        ->and($main->querySelector('[data-map] > svg[data-map-route][aria-hidden="true"] path'))->not->toBeNull()
         ->and($main->querySelector('[data-map-branch]')->hasAttribute('hidden'))->toBeTrue()
         ->and($main->querySelector('[data-map-branch] [data-map-more]')->hasAttribute('hidden'))->toBeTrue();
 });
@@ -1262,4 +1274,28 @@ it('counts the parcels in the map depot', function () {
     expect(texts($main, '[data-map-depot]'))->toBe(['4'])
         ->and($main->querySelector('[data-map-only]')->hasAttribute('hidden'))->toBeTrue()
         ->and(texts($main, '[data-map-only] [data-map-only-clear]'))->toBe(['Clear this filter']);
+});
+
+it('puts a This Week hub first in each list of the map, with the entries added since Monday', function () {
+    writeEntry($this->dir, '2026-10-01-a.php', ['name' => 'A', 'stack' => 'laravel', 'added' => '2026-10-13']);
+    writeEntry($this->dir, '2026-09-01-b.php', ['name' => 'B', 'stack' => 'php', 'added' => '2026-10-12']);
+    writeEntry($this->dir, '2026-08-01-c.php', ['name' => 'C', 'stack' => 'php', 'added' => '2026-10-05']);
+    $main = pages($this)['index.html'];
+
+    expect(attrs($main, '[data-map-hubs] > li:first-child [data-map-hub]', 'data-map-week'))->toBe(['stack', 'topic'])
+        ->and(texts($main, '[data-map-hubs="stack"] [data-map-week] .map-name'))->toBe(['This week'])
+        ->and(texts($main, '[data-map-hubs="stack"] [data-map-week] [data-map-count]'))->toBe(['2'])
+        ->and(attrs($main, '[data-map-week]', 'data-map-week-label'))->toBe(['This week', 'This week'])
+        ->and(texts($main, '[data-map-stub][data-map-this-week] h4'))->toBe(['A', 'B'])
+        ->and($main->querySelectorAll('[data-view="labels"] [data-map-this-week]'))->toHaveCount(0);
+});
+
+it('calls the hub Added last when nothing was added this week', function () {
+    writeEntry($this->dir, '2026-10-01-a.php', ['name' => 'A', 'added' => '2026-10-05']);
+    writeEntry($this->dir, '2026-09-01-b.php', ['name' => 'B', 'added' => '2026-10-02']);
+    $main = pages($this)['index.html'];
+
+    expect(texts($main, '[data-map-hubs="stack"] [data-map-week] .map-name'))->toBe(['Added last'])
+        ->and(attrs($main, '[data-map-week]', 'data-map-week-label'))->toBe(['Added last', 'Added last'])
+        ->and(texts($main, '[data-map-stub][data-map-this-week] h4'))->toBe(['A', 'B']);
 });

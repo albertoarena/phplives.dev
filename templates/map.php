@@ -12,6 +12,8 @@
  * @var array<string, int> $topics Entries per topic, most common first.
  * @var int $noTopic Entries with no topic. They sit under Other.
  * @var string|null $newestSlug
+ * @var list<string> $thisWeek The slugs of the entries on the This Week hub.
+ * @var string $latestTitle "This week", or "Added last" when nothing was added this week.
  * @var string $today
  */
 use PhpLives\Format;
@@ -22,6 +24,7 @@ $chevron = '<svg class="map-chev" width="16" height="16" viewBox="0 0 24 24" fil
 ?>
       <section class="map" data-view="map" aria-label="Manifest map" hidden>
         <div class="map-chart" data-map data-map-limit="6">
+          <svg class="map-route" data-map-route aria-hidden="true" focusable="false" hidden><path d=""/></svg>
           <div class="map-depot">
             <div class="map-depot-head"><b>Depot</b><span class="mono"><?= $e($today) ?></span></div>
             <p class="map-depot-row"><span>Parcels</span> <b class="mono" data-map-depot><?= count($entries) ?></b></p>
@@ -29,6 +32,11 @@ $chevron = '<svg class="map-chev" width="16" height="16" viewBox="0 0 24 24" fil
             <p class="map-depot-foot">Pick one to open its branch.</p>
           </div>
           <ul class="map-hubs" data-map-hubs="stack" aria-label="Stacks">
+<?php if ($thisWeek !== []): ?>
+            <li class="map-node map-node-week" data-map-node>
+              <button type="button" class="map-hub map-hub-week" data-map-hub data-map-week="stack" data-map-week-label="<?= $e($latestTitle) ?>" aria-expanded="false"><span class="map-name"><?= $e($latestTitle) ?></span><span class="map-n mono" data-map-count><?= count($thisWeek) ?></span><?= $chevron ?></button>
+            </li>
+<?php endif ?>
 <?php foreach ($counts as $stack => $count): ?>
             <li class="map-node" data-map-node>
               <button type="button" class="map-hub" data-map-hub data-stack-choice="<?= $e($stack) ?>" data-stack-label="<?= $e(Format::stackLabel($stack)) ?>" aria-pressed="false" aria-expanded="false"><b class="map-code" aria-hidden="true"><?= $e(Format::stackCode($stack)) ?></b><span class="map-name"><?= $e(Format::stackLabel($stack)) ?></span><span class="map-n mono" data-map-count><?= $count ?></span><?= $chevron ?></button>
@@ -36,6 +44,11 @@ $chevron = '<svg class="map-chev" width="16" height="16" viewBox="0 0 24 24" fil
 <?php endforeach ?>
           </ul>
           <ul class="map-hubs map-hubs-topic" data-map-hubs="topic" aria-label="Topics" hidden>
+<?php if ($thisWeek !== []): ?>
+            <li class="map-node map-node-week" data-map-node>
+              <button type="button" class="map-hub map-hub-week" data-map-hub data-map-week="topic" data-map-week-label="<?= $e($latestTitle) ?>" aria-expanded="false"><span class="map-name"><?= $e($latestTitle) ?></span><span class="map-n mono" data-map-count><?= count($thisWeek) ?></span><?= $chevron ?></button>
+            </li>
+<?php endif ?>
 <?php foreach ($mapTopics as $topic => $count): ?>
             <li class="map-node" data-map-node>
               <button type="button" class="map-hub" data-map-hub data-topic-choice="<?= $e($topic) ?>" data-topic-label="<?= $e($topicLabel($topic)) ?>" aria-pressed="false" aria-expanded="false"><span class="map-name"><?= $e($topicLabel($topic)) ?></span><span class="map-n mono" data-map-count><?= $count ?></span><?= $chevron ?></button>
@@ -62,8 +75,9 @@ $chevron = '<svg class="map-chev" width="16" height="16" viewBox="0 0 24 24" fil
               </div>
               <div class="stubs map-stubs">
 <?php $idPrefix = 'm-'; $mapStub = true; foreach ($entries as $j => $entry) {
+    $weekStub = in_array($entry->slug, $thisWeek, true);
     require __DIR__.'/stub.php';
-} $idPrefix = 's-'; $mapStub = false; ?>
+} $idPrefix = 's-'; $mapStub = false; $weekStub = false; ?>
               </div>
               <button type="button" class="map-more" data-map-more hidden>Show all</button>
             </div>

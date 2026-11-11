@@ -80,10 +80,16 @@
       total: document.querySelector('[data-map-total]'),
       depot: document.querySelector('[data-map-depot]'),
       more: document.querySelector('[data-map-more]'),
+      route: document.querySelector('[data-map-route]'),
       only: document.querySelector('[data-map-only]'),
       onlyKind: document.querySelector('[data-map-only-kind]'),
       onlyLabel: document.querySelector('[data-map-only-label]'),
       onlyClear: document.querySelector('[data-map-only-clear]'),
+      slipLinks: document.querySelectorAll('[data-map-open]'),
+      // This Week: the branch that opens when no hub is picked, until the visitor closes it.
+      weekOpen: false,
+      weekShut: false,
+      weekLabel: '',
       limit: root ? Number(root.getAttribute('data-map-limit')) || 6 : 6,
       sort: 'stack',
       all: false,
@@ -146,6 +152,10 @@
     return (' ' + topics + ' ').indexOf(' ' + value + ' ') !== -1;
   }
 
+  function inWeek(item) {
+    return item.getAttribute('data-map-this-week') !== null;
+  }
+
   function typed(item) {
     return !search.terms.length || found(item);
   }
@@ -190,11 +200,7 @@
 
   // While the visitor types, the status line waits for a pause, so a screen reader does not read every letter.
   function render(typing) {
-    var shown = 0;
-    for (var j = 0; j < items.length; j++) {
-      items[j].hidden = !matches(items[j]);
-      if (!items[j].hidden) shown++;
-    }
+    for (var j = 0; j < items.length; j++) items[j].hidden = !matches(items[j]);
     for (j = 0; j < groups.length; j++) count(groups[j]);
     sync(filters.stack);
     sync(filters.topic);
@@ -204,17 +210,23 @@
     for (j = 0; j < panes.length; j++) panes[j].hidden = panes[j].getAttribute('data-view') !== view;
     if (map.root) renderMap();
 
+    var shown = 0;
+    for (j = 0; j < once.length; j++) if (matches(once[j])) shown++;
     var labels = [];
     if (filters.stack.value) labels.push(find(filters.stack, filters.stack.value).label);
     if (filters.topic.value) labels.push(find(filters.topic, filters.topic.value).label);
+    // In the Map, an open This Week narrows the shelf too.
+    if (view === 'map' && map.weekOpen) {
+      shown = 0;
+      for (j = 0; j < map.stubs.length; j++) if (!map.stubs[j].hidden) shown++;
+      labels.unshift(map.weekLabel);
+    }
     var query = search.terms.length ? '“' + search.value.trim().replace(/\s+/g, ' ') + '”' : '';
 
     if (status) {
       var total = Number(status.getAttribute('data-total'));
-      // Each entry shows once in each view, so the items are a whole number of copies of the list.
-      var copies = total ? items.length / total : 1;
       var text = query || labels.length
-        ? 'Showing ' + Math.round(shown / copies) + ' of ' + total + ' parcels: ' + (query ? [query] : []).concat(labels).join(', ') + '.'
+        ? 'Showing ' + shown + ' of ' + total + ' parcels: ' + (query ? [query] : []).concat(labels).join(', ') + '.'
         : '';
       if (later) clearTimeout(later);
       later = null;
@@ -282,8 +294,13 @@
     if (map.depot) map.depot.textContent = String(tally(function (s) { return has(binKind, picked, s); }));
 
     var openNode = null;
+    var weekNode = null;
     for (j = 0; j < map.nodes.length; j++) {
       var hub = map.nodes[j].querySelector('[data-map-hub]');
+      if (hub && hub.getAttribute('data-map-week') !== null) {
+        if (hub.getAttribute('data-map-week') === hubKind) weekNode = map.nodes[j];
+        continue;
+      }
       var value = hub ? hub.getAttribute('data-' + hubKind + '-choice') : null;
       if (value === null) continue;
       var n = tally(function (s) { return has(hubKind, value, s) && has(binKind, picked, s); });
@@ -292,6 +309,21 @@
       hub.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       map.nodes[j].hidden = n === 0 && !isOpen;
       if (isOpen) openNode = map.nodes[j];
+    }
+
+    // This Week opens when no hub of this sort is picked, unless the visitor closed it.
+    map.weekOpen = !!weekNode && open === '' && !map.weekShut;
+    if (weekNode) {
+      var weekHub = weekNode.querySelector('[data-map-hub]');
+      var w = tally(function (s) { return inWeek(s) && has(binKind, picked, s); });
+      map.weekLabel = weekHub.getAttribute('data-map-week-label') || 'This week';
+      setCount(weekHub, w);
+      weekHub.setAttribute('aria-expanded', map.weekOpen ? 'true' : 'false');
+      weekNode.hidden = w === 0 && !map.weekOpen;
+      if (map.weekOpen) {
+        openNode = weekNode;
+        for (j = 0; j < map.stubs.length; j++) if (!inWeek(map.stubs[j])) map.stubs[j].hidden = true;
+      }
     }
 
     map.open = openNode;
@@ -304,7 +336,7 @@
       var bin = map.bins[j];
       if (bin.getAttribute('data-map-bin') !== hubKind) continue;
       var binValue = bin.getAttribute('data-' + binKind + '-choice') || '';
-      var m = tally(function (s) { return has(hubKind, open, s) && has(binKind, binValue, s); });
+      var m = tally(function (s) { return (map.weekOpen ? inWeek(s) : has(hubKind, open, s)) && has(binKind, binValue, s); });
       setCount(bin, m);
       bin.hidden = m === 0 && binValue !== picked;
     }
@@ -320,11 +352,12 @@
       }
     }
 
-    if (map.title) map.title.textContent = open ? label(hubKind, open) + (picked ? ', ' + label(binKind, picked) : '') : '';
+    var head = map.weekOpen ? map.weekLabel : (open ? label(hubKind, open) : '');
+    if (map.title) map.title.textContent = head ? head + (picked ? ', ' + label(binKind, picked) : '') : '';
 
     // The shelf shows the first stubs of the branch, then all of them on request.
     // A new branch starts short again.
-    var key = hubKind + '|' + open + '|' + picked;
+    var key = hubKind + '|' + (map.weekOpen ? 'week' : open) + '|' + picked;
     if (key !== map.key) { map.key = key; map.all = false; }
     var shown = 0;
     for (j = 0; j < map.stubs.length; j++) {
@@ -346,6 +379,7 @@
   function place() {
     var node = map.open;
     var branch = map.branch;
+    if (map.route && !node) map.route.setAttribute('hidden', '');
     if (!node || !branch || !map.root.style || typeof getComputedStyle !== 'function') return;
     var outline = getComputedStyle(map.root).getPropertyValue('--map-outline').trim() === '1';
     var hub = node.querySelector('[data-map-hub]');
@@ -364,7 +398,40 @@
       if (branch.parentNode !== map.root) map.root.appendChild(branch);
       branch.style.marginTop = (node.offsetTop + (hub.offsetHeight - (first ? first.offsetHeight : hub.offsetHeight)) / 2) + 'px';
     }
-    if (picked) branch.style.setProperty('--bin-y', (picked.offsetTop + picked.offsetHeight / 2) + 'px');
+    draw(outline, hub, picked || first);
+  }
+
+  // The bold route, as one path: depot, open hub, picked bin and the shelf head. Each
+  // corner sits halfway across the gap between two boxes, so the lines meet. On a narrow
+  // screen there is no route, and when the depot sits above the hubs it starts at the hub.
+  function draw(outline, hub, bin) {
+    var svg = map.route;
+    if (!svg) return;
+    var path = svg.querySelector('path');
+    var head = map.root.querySelector('.map-shelf .bundle-head h3');
+    var depot = map.root.querySelector('.map-depot');
+    if (outline || view !== 'map' || !hub || !bin || !head || !path) { svg.setAttribute('hidden', ''); return; }
+    svg.removeAttribute('hidden');
+    var chart = map.root.getBoundingClientRect();
+    function box(el) {
+      var r = el.getBoundingClientRect();
+      return { l: r.left - chart.left, r: r.right - chart.left, y: (r.top + r.bottom) / 2 - chart.top };
+    }
+    // A 3px stroke is crisp on a half pixel.
+    function px(n) { return Math.round(n) + 0.5; }
+    var h = box(hub);
+    var b = box(bin);
+    var t = box(head);
+    // A head that is nearly level with its bin gets a straight line.
+    var ty = Math.abs(t.y - b.y) < 6 ? b.y : t.y;
+    var d = '';
+    if (depot) {
+      var p = box(depot);
+      if (p.r < h.l) d += 'M' + px(p.r) + ' ' + px(p.y) + 'H' + px((p.r + h.l) / 2) + 'V' + px(h.y) + 'H' + px(h.l);
+    }
+    d += 'M' + px(h.r) + ' ' + px(h.y) + 'H' + px((h.r + b.l) / 2) + 'V' + px(b.y) + 'H' + px(b.l);
+    d += 'M' + px(b.r) + ' ' + px(b.y) + 'H' + px((b.r + t.l) / 2) + 'V' + px(ty) + 'H' + px(t.l - 6);
+    path.setAttribute('d', d);
   }
 
   // Each choice of a filter counts its entries within the pick of the other filter and
@@ -489,6 +556,39 @@
         render();
       });
     })(map.sortButtons[i]);
+  }
+
+  // The This Week hub of each sort opens and closes its branch. Opening it closes a
+  // picked hub of the same sort.
+  for (i = 0; i < map.nodes.length; i++) {
+    (function (hub) {
+      if (!hub || hub.getAttribute('data-map-week') === null) return;
+      hub.addEventListener('click', function () {
+        if (map.weekOpen) map.weekShut = true;
+        else { filters[map.sort].value = ''; map.weekShut = false; }
+        touched = true;
+        render();
+      });
+    })(map.nodes[i].querySelector('[data-map-hub]'));
+  }
+
+  // A stack on the manifest slip opens the Map on its branch, sorted by stack.
+  for (i = 0; i < map.slipLinks.length; i++) {
+    (function (link) {
+      link.addEventListener('click', function (event) {
+        var stack = link.getAttribute('data-map-open');
+        if (!map.root || !find(filters.stack, stack)) return;
+        if (event && event.preventDefault) event.preventDefault();
+        view = 'map';
+        save(view);
+        map.sort = 'stack';
+        filters.stack.value = stack;
+        touched = true;
+        render();
+        var section = typeof document.getElementById === 'function' ? document.getElementById('manifest') : null;
+        if (section && section.scrollIntoView) section.scrollIntoView({ block: 'start' });
+      });
+    })(map.slipLinks[i]);
   }
 
   if (map.onlyClear) {

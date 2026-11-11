@@ -99,6 +99,7 @@ final readonly class Site
                 'counts' => $this->stackCounts($current),
                 'topics' => $this->topicCounts($current),
                 'noTopic' => count(array_filter($current, fn (Entry $e) => $e->topics === [])),
+                'thisWeek' => array_map(fn (Entry $e) => $e->slug, Bundles::thisWeek($current, $this->today)),
                 'searchIndex' => SearchIndex::json($current),
                 'manifestScript' => $this->script('manifest.js'),
                 'weekScript' => $this->script('week.js'),
@@ -541,9 +542,12 @@ final readonly class Site
     }
 
     /**
+     * The stacks on the manifest slip, such as "33 Laravel", keyed by stack.
+     *
      * @param  list<Entry>  $entries
+     * @return array<string, string>
      */
-    private function stackSummary(array $entries): string
+    private function stackSummary(array $entries): array
     {
         $counts = [];
 
@@ -551,10 +555,10 @@ final readonly class Site
             $count = count(array_filter($entries, fn (Entry $e) => $e->stack === $stack));
 
             if ($count > 0) {
-                $counts[] = $count.' '.Format::stackLabel($stack);
+                $counts[$stack] = $count.' '.Format::stackLabel($stack);
             }
         }
 
-        return implode(', ', $counts);
+        return $counts;
     }
 }

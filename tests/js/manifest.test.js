@@ -6,6 +6,7 @@ const source = readFileSync(new URL('../../assets/manifest.js', import.meta.url)
 function element(attrs = {}, { hidden = false, value = '', tagName = 'DIV' } = {}) {
   const listeners = {}
   return {
+    listeners,
     attrs: { ...attrs },
     hidden,
     value,
@@ -47,7 +48,7 @@ const INDEX = {
 
 // The parts of the Map view. Stack hubs: php, laravel. Topic hubs: testing, mcp, none (Other).
 // Sorted by stack, the bins are topics; sorted by topic, they are stacks. "All" has the value "".
-function mapParts(limit) {
+function mapParts(limit, week) {
   const counted = (attrs) => {
     const el = element(attrs, { tagName: 'BUTTON' })
     const count = element({ 'data-map-count': '' })
@@ -63,7 +64,10 @@ function mapParts(limit) {
   const topicBins = [bin('stack', 'topic', '', ''), bin('stack', 'topic', 'testing', 'Testing'), bin('stack', 'topic', 'mcp', 'MCP'), bin('stack', 'topic', 'none', 'Other')]
   const stackBins = [bin('topic', 'stack', '', ''), bin('topic', 'stack', 'php', 'plain PHP'), bin('topic', 'stack', 'laravel', 'Laravel')]
 
-  const nodes = [...stackHubs, ...topicHubs].map((button) => {
+  // The This Week hub, first in each list. It is not a stack or a topic choice.
+  const weekHubs = week ? ['stack', 'topic'].map((sort) => counted({ 'data-map-hub': '', 'data-map-week': sort, 'data-map-week-label': 'This week', 'aria-expanded': 'false' })) : []
+
+  const nodes = [...stackHubs, ...topicHubs, ...weekHubs].map((button) => {
     const li = element({ 'data-map-node': '' })
     li.hub = button
     li.children = []
@@ -86,12 +90,20 @@ function mapParts(limit) {
   const onlyKind = element({ 'data-map-only-kind': '' })
   const onlyLabel = element({ 'data-map-only-label': '' })
   const onlyClear = element({ 'data-map-only-clear': '' }, { tagName: 'BUTTON' })
+  // The stacks on the manifest slip: links that open the Map on a branch.
+  const slipLinks = ['laravel', 'php'].map((stack) => {
+    const link = element({ 'data-map-open': stack, href: `/#stack=${stack}&view=map` }, { tagName: 'A' })
+    link.click = function () { const event = { defaultPrevented: false, preventDefault() { this.defaultPrevented = true } }; this.listeners?.click?.(event); return event }
+    return link
+  })
 
   const find = (list, value) => list.find((el) => (el.getAttribute('data-stack-choice') ?? el.getAttribute('data-topic-choice')) === value)
   return {
     stackButtons: [...stackHubs, ...stackBins],
     topicButtons: [...topicHubs, ...topicBins],
-    nodes, hubLists, binGroups, sortButtons, sortGroup, filterBoxes, root, branch, title, total, depot, more, only, onlyKind, onlyLabel, onlyClear,
+    nodes, hubLists, binGroups, sortButtons, sortGroup, filterBoxes, root, branch, title, total, depot, more, only, onlyKind, onlyLabel, onlyClear, slipLinks, weekHubs,
+    weekHub: (sort) => weekHubs.find((hub) => hub.getAttribute('data-map-week') === sort),
+    weekNode: (sort) => nodes.find((li) => li.hub.getAttribute('data-map-week') === sort),
     lists: {
       '[data-map-node]': nodes,
       '[data-map-bin]': [...topicBins, ...stackBins],
@@ -100,6 +112,7 @@ function mapParts(limit) {
       '[data-map-sort-choice]': sortButtons,
       '[data-map-sort]': [sortGroup],
       '[data-filter]': filterBoxes,
+      '[data-map-open]': slipLinks,
     },
     singles: {
       '[data-map]': root,
@@ -131,7 +144,7 @@ function mapParts(limit) {
 
 // A main page with three entries in two views, or the archive (one view).
 // Entry 0 is php and testing, entry 1 is laravel with testing and mcp, entry 2 is laravel and mcp.
-function run({ hash = '', stored = {}, broken = false, select = false, topicSelect = false, views = true, index = INDEX, map = false, topics = ['testing', 'testing mcp', 'mcp'], limit = 6 } = {}) {
+function run({ hash = '', stored = {}, broken = false, select = false, topicSelect = false, views = true, index = INDEX, map = false, topics = ['testing', 'testing mcp', 'mcp'], limit = 6, week = null } = {}) {
   const stacks = ['php', 'laravel', 'laravel']
   const slugs = ['mollie', 'vigilance', 'excel']
   const items = []
@@ -139,7 +152,12 @@ function run({ hash = '', stored = {}, broken = false, select = false, topicSele
   if (views) items.push(...make())
   items.push(...make())
   // The Map view holds one more copy of the entries: the stubs on its shelf.
-  if (map) items.push(...make({ 'data-map-stub': '' }))
+  if (map) {
+    const shelf = make({ 'data-map-stub': '' })
+    // The stubs added this week carry data-map-this-week.
+    if (week) shelf.forEach((stub) => { if (week.includes(stub.getAttribute('data-slug'))) stub.setAttribute('data-map-this-week', '') })
+    items.push(...shelf)
+  }
 
   const choices = [['', '', 3], ['laravel', 'Laravel', 2], ['php', 'plain PHP', 1]]
   const chips = select ? [] : choices.map(([stack, label, count]) => element({
@@ -165,7 +183,7 @@ function run({ hash = '', stored = {}, broken = false, select = false, topicSele
 
   // The Map: a list of hubs and a group of bins for each sort, and the branch that opens
   // under a hub. Hubs and bins are stack and topic choices, like the chips of the filters.
-  const m = map ? mapParts(limit) : null
+  const m = map ? mapParts(limit, week) : null
   if (m) {
     chips.push(...m.stackButtons)
     topicChips.push(...m.topicButtons)
@@ -1022,5 +1040,117 @@ describe('map filter note', () => {
   it('has no note when no bin is picked', () => {
     expect(run({ map: true, hash: '#view=map' }).map.only.hidden).toBe(true)
     expect(run({ map: true, hash: '#stack=laravel&view=map' }).map.only.hidden).toBe(true)
+  })
+})
+
+describe('map this week', () => {
+  const WEEK = ['vigilance', 'mollie']
+
+  it('opens This Week when the Map has no other choice', () => {
+    const page = run({ map: true, week: WEEK, hash: '#view=map' })
+
+    expect(page.map.branch.hidden).toBe(false)
+    expect(page.map.branch.parent).toBe(page.map.weekNode('stack'))
+    expect(page.map.weekHub('stack').getAttribute('aria-expanded')).toBe('true')
+    expect(page.map.weekHub('stack').count.textContent).toBe('2')
+    expect(page.onShelf()).toEqual(['mollie', 'vigilance'])
+    expect(page.map.title.textContent).toBe('This week')
+    expect(page.map.total.textContent).toBe('2 parcels')
+    expect(page.status.textContent).toBe('Showing 2 of 3 parcels: This week.')
+    expect(page.map.counts(page.map.bins.stack)).toEqual({ '': '2', testing: '2', mcp: '1', none: null })
+  })
+
+  it('leaves Labels and List whole', () => {
+    const page = run({ map: true, week: WEEK, hash: '#view=map' })
+
+    page.view('labels').click()
+
+    expect(page.found()).toEqual(['mollie', 'vigilance', 'excel'])
+    expect(page.status.textContent).toBe('')
+  })
+
+  it('opens This Week when the visitor switches to the Map', () => {
+    const page = run({ map: true, week: WEEK })
+
+    page.view('map').click()
+
+    expect(page.map.weekHub('stack').getAttribute('aria-expanded')).toBe('true')
+    expect(page.urls.at(-1)).toBe('/#view=map')
+  })
+
+  it('narrows This Week with a bin', () => {
+    const page = run({ map: true, week: WEEK, hash: '#view=map' })
+
+    page.map.topicBin('mcp').click()
+
+    expect(page.onShelf()).toEqual(['vigilance'])
+    expect(page.map.title.textContent).toBe('This week, MCP')
+    expect(page.map.weekHub('stack').count.textContent).toBe('1')
+    expect(page.status.textContent).toBe('Showing 1 of 3 parcels: This week, MCP.')
+  })
+
+  it('gives way to a stack, and comes back when the stack closes', () => {
+    const page = run({ map: true, week: WEEK, hash: '#view=map' })
+
+    page.map.stackHub('laravel').click()
+
+    expect(page.map.weekHub('stack').getAttribute('aria-expanded')).toBe('false')
+    expect(page.onShelf()).toEqual(['vigilance', 'excel'])
+
+    page.map.stackHub('laravel').click()
+
+    expect(page.map.weekHub('stack').getAttribute('aria-expanded')).toBe('true')
+  })
+
+  it('closes when its hub is picked, and leaves every branch closed', () => {
+    const page = run({ map: true, week: WEEK, hash: '#view=map' })
+
+    page.map.weekHub('stack').click()
+
+    expect(page.map.branch.hidden).toBe(true)
+    expect(page.status.textContent).toBe('')
+
+    page.map.weekHub('stack').click()
+
+    expect(page.map.branch.hidden).toBe(false)
+  })
+
+  it('closes an open stack when its hub is picked', () => {
+    const page = run({ map: true, week: WEEK, hash: '#stack=laravel&view=map' })
+
+    expect(page.map.weekHub('stack').getAttribute('aria-expanded')).toBe('false')
+
+    page.map.weekHub('stack').click()
+
+    expect(page.map.weekHub('stack').getAttribute('aria-expanded')).toBe('true')
+    expect(page.urls.at(-1)).toBe('/#view=map')
+  })
+
+  it('has a This Week hub for each sort', () => {
+    const page = run({ map: true, week: WEEK, hash: '#view=map&sort=topic' })
+
+    expect(page.map.branch.parent).toBe(page.map.weekNode('topic'))
+    expect(page.map.counts(page.map.bins.topic)).toEqual({ '': '2', php: '1', laravel: '1' })
+  })
+
+  it('opens the Map on a branch from a stack on the manifest slip', () => {
+    const page = run({ map: true, week: WEEK })
+
+    const event = page.map.slipLinks[0].click()
+
+    expect(event.defaultPrevented).toBe(true)
+    expect(page.panes.map((pane) => pane.hidden)).toEqual([true, true, false])
+    expect(page.map.stackHub('laravel').getAttribute('aria-expanded')).toBe('true')
+    expect(page.urls.at(-1)).toBe('/#stack=laravel&view=map')
+    expect(page.localStorage.data.view).toBe('map')
+  })
+
+  it('opens a slip stack sorted by stack, and keeps the topic', () => {
+    const page = run({ map: true, week: WEEK, hash: '#topic=mcp&view=map&sort=topic' })
+
+    page.map.slipLinks[0].click()
+
+    expect(page.map.hubLists.map((list) => list.hidden)).toEqual([false, true])
+    expect(page.urls.at(-1)).toBe('/#stack=laravel&topic=mcp&view=map')
   })
 })

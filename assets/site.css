@@ -652,10 +652,8 @@ body{margin:0;background:var(--field)}
 .map-hubs::before{content:'';position:absolute;left:calc(var(--map-gap) / -2 - 1px);top:calc(var(--hub-h) / 2);bottom:calc(var(--hub-h) / 2);border-left:2px solid var(--map-line)}
 .map-node{position:relative}
 .map-node::before{content:'';position:absolute;left:calc(var(--map-gap) / -2);top:calc(var(--hub-h) / 2 - 1px);width:calc(var(--map-gap) / 2);border-top:2px solid var(--map-line)}
-.map-node:has(>[aria-expanded="true"])::before{border-top:3px solid var(--on-field);margin-top:-.5px}
 .map-hub{position:relative;box-sizing:border-box;display:flex;align-items:center;gap:12px;width:100%;height:var(--hub-h);padding:0 12px 0 10px;font:inherit;text-align:left;color:var(--ink);background:var(--label);border:0;border-radius:6px;box-shadow:var(--shadow);cursor:pointer}
 .map-hub[aria-expanded="true"]{box-shadow:inset 0 0 0 3px var(--ink),var(--shadow)}
-.map-hub[aria-expanded="true"]::after{content:'';position:absolute;left:100%;top:calc(50% - 1.5px);width:var(--map-gap);border-top:3px solid var(--on-field)}
 .map-hub:hover .map-name,.map-bin:hover .map-name{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.2em}
 .map-hub:focus-visible,.map-bin:focus-visible,.map-more:focus-visible{outline:2px solid var(--on-field);outline-offset:3px}
 .map-code{flex:none;background:var(--ink);color:var(--label);font-weight:900;font-stretch:62%;font-size:22px;line-height:.86;letter-spacing:.01em;padding:6px 7px 5px;border-radius:3px}
@@ -666,18 +664,17 @@ body{margin:0;background:var(--field)}
 .map-branch{grid-column:3;display:grid;grid-template-columns:220px minmax(0,1fr);column-gap:var(--map-gap);align-items:start}
 .map-bins{position:relative;display:flex;flex-direction:column;gap:10px}
 .map-bins::before{content:'';position:absolute;left:calc(var(--map-gap) / -2 - 1px);top:22px;bottom:22px;border-left:2px solid var(--map-line)}
-.map-bins::after{content:'';position:absolute;left:calc(var(--map-gap) / -2 - 1.5px);top:22px;height:calc(var(--bin-y, 22px) - 22px);border-left:3px solid var(--on-field)}
 .map-bin{position:relative;box-sizing:border-box;display:flex;align-items:center;gap:10px;height:44px;padding:0 12px;font:inherit;text-align:left;color:var(--ink);background:var(--label);border:0;border-radius:5px;box-shadow:var(--shadow);cursor:pointer}
 .map-bin::before{content:'';position:absolute;left:calc(var(--map-gap) / -2);top:21px;width:calc(var(--map-gap) / 2);border-top:2px solid var(--map-line)}
 .map-bin[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--ink),var(--shadow)}
-.map-bin[aria-pressed="true"]::before{border-top:3px solid var(--on-field);top:20.5px}
-.map-bin[aria-pressed="true"]::after{content:'';position:absolute;left:100%;top:20.5px;width:calc(var(--map-gap) / 2);border-top:3px solid var(--on-field)}
 .map-bin .map-name{font-size:15px;font-weight:700;font-stretch:100%;word-spacing:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .map-bin:first-child .map-name{font-weight:800}
 .map-bin .map-code{font-size:16px;padding:4px 6px 3px;border-radius:2px}
-.map-shelf{position:relative;min-width:0}
-.map-shelf::before{content:'';position:absolute;left:calc(var(--map-gap) / -2 - 1.5px);top:min(14px,var(--bin-y, 22px));height:calc(max(14px,var(--bin-y, 22px)) - min(14px,var(--bin-y, 22px)) + 3px);border-left:3px solid var(--on-field)}
-.map-shelf::after{content:'';position:absolute;left:calc(var(--map-gap) / -2);top:12.5px;width:calc(var(--map-gap) / 2 - 6px);border-top:3px solid var(--on-field)}
+.map-shelf{position:relative;min-width:0;padding-top:10px}
+/* The route of the open hub and the picked bin: one 3px path, drawn by the script from
+   the boxes it joins, so its corners meet. It sits under the paper. */
+.map-route{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.map-route path{fill:none;stroke:var(--on-field);stroke-width:3;stroke-linejoin:miter;stroke-linecap:butt}
 .map-shelf .bundle-head{margin-bottom:18px}
 .map .stubs{grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px 20px}
 .map .stub{animation:none}
@@ -705,7 +702,7 @@ body{margin:0;background:var(--field)}
 @container map (max-width:760px){
   .map-chart{--map-outline:1;display:block;padding-top:0}
   .map-depot{margin:0 0 12px}
-  .map-depot::after,.map-hub[aria-expanded="true"]::after,.map-bins::before,.map-bins::after,.map-bin::before,.map-bin::after,.map-shelf::before,.map-shelf::after{display:none}
+  .map-depot::after,.map-bins::before,.map-bin::before,.map-route{display:none}
   .map-depot-head{padding:10px 14px 6px}
   .map-depot-foot{display:none}
   .map-hubs{--hub-h:56px;gap:12px;padding-left:24px}
@@ -722,7 +719,7 @@ body{margin:0;background:var(--field)}
   .map-bin .map-name{font-size:14px}
   .map-bin .map-code{background:none;color:inherit;padding:0;font-size:17px}
   .map-bin .map-n{color:inherit;opacity:.8;font-size:12px}
-  .map-shelf{margin-top:18px}
+  .map-shelf{margin-top:18px;padding-top:0}
   .map-shelf .bundle-head{margin-bottom:14px}
   .map .stubs{grid-template-columns:minmax(0,1fr);gap:18px}
 }
