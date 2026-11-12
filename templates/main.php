@@ -10,7 +10,8 @@
  * @var list<string> $latestNotes The note for 1, 2 or 3 labels, for the script to use when a filter leaves fewer.
  * @var list<\PhpLives\Bundle> $bundles Every other entry, by week and by month.
  * @var string $cutoff
- * @var string $stacks
+ * @var array<string, string> $stacks Each stack on the slip, such as "33 Laravel". Each one opens its branch of the Map.
+ * @var list<string> $thisWeek The slugs of the entries on the This Week hub of the Map.
  * @var int $archivedCount How many parcels are in the archive. The slip links to it when there are any.
  * @var list<\PhpLives\Post> $posts
  * @var string $copyScript
@@ -46,7 +47,9 @@ use PhpLives\Format;
           <div><dt>Shipped since</dt><dd class="mono"><?= $e($cutoff) ?></dd></div>
 <?php if ($entries): ?>
           <div><dt>Last shipped</dt><dd class="mono"><time datetime="<?= $entries[0]->shipped->format('Y-m-d') ?>"><?= $e(Format::date($entries[0]->shipped)) ?></time></dd></div>
-          <div class="slip-stacks"><dt>Stacks</dt><dd><?= $e($stacks) ?></dd></div>
+          <div class="slip-stacks"><dt>Stacks</dt><dd><?php $links = []; foreach ($stacks as $stack => $text) {
+    $links[] = '<a href="/#stack='.$e($stack).'&amp;view=map" data-map-open="'.$e($stack).'">'.$e($text).'</a>';
+} echo implode(', ', $links) ?></dd></div>
 <?php endif ?>
 <?php if ($archivedCount > 0): ?>
           <div class="slip-archive"><dt>Archive</dt><dd><a href="/archive/"><?= $archivedCount ?> older <?= $archivedCount === 1 ? 'parcel' : 'parcels' ?><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></a></dd></div>

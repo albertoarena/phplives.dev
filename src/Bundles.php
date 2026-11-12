@@ -44,6 +44,28 @@ final class Bundles
     }
 
     /**
+     * The entries of This Week on the Map: the entries added since Monday, or, when
+     * nothing was added this week, the entries on the full labels (Added last). They
+     * keep the order they are given in.
+     *
+     * @param  list<Entry>  $entries
+     * @return list<Entry>
+     */
+    public static function thisWeek(array $entries, DateTimeImmutable $today): array
+    {
+        $monday = self::key(self::weekStart($today));
+        $week = array_values(array_filter($entries, fn (Entry $e) => self::key($e->added) >= $monday));
+
+        if ($week !== []) {
+            return $week;
+        }
+
+        $featured = self::featured($entries, $today);
+
+        return array_values(array_filter($entries, fn (Entry $e) => in_array($e, $featured, true)));
+    }
+
+    /**
      * @param  list<Entry>  $entries
      */
     public static function addedThisWeek(array $entries, DateTimeImmutable $today): int

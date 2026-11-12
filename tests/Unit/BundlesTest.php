@@ -144,3 +144,25 @@ it('bundles the archive by month only', function () {
         ['January 2026', ['january']],
     ]);
 });
+
+it('finds the entries of This Week: the entries added since Monday', function () {
+    $entries = [
+        parcel('old', '2026-10-01', '2026-10-01'),
+        parcel('monday', '2026-09-01', '2026-10-19'),
+        parcel('tuesday', '2026-08-01', '2026-10-20'),
+        parcel('fourth', '2026-07-01', '2026-10-20'),
+    ];
+
+    expect(slugs(Bundles::thisWeek($entries, new DateTimeImmutable('2026-10-21'))))->toBe(['monday', 'tuesday', 'fourth']);
+});
+
+it('falls back to the entries added last, when nothing was added this week', function () {
+    $entries = [
+        parcel('a', '2026-10-01', '2026-10-01'),
+        parcel('b', '2026-09-01', '2026-10-05'),
+        parcel('c', '2026-08-01', '2026-10-02'),
+        parcel('d', '2026-07-01', '2026-09-20'),
+    ];
+
+    expect(slugs(Bundles::thisWeek($entries, new DateTimeImmutable('2026-10-21'))))->toBe(['a', 'b', 'c']);
+});

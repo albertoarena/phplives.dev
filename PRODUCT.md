@@ -50,7 +50,8 @@ never makes the case for PHP itself.
   image.
 - A Privacy page, a Credits page and a Feeds page.
 - Three views on the main page: Labels (the default), List and Map. The Map shows the
-  entries as a tree, by stack or by topic, and opens one branch at a time.
+  entries as a tree, by stack or by topic, and opens on This Week. The stacks on the
+  manifest slip open their branch of the Map.
 - A search field on the main page and the archive. It filters the entries of the
   page in the browser, by name, sentence, details, maker, package, stack and topic.
 - One entry: name, one plain sentence, maker (with a dev/null link when found),
