@@ -3,7 +3,7 @@
 return [
     'name' => 'fast-excel-reader 5.0',
     'sentence' => 'A new major version of fast-excel-reader, a light and fast XLSX and CSV reader for PHP, that now also reads ODS files as a stream.',
-    'details' => 'It can now read XLSM, XLTX and XLTM files saved by Excel. Macros are never run and formulas are not calculated. A book can be closed, and its temporary files are cleaned up. An upgrade guide covers the breaking changes.',
+    'details' => 'Reading XLSM, XLTX and XLTM files saved by Excel is now tested. Macros are never run and formulas are not calculated. A workbook can be closed, and its temporary files are cleaned up. An upgrade guide covers the breaking changes.',
     'makers' => [
         ['name' => 'Vadim Shemarov', 'github' => 'aVadim483'],
     ],
