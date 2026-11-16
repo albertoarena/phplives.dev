@@ -4,10 +4,17 @@
 /**
  * Checks that every link in some entry files still works.
  *
- *   bin/check-links [--entries=entries] [--today=YYYY-MM-DD] [--wait=5] [entries/file.php ...]
+ *   bin/check-links [--entries=entries] [--today=YYYY-MM-DD] [--wait=5]
+ *                   [--state=warnings.json] [--annotate] [entries/file.php ...]
  *
- * With no files, it checks every entry. It fails when a link is broken. A link
- * that gives no answer gets one more try after --wait seconds.
+ * With no files, it checks every entry. It fails when a link is broken: a
+ * missing page, a domain that is gone, a bad certificate. A server error, a rate
+ * limit or no answer only gives a warning, because it is usually the other
+ * site's problem for a while. Such a link gets one more try after --wait seconds.
+ *
+ * With --state, it keeps the links that warned in a JSON file, and a link that
+ * warns on LinkWarnings::RUNS_TO_FAIL runs in a row counts as broken. With
+ * --annotate, it marks each warning for the GitHub Actions run page.
  */
 
 declare(strict_types=1);
@@ -15,11 +22,12 @@ declare(strict_types=1);
 use PhpLives\Entries;
 use PhpLives\InvalidEntries;
 use PhpLives\LinkCheck;
+use PhpLives\LinkWarnings;
 
 require __DIR__.'/../vendor/autoload.php';
 
 $root = dirname(__DIR__);
-$options = getopt('', ['entries:', 'today:', 'wait:'], $rest) + [
+$options = getopt('', ['entries:', 'today:', 'wait:', 'state:', 'annotate'], $rest) + [
     'entries' => "{$root}/entries",
     'today' => 'today',
     'wait' => LinkCheck::RETRY_SECONDS,
@@ -53,25 +61,49 @@ $wait = (int) $options['wait'];
 $check = new LinkCheck(wait: static function () use ($wait): void {
     sleep($wait);
 });
+$state = $options['state'] ?? null;
+$warnings = $state === null ? null : LinkWarnings::load($state);
+$annotate = isset($options['annotate']);
 $checked = 0;
 $broken = 0;
+$warned = 0;
 
 foreach ($files ? array_intersect_key($byFile, array_flip($files)) : $byFile as $file => $entry) {
     echo "{$file}\n";
 
     foreach (LinkCheck::links($entry) as $url) {
         $status = $check->status($url);
+        $label = $status->label();
         $checked++;
 
-        if (LinkCheck::ok($status)) {
-            echo "  ok ({$status}) {$url}\n";
-        } else {
+        if ($status->ok()) {
+            echo "  ok ({$label}) {$url}\n";
+        } elseif ($status->fails()) {
             $broken++;
-            printf("  broken (%s) %s\n", $status === 0 ? 'no answer' : $status, $url);
+            echo "  broken ({$label}) {$url}\n";
+        } elseif (($runs = $warnings?->warn($url) ?? 1) >= LinkWarnings::RUNS_TO_FAIL) {
+            $broken++;
+            echo "  broken ({$label}, {$runs} runs in a row) {$url}\n";
+        } else {
+            $warned++;
+            echo "  warning ({$label}) {$url}\n";
+
+            if ($annotate) {
+                echo "::warning file=entries/{$file}::".ucfirst($status->code === 0 ? $label : "status {$label}")." from {$url}\n";
+            }
         }
     }
 }
 
-printf("%d %s checked, %d broken.\n", $checked, $checked === 1 ? 'link' : 'links', $broken);
+$warnings?->save($state);
+
+printf(
+    "%d %s checked, %d broken, %d %s.\n",
+    $checked,
+    $checked === 1 ? 'link' : 'links',
+    $broken,
+    $warned,
+    $warned === 1 ? 'warning' : 'warnings',
+);
 
 exit($broken > 0 ? 1 : 0);

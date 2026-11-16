@@ -5,6 +5,10 @@ name: Links
 # checker. The job then checks every entry.
 #
 # Once a week, it checks every entry, to find links that broke after merging.
+#
+# A server error, a rate limit or no answer only gives a warning, so another
+# site's outage never turns a run red. The weekly run keeps the links that
+# warned in a run artifact, and a link that warns two weeks in a row fails.
 
 on:
   schedule:
@@ -16,7 +20,13 @@ on:
       - 'bin/check-links'
       - 'src/Http.php'
       - 'src/LinkCheck.php'
+      - 'src/LinkStatus.php'
+      - 'src/LinkWarnings.php'
       - '.github/workflows/links.yml'
+
+permissions:
+  contents: read
+  actions: read
 
 jobs:
   links:
@@ -35,13 +45,39 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
 
+      - name: Get the warnings of the last weekly run
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p .links
+          run=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow links.yml --event schedule \
+            --status completed --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+          if [ -n "$run" ]; then
+            gh run download "$run" --repo "$GITHUB_REPOSITORY" --name link-warnings --dir .links \
+              || echo 'No warnings from the last weekly run.'
+          fi
+
       - name: Check the links
         env:
           EVENT: ${{ github.event_name }}
           BASE_REF: ${{ github.base_ref }}
         run: |
           files=''
+          state=''
           if [ "$EVENT" = 'pull_request' ]; then
             files=$(git diff --name-only --diff-filter=AMR "origin/${BASE_REF}...HEAD" -- 'entries/*.php')
           fi
-          bin/check-links $files
+          if [ "$EVENT" = 'schedule' ]; then
+            state='--state=.links/warnings.json'
+          fi
+          bin/check-links --annotate $state $files
+
+      - name: Keep the warnings for the next weekly run
+        if: always() && github.event_name == 'schedule'
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-warnings
+          path: .links/warnings.json
+          if-no-files-found: ignore
+          retention-days: 30
