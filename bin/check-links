@@ -9,8 +9,8 @@
  *
  * With no files, it checks every entry. It fails when a link is broken: a
  * missing page, a domain that is gone, a bad certificate. A server error, a rate
- * limit or no answer only gives a warning, because it is usually the other
- * site's problem for a while. Such a link gets one more try after --wait seconds.
+ * limit, a 403 or no answer only gives a warning, because it is usually the
+ * other site's problem for a while, or a block on scripts. Such a link gets one more try after --wait seconds.
  *
  * With --state, it keeps the links that warned in a JSON file, and a link that
  * warns on LinkWarnings::RUNS_TO_FAIL runs in a row counts as broken. With
