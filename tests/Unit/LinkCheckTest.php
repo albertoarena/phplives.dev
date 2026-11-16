@@ -174,3 +174,14 @@ it('labels an answer with its status, or with why it failed', function () {
     expect((new LinkStatus(500))->label())->toBe('500')
         ->and((new LinkStatus(0, Http::UNKNOWN_HOST))->label())->toBe('unknown host');
 });
+
+it('lets every warning but a 403 fail once it repeats', function (LinkStatus $status, bool $escalates) {
+    expect($status->escalates())->toBe($escalates);
+})->with([
+    [new LinkStatus(500), true],
+    [new LinkStatus(429), true],
+    [new LinkStatus(0, Http::NO_ANSWER), true],
+    [new LinkStatus(403), false],
+    [new LinkStatus(200), false],
+    [new LinkStatus(404), false],
+]);

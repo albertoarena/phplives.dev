@@ -34,6 +34,16 @@ final readonly class LinkStatus
     }
 
     /**
+     * A warning that repeats on enough runs in a row counts as broken, so a site
+     * that stays down still gets noticed. A 403 does not, because a site that
+     * refuses scripts refuses them every week.
+     */
+    public function escalates(): bool
+    {
+        return $this->warns() && $this->code !== 403;
+    }
+
+    /**
      * Anything else that is not a success means the entry needs an edit: a
      * missing page, a domain that is gone, a bad certificate.
      */
