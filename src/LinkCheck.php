@@ -11,22 +11,22 @@ use Closure;
  */
 final readonly class LinkCheck
 {
-    /** How long to wait before asking again a link that gave no answer. */
+    /** How long to wait before asking again a link that only warned. */
     public const int RETRY_SECONDS = 5;
 
-    /** @var Closure(string, string): int */
+    /** @var Closure(string, string): array{int, ?string} */
     private Closure $status;
 
     /** @var Closure(int): void */
     private Closure $wait;
 
     /**
-     * @param  (Closure(string, string): int)|null  $status  Gets a URL with a method, as Http::status does.
+     * @param  (Closure(string, string): array{int, ?string})|null  $status  Gets a URL with a method, as Http::answer does.
      * @param  (Closure(int): void)|null  $wait  Waits a number of seconds, as sleep() does.
      */
     public function __construct(?Closure $status = null, ?Closure $wait = null)
     {
-        $this->status = $status ?? Http::status(...);
+        $this->status = $status ?? Http::answer(...);
         $this->wait = $wait ?? static function (int $seconds): void {
             sleep($seconds);
         };
@@ -65,14 +65,14 @@ final readonly class LinkCheck
     }
 
     /**
-     * The status a link answers with. A server that gives no answer at all may
-     * only be slow for a moment, so the link gets one more try after a wait.
+     * The answer a link gives. A server that fails or gives no answer may only
+     * have a problem for a moment, so the link gets one more try after a wait.
      */
-    public function status(string $url): int
+    public function status(string $url): LinkStatus
     {
         $status = $this->ask($url);
 
-        if ($status === 0) {
+        if ($status->warns()) {
             ($this->wait)(self::RETRY_SECONDS);
             $status = $this->ask($url);
         }
@@ -84,18 +84,10 @@ final readonly class LinkCheck
      * Some servers refuse a HEAD request, so a link that fails with HEAD gets a
      * second try with GET.
      */
-    private function ask(string $url): int
+    private function ask(string $url): LinkStatus
     {
-        $status = ($this->status)($url, 'HEAD');
+        $status = new LinkStatus(...($this->status)($url, 'HEAD'));
 
-        return self::ok($status) ? $status : ($this->status)($url, 'GET');
-    }
-
-    /**
-     * A link works when its final answer, after redirects, is a success.
-     */
-    public static function ok(int $status): bool
-    {
-        return $status >= 200 && $status < 300;
+        return $status->ok() ? $status : new LinkStatus(...($this->status)($url, 'GET'));
     }
 }
