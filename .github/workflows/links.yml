@@ -6,9 +6,10 @@ name: Links
 #
 # Once a week, it checks every entry, to find links that broke after merging.
 #
-# A server error, a rate limit or no answer only gives a warning, so another
-# site's outage never turns a run red. The weekly run keeps the links that
+# A server error, a rate limit, a 403 or no answer only gives a warning, so
+# another site's outage or its block on scripts never turns a run red. The weekly run keeps the links that
 # warned in a run artifact, and a link that warns two weeks in a row fails.
+# A 403 never fails, because a site that refuses scripts does it every week.
 
 on:
   schedule:

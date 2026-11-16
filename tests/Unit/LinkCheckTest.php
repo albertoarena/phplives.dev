@@ -136,7 +136,7 @@ it('waits and tries once more when a server fails or is too busy', function (int
             'wait '.LinkCheck::RETRY_SECONDS,
             'HEAD https://example.com',
         ]);
-})->with([500, 503, 429]);
+})->with([500, 503, 429, 403]);
 
 it('does not try again when the host is unknown or its certificate is bad', function (string $failure) {
     $status = fakeWeb(['HEAD https://example.com' => $failure, 'GET https://example.com' => $failure], $requests)
@@ -159,11 +159,11 @@ it('says which answers are good, which only warn and which fail', function (Link
     [new LinkStatus(500), 'warn'],
     [new LinkStatus(503), 'warn'],
     [new LinkStatus(429), 'warn'],
+    [new LinkStatus(403), 'warn'],
     [new LinkStatus(0, Http::NO_ANSWER), 'warn'],
     [new LinkStatus(199), 'fail'],
     [new LinkStatus(301), 'fail'],
     [new LinkStatus(401), 'fail'],
-    [new LinkStatus(403), 'fail'],
     [new LinkStatus(404), 'fail'],
     [new LinkStatus(410), 'fail'],
     [new LinkStatus(0, Http::UNKNOWN_HOST), 'fail'],
@@ -174,3 +174,14 @@ it('labels an answer with its status, or with why it failed', function () {
     expect((new LinkStatus(500))->label())->toBe('500')
         ->and((new LinkStatus(0, Http::UNKNOWN_HOST))->label())->toBe('unknown host');
 });
+
+it('lets every warning but a 403 fail once it repeats', function (LinkStatus $status, bool $escalates) {
+    expect($status->escalates())->toBe($escalates);
+})->with([
+    [new LinkStatus(500), true],
+    [new LinkStatus(429), true],
+    [new LinkStatus(0, Http::NO_ANSWER), true],
+    [new LinkStatus(403), false],
+    [new LinkStatus(200), false],
+    [new LinkStatus(404), false],
+]);

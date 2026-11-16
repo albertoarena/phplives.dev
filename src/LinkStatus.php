@@ -21,13 +21,26 @@ final readonly class LinkStatus
 
     /**
      * A server error, a rate limit or no answer at all usually means the other
-     * site has a problem for a while. The entry may still be right.
+     * site has a problem for a while. Many sites also refuse every request from
+     * a script with a 403, while they show the page to a browser. The entry may
+     * still be right.
      */
     public function warns(): bool
     {
         return $this->code >= 500
             || $this->code === 429
+            || $this->code === 403
             || ($this->code === 0 && $this->failure === Http::NO_ANSWER);
+    }
+
+    /**
+     * A warning that repeats on enough runs in a row counts as broken, so a site
+     * that stays down still gets noticed. A 403 does not, because a site that
+     * refuses scripts refuses them every week.
+     */
+    public function escalates(): bool
+    {
+        return $this->warns() && $this->code !== 403;
     }
 
     /**
