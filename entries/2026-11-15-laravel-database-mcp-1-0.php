@@ -3,7 +3,7 @@
 return [
     'name' => 'Laravel Database MCP 1.0',
     'sentence' => 'The first stable version of Laravel Database MCP, which lets an AI assistant read a Laravel app\'s database through structured queries, never raw SQL.',
-    'details' => 'The assistant gets two tools: describe_database and query_database. You can hide tables and columns from it, mask sensitive columns, or limit each query to the current tenant. Version 1.0 adds masking, an audit log and a query timeout. It also fixes a security bug that let the assistant read hidden tables.',
+    'details' => 'The assistant gets two tools: describe_database and query_database. You can hide tables and columns from it, or mask sensitive columns. Version 1.0 adds masking, an audit log and a query timeout. It also fixes a security bug that let the assistant read hidden tables.',
     'makers' => [
         ['name' => 'Alberto Peripolli', 'github' => 'trippo'],
         ['name' => 'Datomatic', 'github' => 'datomatic'],
